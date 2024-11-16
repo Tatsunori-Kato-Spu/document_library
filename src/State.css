@@ -71,8 +71,13 @@ div{
   
   
   
+.statsContainer{
+    display: flex;
+    background-color: red;
+    border: #E14E15 1px solid;
+}
+
   .boxStats{
-    display: grid;
     width: 260px;
     height: 120px;
     background-color: #373A40;
@@ -85,7 +90,6 @@ div{
   
   .textStatsTopic{
     margin: auto;
-    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -96,7 +100,6 @@ div{
   
   .textStatsNum{
     margin-top: 5px;
-    display: flex;
     /* border: #E14E15 0.125rem solid; */
     font-size: 40px;
     justify-content: center;
