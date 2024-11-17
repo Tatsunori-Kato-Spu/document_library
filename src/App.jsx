@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Layout from './Layout/Layout';
 import Permission from './pages/Permission/Permission';
 import Stats from './pages/Stats/Stats';
-import Navbar from './Layout/Navber/Navber';
+
 import Login from './pages/Login/Login';
+import Pagedoc from './pages/Pagedoc/page';
+import Searchbar from './pages/Searchbar/Searchbar';
 
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -29,15 +30,17 @@ function App() {
       path: "/",
       element: isLoggedIn ? (
     <>
-        <Navbar />
+        
+        <Pagedoc />
     </>
       ) : (
         <Login onLoginSuccess={handleLoginSuccess} />
       ),
-    },
-    { path: "search",
-      element: <Navbar />,
     },{
+      path: "pagedoc",
+      element: <Searchbar />,
+    },
+    {
       path: "permission",
       element: <Permission />,
     },

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import "./page.css";
-import { docdata } from "../../data/docdata";  
+import { docdata } from "../../data/docdata";
+import Searchbar from "../Searchbar/Searchbar";
 
 const Pagedoc = () => {
   const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
@@ -13,7 +14,9 @@ const Pagedoc = () => {
   };
 
   return (
-    <>
+    <><div>
+      <Searchbar />,
+
       <div className="table-wrapper">
         <table className="table-contenner">
           <thead className="table-th">
@@ -60,6 +63,7 @@ const Pagedoc = () => {
           </tbody>
         </table>
       </div>
+    </div>
     </>
   );
 };
