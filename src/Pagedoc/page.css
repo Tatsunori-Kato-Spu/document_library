@@ -1,0 +1,126 @@
+.container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+ 
+  
+  
+  .list-button i {
+    color: white; /* เปลี่ยนสีไอคอนเป็นสีขาว */
+   
+  }
+  
+  
+  
+  /* ปุ่มตัวเลื่อน */
+  .Slider-button {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ไอคอนตัวเลื่อน */
+  .slider-icon {
+    color: #ff6c00;
+    font-size: 1.2rem;
+  }
+  
+  /* ปุ่มอัปโหลด */
+  .upload-button {
+    background-color: #ff8539;
+    border: none;
+    border-radius: 10px;
+    position: absolute;
+    right: 250px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  
+    
+  }
+  
+  .list-button {
+    background-color: transparent;
+    border: none;
+  }
+  
+  /* ตาราง */
+  .table-wrapper {
+    width: 1500px; /* ความกว้างของกล่องครอบ */
+    background-color: #373a40;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    overflow-x: auto;
+    margin-top: 50px;
+    border: 2px solid #ff6c00;
+  
+    position: absolute;
+    top: 50%; /* ตั้งให้กล่องอยู่กลางแนวตั้ง */
+    left: 50%; /* ตั้งให้กล่องอยู่กลางแนวนอน */
+    transform: translate(-50%, -50%); /* เคลื่อนย้ายกล่องกลับให้อยู่กลาง */
+  }
+  
+  
+  
+  
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  
+  table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  table tbody tr:hover {
+    background-color: rgba(255, 108, 0, 0.1);
+  }
+  /* .table-th{
+  border: solid 5px; color: #ff8539;
+  border-radius: 5px;
+  background-color: #ff8539;
+  color: #ffffff;
+  
+  } */
+  th {
+  
+    background-color: #ff8539; 
+    color: black;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10; 
+  
+  }
+  
+  td {
+    color: #fff;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 108, 0, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .table-container .table-wrapper table th {
+    background-color: #ff8539 !important;
+    color: black !important;
+  }
+  
+  .table-container .table-wrapper table td {
+    background-color: #3c3c3c;
+    color: #ffffff !important;
+  }
