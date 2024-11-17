@@ -1,0 +1,51 @@
+.header-container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    /* background-image: url('/images/background.png'); ใช้ภาพพื้นหลังจากโฟลเดอร์ public */
+    background-size: cover; 
+    background-position: center;
+    padding: 10px 0;
+} 
+
+/* สไตล์สำหรับ header ที่ติดกับด้านบน */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #373A40;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px; /* เพิ่มระยะห่าง */
+    z-index: 1000; /* ทำให้ header อยู่ข้างบนสุด */
+}  
+
+/* โลโก้ */
+.header-logo {
+    padding: 5px;
+    margin-right: 20px;
+    /* width: 267px; */
+    height: 50px;
+    object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+  }
+  
+  
+  /* สไตล์สำหรับ navigation */
+  .header-nav {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 1rem;
+    margin: 0;
+  }
+  
+  .nav-item a {
+    color: orange; /* ให้สีคงที่ */
+    text-decoration: none;
+  }

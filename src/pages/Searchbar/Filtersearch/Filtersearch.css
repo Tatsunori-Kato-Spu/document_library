@@ -1,0 +1,39 @@
+.filter-search-content {
+    background-color: #3c3c3c;  /* พื้นหลังสีดำ */
+    color: white;             /* ตัวหนังสือสีขาว */
+  }
+  
+  .MuiDialogTitle-root {
+    background-color: #3c3c3c;  /* พื้นหลังของหัวข้อ */
+    color: white;             /* ตัวหนังสือสีขาว */
+  }
+  
+  .MuiDialogActions-root {
+    background-color: #3c3c3c;  /* พื้นหลังของปุ่ม */
+  }
+  
+  .MuiButton-root {
+    color: white;             /* ตัวหนังสือของปุ่มเป็นสีขาว */
+  }
+  
+  .MuiTextField-root input {
+    color: white;             /* ตัวหนังสือในช่องกรอกข้อมูลเป็นสีขาว */
+  }
+  
+  .MuiFormControl-root label {
+    color: white;             /* ตัวหนังสือใน InputLabel เป็นสีขาว */
+  }
+  
+  .MuiSelect-root {
+    color: white;             /* ตัวหนังสือใน Select เป็นสีขาว */
+  }
+  
+  .MuiMenuItem-root {
+    color: #FF8539;             /* ตัวหนังสือใน MenuItem เป็นสีดำ */
+    background-color: white;  /* พื้นหลังของ MenuItem เป็นสีขาว */
+  }
+  
+  .MuiMenuItem-root:hover {
+    background-color: #FF8539;   /* เมื่อ Hover เมนูจะเปลี่ยนเป็นสีเทา */
+  }
+  

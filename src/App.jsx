@@ -1,34 +1,33 @@
-import { useState } from 'react'
+import { HashRouter,Routes, Route } from 'react-router-dom';
+import SearchBar from './pages/Searchbar/Searchbar';
+
+
+import Layout from './Layout/Layout';
+
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.min.css";
+
 import './App.css'
 
-//permission  add confirm
 
-// เพิ่มเส้นขีดใต้ tr
-// ปรับรูปให้อยู่กลาง
-// เพิ่ม icon option หลังระดับสิทธิ
-// ทำให้เชื่อมกัย Data
-// search engine ต้องใช้ได้
-// ปรับสมดุล
-// เพิ่ม Navbar
-// ใส่ background Pic
-// ใน dataมีกี่รายชื่อต้องใส่ทั้งหมด
-// มีหลายหน้าได้หรือสไลเรื่อนลงเก็ได้
-// ทำ pop up option
-
-//Stats part
-//ปรับสมดุล text ใน Box
-//make graph box
-//make graph
-//make line graph
-//ดึงเลขมาจาก database คน/เอกสาร
 
 function App() {
 
   return (
-    <div className="App">
-      <p>Hi Welcome</p>
-    </div>
+    <>
+      <div className="App">
+        <HashRouter>
+          <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route path='/' element={<SearchBar />} />
+          </Route>
+        </Routes>
+        </HashRouter>
+      </div>
+    </>
   )
 }
 
 export default App
+
