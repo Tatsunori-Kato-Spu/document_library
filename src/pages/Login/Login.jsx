@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import Form from "react-bootstrap/Form";
-import { verifyUser } from "./data/users.jsx";  // ถ้าไฟล์อยู่ใน src/data/users.js
+import { verifyUser } from "../../data/users.jsx";  // ถ้าไฟล์อยู่ใน src/data/users.js
 
 import "./Login.css";
+import Header from "../../Layout/Header/Header.jsx";
 
 function Login({ onLoginSuccess }) {
   const userRef = useRef();
@@ -29,6 +30,7 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
+
     <div className="Login-container">
       {/* โลโก้ */}
       <div className="logo-container">
@@ -36,7 +38,7 @@ function Login({ onLoginSuccess }) {
           src="/logo-login.png" // โลโก้ใน public directory
           alt="Login Logo"
           className="login-logo"
-        />
+          />
       </div>
 
       {/* ฟอร์ม */}
@@ -47,14 +49,14 @@ function Login({ onLoginSuccess }) {
           placeholder="Username"
           ref={userRef}
           className="input-field"
-        />
+          />
         <Form.Control
           type="password"
           id="password"
           placeholder="Password"
           ref={passRef}
           className="input-field"
-        />
+          />
 
         <div className="button-container">
           <button className="btn-login" onClick={handleLogin} type="button">
@@ -63,7 +65,7 @@ function Login({ onLoginSuccess }) {
           <button
             className="guest-button"
             onClick={handleGuestLogin}
-          >
+            >
             Sign In with Guest
           </button>
         </div>

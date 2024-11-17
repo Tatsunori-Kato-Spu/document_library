@@ -5,7 +5,7 @@
 
 /* คอนเทนเนอร์ของ Search Bar */
 .search-bar-container {
-  padding-top: 6rem;
+  padding-top: 1rem;
   padding-bottom: 3rem;
   display: flex;
   justify-content: center;
@@ -14,8 +14,9 @@
 
 /* ฟอร์ม */
 .search-form {
-  width: 100%;
-  max-width: 100rem;
+  width: 1000px;
+  min-width: none;
+  max-width: none;
   position: relative;
   display: flex;
   align-items: center;
@@ -49,8 +50,8 @@
   border: none;
   position: absolute;
 
-  top: 50%;
-  right: 70px;
+  top: 43%;
+  right: 85px;
   transform: translateY(-50%);
   cursor: pointer;
   padding: 0;
@@ -69,8 +70,8 @@
   background-color: transparent;
   border: none;
   position: absolute;
-  top: 50%;
-  right: 20px; 
+  top: 43%;
+  right: 45px; 
   transform: translateY(-50%);
   cursor: pointer;
   display: flex;
