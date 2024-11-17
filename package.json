@@ -12,22 +12,15 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-<<<<<<< HEAD
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
-=======
->>>>>>> 17a375aaa5e0d3900cd4c989bc11afcaee52880c
     "@mui/material": "^6.1.7",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
-<<<<<<< HEAD
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"
-=======
-    "react-dom": "^18.3.1"
->>>>>>> 17a375aaa5e0d3900cd4c989bc11afcaee52880c
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
