@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import './permission.css'
 
+
 function Permission(){
 const [count, setCount] = useState(0)
   
 return (
   <div className="background">
-    <div className='search'>
-     <p>Search</p>
-    </div>
     <div className='permissionContainer'>
         <table className='tablePermission'>
       <thead>
