@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-
-import Filtersearch from "./Filtersearch/Filtersearch";
-import docdata from "../../data/docdata";
-
+import { docdata } from "../../data/docdata";  
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-
-import "./Searchbar.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'; // ใช้ไอคอนจาก FontAwesome
+import "../Searchbar/Searchbar.css";
+import Filtersearch from "./Filtersearch/Filtersearch";
 
 function SearchBar() {
   const [query, setQuery] = useState("");
@@ -16,12 +15,12 @@ function SearchBar() {
   const handleSearch = (searchQuery) => {
     const filtered = docdata.filter(
       (item) =>
-        item.id.includes(searchQuery) ||
-        item.title.includes(searchQuery) ||
-        item.description.toLowerCase().includes(searchQuery) ||
-        item.department.includes(searchQuery) ||
-        item.date.includes(searchQuery) ||
-        item.time.includes(searchQuery)
+        item.หมายเลข.includes(searchQuery) ||
+        item.ชื่อเอกสาร.includes(searchQuery) ||
+        item.เรื่อง.toLowerCase().includes(searchQuery) ||
+        item.หน่วยงาน.includes(searchQuery) ||
+        item.วันที่.includes(searchQuery) ||
+        item.เวลา.includes(searchQuery)
     );
     setFilteredData(filtered);
   };
@@ -41,10 +40,17 @@ function SearchBar() {
     e.preventDefault();
     handleSearch(query);
   };
+
+  // ฟังก์ชันคลิกที่แถวในตาราง
+  const handleRowClick = (rowData) => {
+    alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
+
+  };
+
   return (
     <>
       <div className="container">
-        <div
+      <div
           className="search-bar-container"
           style={{ display: "flex", alignItems: "center" }}
         >
@@ -93,49 +99,8 @@ function SearchBar() {
           </Button>
         </div>
       </div>
-      <div className="table-container">
-        <div className="table-wrapper">
-          <table className="table">
-            <thead>
-              <tr className="table-header">
-                <th style={{ backgroundColor: "#FF8539" }}>หมายเลข</th>
-                <th style={{ backgroundColor: "#FF8539" }}>
-                  <i className="bi bi-envelope"></i>&nbsp; ชื่อเอกสาร
-                </th>
-                <th style={{ backgroundColor: "#FF8539" }}>เรื่อง</th>
-                <th style={{ backgroundColor: "#FF8539" }}>หน่อยงาน</th>
-                <th style={{ backgroundColor: "#FF8539" }}>วันที่</th>
-                <th style={{ backgroundColor: "#FF8539" }}>เวลา</th>
-              </tr>
-            </thead>
-            <tbody className="table-body">
-              {filteredData.length > 0 ? (
-                filteredData.map((report) => (
-                  <tr key={report.id}>
-                    <td>{report.id}</td>
-                    <td>
-                      <strong>{report.title}</strong>
-                    </td>
-                    <td>{report.description}</td>
-                    <td>{report.department}</td>
-                    <td>{report.date}</td>
-                    <td>{report.time}</td>
-                    <td>
-                      <button className="list-button" type="button">
-                        <i className="bi bi-list"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5">ไม่พบผลลัพธ์</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+      
     </>
   );
 }
