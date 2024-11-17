@@ -1,26 +1,20 @@
 import React, { useState } from "react";
-import { docdata } from "../../data/docdata";  
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'; // ใช้ไอคอนจาก FontAwesome
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import "../Pagedoc/page.css";
+import { docdata } from "../../data/docdata";  
 
-
-  
+const Pagedoc = () => {
+  const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
 
   // ฟังก์ชันคลิกที่แถวในตาราง
   const handleRowClick = (rowData) => {
     alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
-
   };
 
   return (
     <>
-      
-
       <div className="table-wrapper">
-        {/* ตาราง */}
         <table className="table-contenner">
           <thead className="table-th">
             <tr>
@@ -28,7 +22,7 @@ import "../Pagedoc/page.css";
               <th>หมายเลข</th>
               <th>
                 <FontAwesomeIcon
-                  icon={faEnvelope} 
+                  icon={faEnvelope}
                   style={{ cursor: 'pointer', marginRight: '10px' }}
                 />
                 ชื่อเอกสาร
@@ -68,6 +62,6 @@ import "../Pagedoc/page.css";
       </div>
     </>
   );
+};
 
-
-export default SearchBar;
+export default Pagedoc;

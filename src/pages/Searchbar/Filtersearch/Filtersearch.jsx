@@ -12,7 +12,8 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import docdata from "../../../data/docdata";
+import { docdata } from "../../../data/docdata";
+
 
 import "./Filtersearch.css";
 
@@ -21,10 +22,8 @@ const Filtersearch = ({ open, onClose, onApply }) => {
     docNumber: "",
     docName: "",
     department: "",
-    docType: "",
     timeRange: "1 วัน",
   });
-
 
   const [filteredDocs, setFilteredDocs] = useState(docdata);
 
@@ -41,7 +40,6 @@ const Filtersearch = ({ open, onClose, onApply }) => {
       docNumber: "",
       docName: "",
       department: "",
-      docType: "",
       timeRange: "1 วัน",
     });
     setFilteredDocs(docdata);
@@ -49,33 +47,44 @@ const Filtersearch = ({ open, onClose, onApply }) => {
 
   const handleSubmit = () => {
     let filtered = docdata;
-      // กรองตามเลขเอกสาร
-      if (formData.docNumber) {
-        filtered = filtered.filter(doc => doc.id.includes(formData.docNumber));
-      }
-      // กรองตามชื่อเอกสาร
-      if (formData.docName) {
-        filtered = filtered.filter(doc => doc.title.includes(formData.docName));
-      }
-      // กรองตามหน่วยงาน
-      if (formData.department) {
-        filtered = filtered.filter(doc => doc.department === formData.department);
-      }
-      // ฟิลด์ช่วงเวลา (timeRange) สามารถพิจารณาตามวันได้ เช่น "1 วัน", "7 วัน", "30 วัน"
-      if (formData.timeRange) {
-        const today = new Date();
-        let days = 1;
-        if (formData.timeRange === "7 วัน") days = 7;
-        if (formData.timeRange === "30 วัน") days = 30;
-        const pastDate = new Date(today.setDate(today.getDate() - days));
-        filtered = filtered.filter((doc) => {
-          const docDate = new Date(doc.date.split("/").reverse().join("-"));
-          return docDate >= pastDate;
-        });
-      }
+
+    if (formData.docNumber) {
+      filtered = filtered.filter((doc) =>
+        doc['หมายเลข'].includes(formData.docNumber)
+      );
+    }
+
+    if (formData.docName) {
+      filtered = filtered.filter((doc) =>
+        doc['ชื่อเอกสาร'].includes(formData.docName)
+      );
+    }
+
+    if (formData.department) {
+      filtered = filtered.filter(
+        (doc) => doc['หน่วยงาน'] === formData.department
+      );
+    }
+
+    if (formData.timeRange) {
+      const today = new Date();
+      let days = 1;
+      if (formData.timeRange === "7 วัน") days = 7;
+      if (formData.timeRange === "30 วัน") days = 30;
+      const pastDate = new Date(today.setDate(today.getDate() - days));
+
+      filtered = filtered.filter((doc) => {
+        const dateParts = doc['วันที่'].split('/');
+        const docDate = new Date(
+          parseInt(dateParts[2]) - 543,
+          parseInt(dateParts[1]) - 1,
+          parseInt(dateParts[0])
+        );
+        return docDate >= pastDate;
+      });
+    }
 
     setFilteredDocs(filtered);
-    // console.log("Filtered Docs: ", filteredDocs);
     onClose();
     onApply(filtered);
   };
@@ -86,7 +95,7 @@ const Filtersearch = ({ open, onClose, onApply }) => {
       <DialogContent className="filter-search-content">
         <TextField
           name="docNumber"
-          label="เลขเอกสาร"
+          label="หมายเลขเอกสาร"
           value={formData.docNumber}
           onChange={handleChange}
           fullWidth
@@ -106,26 +115,13 @@ const Filtersearch = ({ open, onClose, onApply }) => {
             name="department"
             value={formData.department}
             onChange={handleChange}
-            sx={{ color: "white" }}
           >
             <MenuItem value="">เลือกทั้งหมด</MenuItem>
-            {["บัญชี", "การตลาด", "ไอที", "ทรัพยากรบุคคล"].map((department) => (
+            {["บัญชี", "การเงิน", "การตลาด", "ทรัพยากรบุคคล", "ไอที"].map((department) => (
               <MenuItem key={department} value={department}>
                 {department}
               </MenuItem>
             ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>ประเภทเอกสาร</InputLabel>
-          <Select
-            name="docType"
-            value={formData.docType}
-            onChange={handleChange}
-          >
-            <MenuItem value="">เลือกทั้งหมด</MenuItem>
-            <MenuItem value="type1">ประเภท 1</MenuItem>
-            <MenuItem value="type2">ประเภท 2</MenuItem>
           </Select>
         </FormControl>
         <FormControl fullWidth margin="normal">
@@ -134,7 +130,6 @@ const Filtersearch = ({ open, onClose, onApply }) => {
             name="timeRange"
             value={formData.timeRange}
             onChange={handleChange}
-            sx={{ color: "white" }}
           >
             <MenuItem value="1 วัน">1 วัน</MenuItem>
             <MenuItem value="7 วัน">7 วัน</MenuItem>
@@ -143,20 +138,10 @@ const Filtersearch = ({ open, onClose, onApply }) => {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleReset} color="secondary" sx={{ color: "white" }}>
+        <Button onClick={handleReset} color="secondary">
           รีเซ็ต
         </Button>
-        <Button
-          onClick={handleSubmit}
-          color="primary"
-          sx={{
-            backgroundColor: "#FF8539", // สีพื้นหลังของปุ่ม "ค้นหา" เป็นสีส้ม
-            color: "white",
-            "&:hover": {
-              backgroundColor: "#ff6c00", // เมื่อ hover ปุ่ม "ค้นหา" เป็นส้มเข้ม
-            },
-          }}
-        >
+        <Button onClick={handleSubmit} color="primary">
           ค้นหา
         </Button>
       </DialogActions>
