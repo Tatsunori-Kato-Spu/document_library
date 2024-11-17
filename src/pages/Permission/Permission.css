@@ -1,9 +1,4 @@
-div{
-    border: 1px solid black;
-    margin: auto;
-  }
-  
-  .background{
+.background{
     width: 100%;
     width: 120rem;
     height: 67.5rem;
@@ -69,40 +64,3 @@ div{
     height: 50px;
   }
   
-  
-  
-.statsContainer{
-    display: flex;
-    background-color: red;
-    border: #E14E15 1px solid;
-}
-
-  .boxStats{
-    width: 260px;
-    height: 120px;
-    background-color: #373A40;
-    color: white;
-    border-radius: 1rem;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .textStatsTopic{
-    margin: auto;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 10px;
-    font-size: 24px;
-    /* border: #E14E15 0.125rem solid; */
-  }
-  
-  .textStatsNum{
-    margin-top: 5px;
-    /* border: #E14E15 0.125rem solid; */
-    font-size: 40px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
