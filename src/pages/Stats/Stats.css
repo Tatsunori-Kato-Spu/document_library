@@ -39,3 +39,24 @@
     align-items: center;
     text-align: center;
   }
+
+
+  .BarChartContainer{
+    width: 1105px;
+    height: 415px;
+    display: flex;
+    flex-direction: row;
+    background-color: #373A40;
+    border-radius: 20px;
+    
+  }
+
+  .DoughnutChartContainer{
+    width: 496px;
+    height: 644px;
+    display: flex;
+    flex-direction: row;
+    background-color: #373A40;
+    border-radius: 20px;
+  }
+
