@@ -1,0 +1,153 @@
+.container{
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* คอนเทนเนอร์ของ Search Bar */
+  .search-bar-container {
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* ฟอร์ม */
+  .search-form {
+    width: 100%;
+    max-width: 100rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ช่องกรอกข้อมูล */
+  .search-input {
+    /* padding: 0 90px 0 20px;  */
+    margin-right: 10px;
+    border-radius: 20px;
+    background-color: #3c3c3c;
+    color: #ffffff;
+    border: 1px solid #ff6c00;
+    outline: none;
+    width: 100%;
+    height: 40px;
+    font-size: 1rem;
+      padding-left: 2.5rem;
+      padding-right: 1rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      /* border: 1px solid #d1d5db; */
+      text-overflow: ellipsis;
+      
+    
+  }
+  
+  /* ปุ่มค้นหาภายในช่อง */
+  .search-button {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+  
+    top: 50%;
+    right: 70px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ไอคอนค้นหา */
+  .search-icon i {
+    color: #ff6c00;
+    font-size: 1.2rem;
+  }
+  
+  /* ปุ่มตัวเลื่อน */
+  .Slider-button {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 50%;
+    right: 20px; 
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ไอคอนตัวเลื่อน */
+  .slider-icon {
+    color: #ff6c00; 
+    font-size: 1.2rem;
+  }
+  
+  /* ปุ่มอัปโหลด */
+  .upload-button {
+    background-color: #FF8539;
+    border: none;
+    border-radius: 10px;
+  
+    position: absolute;
+    right: 20px; 
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  
+  .list-button{
+    background-color: transparent;
+    border: none;
+  
+  }
+  
+  /* .upload-button-hover {
+    background-color: #ff6c00;
+    } */
+  
+  /* ตาราง */
+  .table-wrapper {
+    width: 100%;
+    background-color: #373A40;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border: 2px solid #ff6c00;
+    overflow-x: auto;
+    position: relative;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background-color: #FF8539;
+    
+  }
+  table tbody tr {
+    cursor: pointer;
+    /* transition: background-color 0.3s ease; */
+  }
+  table tbody tr:hover {
+    background-color: rgba(255, 108, 0, 0.1);
+  }
+  th {
+    background-color: #FF8539;
+    color: black;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  td {
+    color: #fff;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 108, 0, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
