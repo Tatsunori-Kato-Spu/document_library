@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import "../Pagedoc/page.css";
+import "./page.css";
 import { docdata } from "../../data/docdata";  
 
 const Pagedoc = () => {
