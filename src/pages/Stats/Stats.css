@@ -1,12 +1,10 @@
-div{
-    border: 1px solid black;
-    margin: auto;
-  }
+
   
  
   
   
 .statsContainer{
+  width: 1980px;
     display: flex;
     background-color: red;
     border: #E14E15 1px solid;

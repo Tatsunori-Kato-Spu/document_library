@@ -13,7 +13,5 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
     
-    <Permission/>
-    <Stats />
   </StrictMode>,
 )

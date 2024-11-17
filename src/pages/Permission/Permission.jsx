@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './permission.css'
+import Header from '../../Layout/Header/Header'
 
 
 function Permission(){
@@ -7,6 +8,8 @@ const [count, setCount] = useState(0)
   
 return (
   <div className="background">
+    <Header/>
+        
     <div className='permissionContainer'>
         <table className='tablePermission'>
       <thead>
