@@ -33,7 +33,17 @@
     /* width: 267px; */
     height: 50px;
     object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+
   }
+  /* โลโก้ */
+.header-logo {
+  padding: 5px;
+  margin-right: 20px;
+  width: 267px;
+  height: 68px;
+  object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+}
+
   
   
   /* สไตล์สำหรับ navigation */
@@ -49,3 +59,50 @@
     color: orange; /* ให้สีคงที่ */
     text-decoration: none;
   }
+  /* เมนู */
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-end; /* ทำให้เมนูชิดขวา */
+  gap: 30px; /* ช่องว่างระหว่างรายการเมนู */
+  align-items: center; /* จัดแนวไอคอนในแนวตั้ง */
+}
+
+/* เพิ่ม margin ให้กับไอคอนสุดขวา (login) */
+nav ul li:last-child {
+  margin-right: 20px; /* ห่างจากขอบขวาของจอ */
+}
+
+/* เมนูรายการ */
+nav ul li {
+  display: inline-block;
+}
+
+/* ปรับการแสดงผลของลิงก์เมนู */
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* ช่องว่างระหว่างไอคอนและข้อความ */
+  padding: 10px 20px; /* เพิ่มขนาดให้คลิกได้สะดวก */
+  font-size: 18px; /* ปรับขนาดตัวอักษรในเมนู */
+}
+
+nav ul li a:hover {
+  background-color: rgba(255, 133, 57, 0.2); /* สีเมื่อ hover */
+  color: #FF8539; /* เปลี่ยนสีตัวอักษร */
+}
+/* เพิ่มขนาดไอคอนในเมนู */
+nav ul li a .fa {
+  font-size: 24px; /* ขนาดไอคอน */
+}
+
+/* เพื่อให้เนื้อหาหลักไม่โดน header ปิด */
+main {
+  margin-top: 70px; /* เพิ่มระยะห่างจาก header */
+  padding: 20px;
+}
