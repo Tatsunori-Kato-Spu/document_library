@@ -18,13 +18,19 @@ import Header from './Layout/Header/Header';
 
 
 function App() {
+  
 
   const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะการล็อกอิน
+  const [userRole, setUserRole] = useState(null); // สถานะเก็บบทบาทผู้ใช้
     
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true); // ตั้งค่าการล็อกอินเมื่อสำเร็จ
+  const handleLoginSuccess = (userInfo) => {
+    setIsLoggedIn(true);
+    setUserRole(userInfo.role);
+    console.log("User logged in with role:", userInfo.role);  // ตรวจสอบค่าบทบาทที่ส่ง
   };
 
+
+  
   const router = createBrowserRouter([ 
     {
       path: "/",

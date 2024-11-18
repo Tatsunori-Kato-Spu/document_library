@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Form from "react-bootstrap/Form";
-import { verifyUser, verifyGuestLogin } from "./data/users.jsx"; // ดึงฟังก์ชันมาใช้
+import { verifyUser, verifyGuestLogin } from "../../data/users"; // ดึงฟังก์ชันมาใช้
 import "./Login.css";
 import Swal from "sweetalert2";
 
