@@ -1,36 +1,52 @@
 import { useRef } from "react";
 import Form from "react-bootstrap/Form";
-import { verifyUser } from "../../data/users.jsx";  // ถ้าไฟล์อยู่ใน src/data/users.js
-
+import { verifyUser, verifyGuestLogin } from "./data/users.jsx"; // ดึงฟังก์ชันมาใช้
 import "./Login.css";
-import Header from "../../Layout/Header/Header.jsx";
+import Swal from "sweetalert2";
 
 function Login({ onLoginSuccess }) {
   const userRef = useRef();
   const passRef = useRef();
 
   const handleLogin = () => {
-    const user = userRef.current.value.trim();
-    const pass = passRef.current.value.trim();
-    userRef.current.value = "";
-    passRef.current.value = "";
+    const user = userRef.current.value;
+    const pass = passRef.current.value;
 
-    const userInfo = verifyUser(user, pass);
+    const userInfo = verifyUser(user, pass); // ตรวจสอบ user และ password
+
     if (userInfo === null) {
-      alert("User not found");
+      Swal.fire({
+        title: "Error!",
+        text: "User not found or incorrect credentials!",
+        icon: "error",
+        confirmButtonText: "Try Again",
+      });
       userRef.current.focus();
     } else {
-      onLoginSuccess(); // เรียกฟังก์ชันนี้เมื่อเข้าสู่ระบบสำเร็จ
+      Swal.fire({
+        title: "Welcome!",
+        text: `Welcome, ${userInfo.role}!`,
+        icon: "success",
+        confirmButtonText: "Proceed",
+      }).then(() => {
+        onLoginSuccess(userInfo); // ส่งข้อมูล userInfo หลังจากเข้าสู่ระบบ
+      });
     }
   };
 
   const handleGuestLogin = () => {
-    alert("Logged in as Guest");
-    onLoginSuccess(); // ให้เข้าสู่ระบบเหมือนกัน
+    const guestInfo = verifyGuestLogin();
+    Swal.fire({
+      title: "Logged In!",
+      text: "Logged in as Guest",
+      icon: "info",
+      confirmButtonText: "OK",
+    }).then(() => {
+      onLoginSuccess(guestInfo); // ส่ง guestInfo ไป
+    });
   };
 
   return (
-
     <div className="Login-container">
       {/* โลโก้ */}
       <div className="logo-container">
@@ -38,7 +54,7 @@ function Login({ onLoginSuccess }) {
           src="/logo-login.png" // โลโก้ใน public directory
           alt="Login Logo"
           className="login-logo"
-          />
+        />
       </div>
 
       {/* ฟอร์ม */}
@@ -49,14 +65,14 @@ function Login({ onLoginSuccess }) {
           placeholder="Username"
           ref={userRef}
           className="input-field"
-          />
+        />
         <Form.Control
           type="password"
           id="password"
           placeholder="Password"
           ref={passRef}
           className="input-field"
-          />
+        />
 
         <div className="button-container">
           <button className="btn-login" onClick={handleLogin} type="button">
@@ -65,8 +81,9 @@ function Login({ onLoginSuccess }) {
           <button
             className="guest-button"
             onClick={handleGuestLogin}
-            >
-            Sign In with Guest
+            type="button"
+          >
+            Sign In as Guest
           </button>
         </div>
       </form>
