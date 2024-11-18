@@ -47,7 +47,7 @@ const Pagedoc = () => {
                 <th>หน่วยงาน</th>
                 <th>วันที่</th>
                 <th>เวลา</th>
-                <th></th>
+                {/* <th></th> */}
               </tr>
             </thead>
             <tbody>
