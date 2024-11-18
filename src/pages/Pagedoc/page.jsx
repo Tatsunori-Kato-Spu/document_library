@@ -8,6 +8,7 @@ import Searchbar from "../Searchbar/Searchbar";
 const Pagedoc = () => {
   const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
 
+  //search
   const handleSearch = (filtered) => {
     setFilteredData(filtered); // อัพเดตข้อมูลที่กรองแล้ว
   };
@@ -16,11 +17,16 @@ const Pagedoc = () => {
   const handleRowClick = (rowData) => {
     alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
   };
-
+  //ปุ่มลิส
+  const handleDetailsClick = (item) => {
+    console.log("Details for:", item);
+    
+  };
+  
   return (
     <>
       <div>
-      <Searchbar onSearch={handleSearch} />
+        <Searchbar onSearch={handleSearch} />
 
         <div className="table-wrapper">
           <table className="table-contenner">
@@ -54,7 +60,11 @@ const Pagedoc = () => {
                     <td>{item["วันที่"]}</td>
                     <td>{item["เวลา"]}</td>
                     <td>
-                      <button className="list-button" type="button">
+                      <button
+                        className="list-button"
+                        type="button"
+                        onClick={() => handleDetailsClick(item)}
+                      >
                         <i className="bi bi-list"></i>
                       </button>
                     </td>

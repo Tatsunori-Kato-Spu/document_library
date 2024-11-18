@@ -11,6 +11,7 @@ function SearchBar({ onSearch }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSearch = (searchQuery) => {
+    if (!searchQuery.trim()) return;
     const filtered = docdata.filter(
       (item) =>
         item.หมายเลข.includes(searchQuery) ||
@@ -20,7 +21,8 @@ function SearchBar({ onSearch }) {
         item.วันที่.includes(searchQuery) ||
         item.เวลา.includes(searchQuery)
     );
-    onSearch(filtered); 
+    setFilteredData(filtered);
+    onSearch(filtered);
   };
 
   const handleInputChange = (e) => {
@@ -72,7 +74,10 @@ function SearchBar({ onSearch }) {
       <Filtersearch
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        onApply={(filtered) => setFilteredData(filtered)}
+        onApply={(filtered) => {
+          setFilteredData(filtered);
+          onSearch(filtered);
+        }}
       />
       <Button className="upload-button">
         <span className="upload-icon">
