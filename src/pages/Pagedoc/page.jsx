@@ -4,10 +4,11 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import "./page.css";
 import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
+import Dropdown from "../Dropdown/Dropdown";
 
 const Pagedoc = () => {
   const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
-
+  const [activeDropdown, setActiveDropdown] = useState(null);
   //search
   const handleSearch = (filtered) => {
     setFilteredData(filtered); // อัพเดตข้อมูลที่กรองแล้ว
@@ -17,10 +18,11 @@ const Pagedoc = () => {
   const handleRowClick = (rowData) => {
     alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
   };
+
   //ปุ่มลิส
-  const handleDetailsClick = (item) => {
-    console.log("Details for:", item);
-    
+  const handleDropdownToggle = (e,index) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === index ? null : index); 
   };
   
   return (
@@ -60,13 +62,21 @@ const Pagedoc = () => {
                     <td>{item["วันที่"]}</td>
                     <td>{item["เวลา"]}</td>
                     <td>
+                    <div style={{ position: "relative" }}>
                       <button
                         className="list-button"
                         type="button"
-                        onClick={() => handleDetailsClick(item)}
+                        onClick={(e) => handleDropdownToggle(e, index)}
                       >
                         <i className="bi bi-list"></i>
                       </button>
+                      {activeDropdown === index && (
+                        <Dropdown
+                          isOpen={activeDropdown === index}
+                          onClose={() => setActiveDropdown(null)}
+                        />
+                      )}
+                    </div>
                     </td>
                   </tr>
                 ))
