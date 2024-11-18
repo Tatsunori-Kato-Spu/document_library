@@ -1,62 +1,97 @@
-
-  
- 
-  
-  
-.statsContainer{
-  width: 1980px;
-    display: flex;
-    background-color: red;
-    border: #E14E15 1px solid;
+.stats{
+  width: 100%;
+  /* background-color: blue; */
+  display: flex;
+  flex-direction: row;
 }
 
-  .boxStats{
-    width: 260px;
-    height: 120px;
-    background-color: #373A40;
-    color: white;
-    border-radius: 1rem;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-  }
+.statsContainer {
+  margin-left: 160px;
+  width: 1125px;
+  /* background-color: red; */
+  /* border: black 1px solid; */
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+   justify-content: center;
+
+
+}
+
+
+.statsContainer1 {
+  margin-left: 20px;
+  align-items: center;
+  width: 1125px;
+  gap: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* background-color: green; */
+  /* border: #E14E15 1px solid; */
+  flex-wrap: wrap;
+}
+
+
+
+.BarChartContainer {
+  margin-top: 50px;
+  width: 1105px;
+  height: 415px;
+  justify-items: center;
+  /* display: flex; */
+  /* flex-direction: row; */
+  background-color: #373A40;
+  border-radius: 20px;
   
-  .textStatsTopic{
-    margin: auto;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-top: 10px;
-    font-size: 24px;
-    /* border: #E14E15 0.125rem solid; */
-  }
-  
-  .textStatsNum{
-    margin-top: 5px;
-    /* border: #E14E15 0.125rem solid; */
-    font-size: 40px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
+}
 
+.DoughnutChartContainer {
+  width: 496px;
+  height: 644px;
+  display: flex;
+  justify-self: center;
+  /* flex-direction: row; */
+  background-color: #373A40;
+  border-radius: 20px;
+}
 
-  .BarChartContainer{
-    width: 1105px;
-    height: 415px;
-    display: flex;
-    flex-direction: row;
-    background-color: #373A40;
-    border-radius: 20px;
-    
-  }
+.DoughnutChartBg{
+  margin-left: 65px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  /* background-color: azure; */
+}
 
-  .DoughnutChartContainer{
-    width: 496px;
-    height: 644px;
-    display: flex;
-    flex-direction: row;
-    background-color: #373A40;
-    border-radius: 20px;
-  }
+.boxStats {
+  width: 260px;
+  height: 120px;
+  background-color: #373A40;
+  color: white;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
 
+.textStatsTopic {
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 24px;
+  /* border: #E14E15 0.125rem solid; */
+}
+
+.textStatsNum {
+  margin-top: 5px;
+  /* border: #E14E15 0.125rem solid; */
+  font-size: 40px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

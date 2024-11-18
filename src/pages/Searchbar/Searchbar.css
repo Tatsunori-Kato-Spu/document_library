@@ -1,4 +1,4 @@
-.container {
+/* .container {
   display: flex;
   flex-direction: column;
 }
@@ -9,7 +9,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+} */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 0.5rem; /* ตั้งความสูงเต็มหน้าจอ */
 }
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* เพิ่มระยะห่างระหว่างองค์ประกอบ */
+}
+
 
 /* ฟอร์ม */
 .search-form {
@@ -24,6 +38,7 @@
 /* ช่องกรอกข้อมูล */
 .search-input {
   /* padding: 0 90px 0 20px;  */
+  flex-grow: 1;
   margin-right: 10px;
   border-radius: 20px;
   background-color: #3c3c3c;
