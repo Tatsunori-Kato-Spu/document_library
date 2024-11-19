@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider ,Navigate} from 'react-router-dom';
+
 
 import Permission from './pages/Permission/Permission';
 import Stats from './pages/Stats/Stats';
@@ -18,11 +19,11 @@ import Header from './Layout/Header/Header';
 
 
 function App() {
-  
+
 
   const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะการล็อกอิน
   const [userRole, setUserRole] = useState(null); // สถานะเก็บบทบาทผู้ใช้
-    
+
   const handleLoginSuccess = (userInfo) => {
     setIsLoggedIn(true);
     setUserRole(userInfo.role);
@@ -30,21 +31,19 @@ function App() {
   };
 
 
-  
-  const router = createBrowserRouter([ 
+
+  const router = createBrowserRouter([
     {
       path: "/",
       element: isLoggedIn ? (
-    <>
-        
-        <Pagedoc />
-    </>
+        <Navigate to="/pagedoc" />  // ถ้า login แล้วจะไปที่ /pagedoc
       ) : (
-        <Login onLoginSuccess={handleLoginSuccess} />
+        <Login onLoginSuccess={handleLoginSuccess} />  // ถ้ายังไม่ login แสดง Login
       ),
-    },{
+    },
+    {
       path: "pagedoc",
-      element: <Searchbar />,
+      element: <Pagedoc />,  // เส้นทางไปที่ /pagedoc
     },
     {
       path: "permission",
@@ -53,12 +52,13 @@ function App() {
     {
       path: "stats",
       element: <Stats />,
-    }
+    },
   ]);
+
   return (
     <div>
-    <Header/>
-   <RouterProvider router={router}/>
+      <Header />
+      <RouterProvider router={router} />
     </div>
   )
 }
