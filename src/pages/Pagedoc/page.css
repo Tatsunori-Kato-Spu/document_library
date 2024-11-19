@@ -10,7 +10,7 @@
   background-color: #373a40;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  /* padding: 20px; */
   margin-top: 50px;
   border: 2px solid #ff6c00;
 
@@ -69,7 +69,7 @@ th {
   font-weight: 600;
   text-align: left;
   position: sticky;  /* ทำให้ sticky */
-  top: 0; /* ทำให้ยึดติดที่ด้านบน */
+  top: 0px; /* ทำให้ยึดติดที่ด้านบน */
   z-index: 1; /* ให้แน่ใจว่า th อยู่บนสุดเมื่อเลื่อน */
   border-bottom: 2px solid #ff6c00; /* ขอบล่างเพื่อความชัดเจน */
 }
