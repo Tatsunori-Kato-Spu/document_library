@@ -84,12 +84,13 @@
   align-items: center;
   text-align: center;
   margin-top: 10px;
-  font-size: 24px;
+  font-size: 20px;
   /* border: #E14E15 0.125rem solid; */
 }
 
 .textStatsNum {
-  margin-top: 5px;
+  /* margin-top: 5px; */
+  margin-bottom: 10px;
   /* border: #E14E15 0.125rem solid; */
   font-size: 40px;
   justify-content: center;
