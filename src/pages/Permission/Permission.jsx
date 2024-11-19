@@ -3,7 +3,14 @@ import React, { useState } from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
 
 function Permission() {
+  const [users, setUsers] = useState(userdata); // สร้าง state เพื่อจัดการข้อมูลผู้ใช้
 
+  // ฟังก์ชันสำหรับเปลี่ยน role
+  const handleRoleChange = (index, newRole) => {
+    const updatedUsers = [...users];
+    updatedUsers[index].role = newRole;
+    setUsers(updatedUsers);
+  };
   return (
     <div className="background">
       <div className="table-wrapper">
@@ -24,7 +31,7 @@ function Permission() {
             {userdata.map((user, index) => (
               <tr key={index}>
                 <td>
-                 
+
                 </td>
                 <td>{user.ชื่อ}</td>
                 <td>{user.รหัสประจำตัว}</td>
@@ -33,17 +40,20 @@ function Permission() {
                 <td>{user.Email}</td>
                 <td>{user.ติดต่อ}</td>
                 <Dropdown>
-                          <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          {user.role}
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">Admin</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">worker</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                  
-                  
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    {user.role}
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => handleRoleChange(index, "admin")}>
+                      Admin
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleRoleChange(index, "worker")}>
+                      Worker
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+
+
               </tr>
             ))}
           </tbody>
