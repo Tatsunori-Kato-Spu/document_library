@@ -1,69 +1,44 @@
-import { useState } from 'react'
-import './permission.css'
-import Header from '../../Layout/Header/Header'
+import { usersdata } from '../../data/user';  // นำเข้าข้อมูลจาก usersdata.js
+import React, { useState } from 'react';
 
+function Permission() {
 
-function Permission(){
-const [count, setCount] = useState(0)
-  
-return (
-  <div className="background">
-    <Header/>
-        
-    <div className='permissionContainer'>
-        <table className='tablePermission'>
-      <thead>
-      <tr className='trHead'>
-        <th></th>
-        <th>ชื่อ</th>
-        <th>หมายเลข</th>
-        <th>หน่วยงาน</th>
-        <th>ตำแหน่ง</th>
-        <th>Email</th>
-        <th>ติดต่อ</th>
-        <th>ระดับสิทธิ</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><img src="./public/img/profile.png" alt="" srcset="" /></td>
-        <td>นายสมชาย สุขสันต์</td>
-        <td>123-456-789</td>
-        <td>ฝ่ายบัญชี</td>
-        <td>เจ้าหน้าที่บัญชี</td>
-        <td>sumchai@email.com</td>
-        <td>081-123-4XXX</td>
-        <td>ระดับสูง</td>
-      </tr>
-      
-      <tr>
-        <td><img src="./public/img/profile.png" alt="" srcset="" /></td>
-        <td>นายสมชาย สุขสันต์</td>
-        <td>123-456-789</td>
-        <td>ฝ่ายบัญชี</td>
-        <td>เจ้าหน้าที่บัญชี</td>
-        <td>sumchai@email.com</td>
-        <td>081-123-4XXX</td>
-        <td>ระดับสูง</td>
-      </tr>
-      <tr>
-        <td><img src="./public/img/profile.png" alt="" srcset="" /></td>
-        <td>นายสมชาย สุขสันต์</td>
-        <td>123-456-789</td>
-        <td>ฝ่ายบัญชี</td>
-        <td>เจ้าหน้าที่บัญชี</td>
-        <td>sumchai@email.com</td>
-        <td>081-123-4XXX</td>
-        <td>ระดับสูง</td>
-      </tr>
-    </tbody>
+  return (
+    <div className="background">
+      <div className="table-wrapper">
+        <table className="table-container">
+          <thead className="table-th">
+            <tr>
+              <th>รูป</th>
+              <th>ชื่อ</th>
+              <th>รหัสประจำตัว</th>
+              <th>หน่วยงาน</th>
+              <th>ตำแหน่ง</th>
+              <th>E-mail</th>
+              <th>ติดต่อ</th>
+              <th>ระดับสิทธิ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usersdata.map((user, index) => (
+              <tr key={index}>
+                <td>
+                 
+                </td>
+                <td>{user.ชื่อ}</td>
+                <td>{user.รหัสประจำตัว}</td>
+                <td>{user.หน่วยงาน}</td>
+                <td>{user.ตำแหน่ง}</td>
+                <td>{user.Email}</td>
+                <td>{user.ติดต่อ}</td>
+                <td>{user.role}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+      </div>
     </div>
-
-<br />
-
-  </div>
-)
+  );
 }
 
-export default Permission
+export default Permission;
