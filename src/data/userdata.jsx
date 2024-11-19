@@ -1,4 +1,4 @@
-export const usersdata = [
+export const userdata = [
   {
       "user": "admin",
       "pass": "adminpass",
@@ -29,7 +29,7 @@ export const usersdata = [
 
 // ฟังก์ชันตรวจสอบการเข้าสู่ระบบสำหรับ admin, worker
 export function verifyUser(user, pass) {
-  const userFound = users.find((u) => u.user === user && u.pass === pass);
+  const userFound = userdata.find((u) => u.user === user && u.pass === pass);
   return userFound ? { role: userFound.role, token: userFound.token } : null;
 }
 

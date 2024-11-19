@@ -1,4 +1,4 @@
-import { usersdata } from '../../data/user';  // นำเข้าข้อมูลจาก usersdata.js
+import { userdata } from '../../data/userdata';  // นำเข้าข้อมูลจาก usersdata.js
 import React, { useState } from 'react';
 
 function Permission() {
@@ -20,7 +20,7 @@ function Permission() {
             </tr>
           </thead>
           <tbody>
-            {usersdata.map((user, index) => (
+            {userdata.map((user, index) => (
               <tr key={index}>
                 <td>
                  
