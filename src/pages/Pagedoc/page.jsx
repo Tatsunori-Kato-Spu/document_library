@@ -4,7 +4,10 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import "./page.css";
 import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
-import Dropdown from "../Dropdown/Dropdown";
+// import Dropdown from "../Dropdown/Dropdown";
+import Dropdown from 'react-bootstrap/Dropdown';
+
+
 
 const Pagedoc = () => {
   const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
@@ -20,15 +23,17 @@ const Pagedoc = () => {
   };
 
   //ปุ่มลิส
-  const handleDropdownToggle = (e,index) => {
+  const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
-    setActiveDropdown(activeDropdown === index ? null : index); 
+    setActiveDropdown(activeDropdown === index ? null : index);
   };
-  
+
   return (
     <>
-      <div>
-        <Searchbar onSearch={handleSearch} />
+      <div className="page-container">
+        <div className="searchbar-container">
+          <Searchbar onSearch={handleSearch} />
+        </div>
 
         <div className="table-wrapper">
           <table className="table-contenner">
@@ -47,7 +52,7 @@ const Pagedoc = () => {
                 <th>หน่วยงาน</th>
                 <th>วันที่</th>
                 <th>เวลา</th>
-                {/* <th></th> */}
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -60,24 +65,39 @@ const Pagedoc = () => {
                     <td>{item["เรื่อง"]}</td>
                     <td>{item["หน่วยงาน"]}</td>
                     <td>{item["วันที่"]}</td>
-                    <td>{item["เวลา"]}</td>
-                    <td>
-                    <div style={{ position: "relative" }}>
-                      <button
+                    <td>{item["เวลา"]}&nbsp;
+                    </td>
+                      {/* <button
                         className="list-button"
                         type="button"
                         onClick={(e) => handleDropdownToggle(e, index)}
-                      >
+                        >
                         <i className="bi bi-list"></i>
-                      </button>
-                      {activeDropdown === index && (
-                        <Dropdown
+                        </button>
+                        {activeDropdown === index && (
+                          <Dropdown
                           isOpen={activeDropdown === index}
                           onClose={() => setActiveDropdown(null)}
-                        />
-                      )}
-                    </div>
-                    </td>
+                          />
+                          )} */}
+
+                          <div className="dropdown">
+
+                            <Dropdown>
+                              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                <i className="bi bi-list"></i>
+                              </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
+                          
+                    
+
+
                   </tr>
                 ))
               ) : (
@@ -88,7 +108,7 @@ const Pagedoc = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div >
     </>
   );
 };

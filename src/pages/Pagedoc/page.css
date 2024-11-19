@@ -13,9 +13,9 @@
 
 /* ตาราง */
 .table-wrapper {
-  width: 1800px; /* ความกว้างของกล่องครอบ */
+  width: 100%; /* ความกว้างของกล่องครอบ */
   max-width: 1800px;
-  height: 600px;
+  height: 100%;
   max-height: 600px; /* กำหนดความสูงสูงสุดของตาราง (ไม่ให้เลื่อนเกินไป) */
   overflow-y: auto;  /* เพิ่มฟังก์ชั่นเลื่อนขึ้น-ลง */
   word-wrap: break-word;
@@ -64,10 +64,10 @@ table {
 }
 
 
-/* table tbody tr {
+table tbody tr {
   cursor: pointer;
   transition: background-color 0.3s ease;
-} */
+} 
 
 
 table tbody tr:hover {
@@ -105,7 +105,13 @@ td {
 .table-container .table-wrapper table td {
   background-color: #3c3c3c;
   color: #ffffff !important;
+  
 }
 .list-button{
   color: white;
+}
+
+
+.dropdown {
+  margin-top: 10px;
 }
