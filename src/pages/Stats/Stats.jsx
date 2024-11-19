@@ -1,100 +1,96 @@
 import { Chart as ChartJS } from 'chart.js/auto';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import './Stats.css'
+import { docdata } from '../../data/docdata';
 
 import sourceData from '../../data/sourceData.json'
 
 
 function Stats() {
+  const departmentStats = docdata.reduce((acc, doc) => {
+    const department = doc['roles'];
+    if (!acc[department]) {
+      acc[department] = 0;
+    }
+    acc[department]++;
+    return acc;
+  }, {});
+
+  // Prepare the data for the charts
+  const departments = Object.keys(departmentStats);
+  const departmentValues = Object.values(departmentStats);
+
   return (
     <div className='stats'>
-      
-      
+
+
       <div className='statsContainer'>
 
-        <div className='statsContainer1'>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
+        <div className='stats'>
+          <div className='statsContainer'>
+            {/* Static document count boxes */}
+            <div className='statsContainer1'>
+              {departments.map((department, index) => (
+                <div key={index} className='boxStats'>
+                  <span className='textStatsTopic'>{`จำนวนเอกสารใน ${department}`}</span>
+                  <span className='textStatsNum'>{departmentValues[index]}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
-          </div>
-          <div className='boxStats'>
-            <span className='textStatsTopic'>จำนวนเอกสาร</span>
-            <span className='textStatsNum'>500</span>
+
+
+
+
+
+
+
+
+
+
+          <div>
+
+            {/* Bar Chart */}
+            <div className='BarChartContainer'>
+              <Bar
+                data={{
+                  labels: departments,
+                  datasets: [
+                    {
+                      label: 'จำนวนเอกสารแต่ละแผนก',
+                      data: departmentValues,
+                      backgroundColor: [
+                        'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'brown', 'pink'
+                      ],
+                    },
+                  ],
+                }}
+              />
+            </div>
           </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-        <div>
-
-          <div className='BarChartContainer'>
-            <Bar
+           {/* Doughnut Chart */}
+        <div className='DoughnutChartBg'>
+          <div className='DoughnutChartContainer'>
+            <Doughnut
               data={{
-                labels: sourceData.map((data) => data.label),
+                labels: departments,
                 datasets: [
                   {
-                    label: 'จำนวนเข้าชม',
-                    data: sourceData.map((data) => data.value),
+                    label: 'จำนวนเอกสารแต่ละแผนก',
+                    data: departmentValues,
                     backgroundColor: [
-                      'red', 'green', 'blue'
-                    ]
-                  }]
-              }} />
-
+                      'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'brown', 'pink'
+                    ],
+                  },
+                ],
+              }}
+            />
           </div>
         </div>
-      </div>
-      <div className='DoughnutChartBg'>
 
-        <div className='DoughnutChartContainer'>
-          <Doughnut
-            data={{
-              labels: sourceData.map((data) => data.label),
-              datasets: [
-                {
-                  label: 'จำนวนเข้าชม',
-                  data: sourceData.map((data) => data.value),
-                  backgroundColor: [
-                    'red', 'green', 'blue'
-                  ]
-                }
-              ]
-            }}
-          />
-        </div>
       </div>
-
     </div>
   )
 }
