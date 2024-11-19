@@ -1,15 +1,3 @@
-.search-bar-container {
-  padding-top: 6rem;
-  padding-bottom: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  
-}  
-
-
-
 /* ฟอร์ม */
 .search-form {
   width: 1200px;
@@ -19,12 +7,6 @@
   justify-content: center;
   display: flex;
   flex-direction: row;
-justify-content: center;
-justify-items: center;
-justify-self: center;
-align-items: center;
-align-self: center;
-align-content: center;
 }
 
 /* ช่องกรอกข้อมูล */
