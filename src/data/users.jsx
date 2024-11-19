@@ -4,30 +4,32 @@ const users = [
     pass: "adminpass",
     role: "admin",
     token: "admin123",
-    profilePic: "admin.jpg", // รูปภาพ
-    firstName: "John", // ชื่อ
-    lastName: "Doe", // สกุล
-    employeeId: "EMP001", // หมายเลขพนักงาน
-    department: "IT", // หน่วยงาน
-    position: "System Administrator", // ตำแหน่ง
-    email: "admin@example.com", // Email
-    mobile: "0123456789" // เบอร์มือถือ
+    รูป: "1",
+    ชื่อ: "นายสมชาย ใจดี",
+    รหัสประจำตัว: "123456",
+    หน่วยงาน: "ฝ่ายการตลาด",
+    ตำแหน่ง: "ผู้จัดการ",
+    Email: "somchai@example.com",
+    ติดต่อ: "081-1234567",
+    
   },
   {
     user: "worker",
     pass: "workerpass",
     role: "worker",
     token: "worker123",
-    profilePic: "worker.jpg", // รูปภาพ
-    firstName: "Jane", // ชื่อ
-    lastName: "Smith", // สกุล
-    employeeId: "EMP002", // หมายเลขพนักงาน
-    department: "Maintenance", // หน่วยงาน
-    position: "Technician", // ตำแหน่ง
-    email: "worker@example.com", // Email
-    mobile: "0987654321" // เบอร์มือถือ
+    รูป: "2",
+    ชื่อ: "นางสาวสวย ใจงาม",
+    รหัสประจำตัว: "789101",
+    หน่วยงาน: "ฝ่ายการเงิน",
+    ตำแหน่ง: "เจ้าหน้าที่การเงิน",
+    Email: "suay@example.com",
+    ติดต่อ: "081-7654321",
+    
   }
 ];
+
+
 
 // ฟังก์ชันตรวจสอบการเข้าสู่ระบบสำหรับ admin, worker
 export function verifyUser(user, pass) {
