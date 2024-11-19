@@ -1,3 +1,16 @@
+
+
+/* แทบค้นหา */
+.searchbar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  position: absolute;
+  top: 12%; /* ตั้งให้กล่องอยู่กลางแนวตั้ง */
+  left: 20%; /* ตั้งให้กล่องอยู่กลางแนวนอน */
+}
+
 /* ตาราง */
 .table-wrapper {
   width: 1800px; /* ความกว้างของกล่องครอบ */
@@ -51,10 +64,10 @@ table {
 }
 
 
-table tbody tr {
+/* table tbody tr {
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+} */
 
 
 table tbody tr:hover {

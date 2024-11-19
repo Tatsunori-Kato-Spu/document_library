@@ -79,12 +79,12 @@ function SearchBar({ onSearch }) {
           onSearch(filtered);
         }}
       />
-      <Button className="upload-button">
+      {/* <Button className="upload-button">
         <span className="upload-icon">
           <i className="bi bi-plus"></i>
         </span>
         อัปโหลด
-      </Button>
+      </Button> */}
     </div>
   );
 }

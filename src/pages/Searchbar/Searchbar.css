@@ -1,38 +1,30 @@
-/* .container {
-  display: flex;
-  flex-direction: column;
-}
-
 .search-bar-container {
   padding-top: 6rem;
   padding-bottom: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-} */
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 0.5rem; /* ตั้งความสูงเต็มหน้าจอ */
-}
+  align-self: center;
+  
+}  
 
-.search-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* เพิ่มระยะห่างระหว่างองค์ประกอบ */
-}
 
 
 /* ฟอร์ม */
 .search-form {
-  width: 100%;
+  width: 1200px;
   min-width: none;
   max-width: none;
-  position: relative;
+  position: absolute;
+  justify-content: center;
   display: flex;
-  align-items: center;
+  flex-direction: row;
+justify-content: center;
+justify-items: center;
+justify-self: center;
+align-items: center;
+align-self: center;
+align-content: center;
 }
 
 /* ช่องกรอกข้อมูล */
@@ -48,14 +40,16 @@
   width: 1000px;
   height: 40px;
   font-size: 1rem;
-    padding-left: 2.5rem;
-    padding-right: 1rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    /* border: 1px solid #d1d5db; */
-    text-overflow: ellipsis;
-    
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  /* border: 1px solid #d1d5db; */
+  text-overflow: ellipsis;
+
   
+
+
 }
 
 /* ปุ่มค้นหาภายในช่อง */
@@ -65,12 +59,13 @@
   position: absolute;
 
   top: 50%;
-  right: 70px;
+  right: 80px;
   transform: translateY(-50%);
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
+  
 }
 
 /* ไอคอนค้นหา */
@@ -85,35 +80,44 @@
   border: none;
   position: absolute;
   top: 50%;
-  right: 20px; 
+  right: 45px;
   transform: translateY(-50%);
   cursor: pointer;
   display: flex;
   align-items: center;
+  
 }
 
 /* ไอคอนตัวเลื่อน */
 .slider-icon {
-  color: #ff6c00; 
+  color: #ff6c00;
   font-size: 1.2rem;
 }
 
+
+
+
+
+
+
 /* ปุ่มอัปโหลด */
 .upload-button {
+  display: flex;
+
+
   background-color: #FF8539;
   border: none;
   border-radius: 10px;
 
   position: absolute;
-  right: 20px; 
+
   cursor: pointer;
-  display: flex;
+
   align-items: center;
 }
 
-.list-button{
+.list-button {
   background-color: transparent;
   border: none;
 
 }
-
