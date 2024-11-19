@@ -63,6 +63,21 @@ table {
   table-layout: auto;
 }
 
+.icon-button {
+  background: none; /* ไม่มีพื้นหลัง */
+  border: none; /* ไม่มีขอบ */
+  color: black; 
+  font-size: 18px; /* ขนาดไอคอน */
+  cursor: pointer; /* เปลี่ยนเมาส์เป็นรูปมือ */
+}
+
+.icon-button:hover {
+  color: #555; /* สีอ่อนลงเมื่อ hover */
+}
+
+
+
+
 
 table tbody tr {
   cursor: pointer;
@@ -95,6 +110,7 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
 }
 
 .table-container .table-wrapper table th {
@@ -115,3 +131,4 @@ td {
 .dropdown {
   margin-top: 10px;
 }
+
