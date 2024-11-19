@@ -1,32 +1,33 @@
-.stats{
+.stats {
   width: 100%;
   /* background-color: blue; */
   display: flex;
   flex-direction: row;
+  margin-left: 100px;
 }
 
 .statsContainer {
-  margin-left: 160px;
   width: 1125px;
   /* background-color: red; */
-  /* border: black 1px solid; */
+  border: black 1px solid;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
-   justify-content: center;
-
+  justify-content: center;
+  
 
 }
 
 
 .statsContainer1 {
-  margin-left: 20px;
   align-items: center;
-  width: 1125px;
+  width: 100%;
   gap: 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
+  justify-content: center;
   /* background-color: green; */
   /* border: #E14E15 1px solid; */
   flex-wrap: wrap;
@@ -43,7 +44,7 @@
   /* flex-direction: row; */
   background-color: #373A40;
   border-radius: 20px;
-  
+
 }
 
 .DoughnutChartContainer {
@@ -56,7 +57,7 @@
   border-radius: 20px;
 }
 
-.DoughnutChartBg{
+.DoughnutChartBg {
   margin-left: 65px;
   width: 100%;
   align-items: center;

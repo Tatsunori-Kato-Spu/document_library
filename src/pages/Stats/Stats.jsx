@@ -3,7 +3,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import './Stats.css'
 import { docdata } from '../../data/docdata';
 
-import sourceData from '../../data/sourceData.json'
+
 
 
 function Stats() {
@@ -26,51 +26,43 @@ function Stats() {
 
       <div className='statsContainer'>
 
-        <div className='stats'>
+        <div>
           <div className='statsContainer'>
             {/* Static document count boxes */}
             <div className='statsContainer1'>
               {departments.map((department, index) => (
                 <div key={index} className='boxStats'>
-                  <span className='textStatsTopic'>{`จำนวนเอกสารใน ${department}`}</span>
-                  <span className='textStatsNum'>{departmentValues[index]}</span>
+                  <div className='textStatsTopic'>{`จำนวนเอกสารใน ${department}`}</div>
+                  <div className='textStatsNum'>{departmentValues[index]}</div>
                 </div>
               ))}
             </div>
           </div>
-
-
-
-
-
-
-
-
-
-
-          <div>
-
-            {/* Bar Chart */}
-            <div className='BarChartContainer'>
-              <Bar
-                data={{
-                  labels: departments,
-                  datasets: [
-                    {
-                      label: 'จำนวนเอกสารแต่ละแผนก',
-                      data: departmentValues,
-                      backgroundColor: [
-                        'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'brown', 'pink'
-                      ],
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </div>
         </div>
 
-           {/* Doughnut Chart */}
+        <div>
+          {/* Bar Chart */}
+          <div className='BarChartContainer'>
+            <Bar
+              data={{
+                labels: departments,
+                datasets: [
+                  {
+                    label: 'จำนวนเอกสารแต่ละแผนก',
+                    data: departmentValues,
+                    backgroundColor: [
+                      'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'brown', 'pink'
+                    ],
+                  },
+                ],
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div >
+        {/* Doughnut Chart */}
         <div className='DoughnutChartBg'>
           <div className='DoughnutChartContainer'>
             <Doughnut
@@ -89,7 +81,6 @@ function Stats() {
             />
           </div>
         </div>
-
       </div>
     </div>
   )
