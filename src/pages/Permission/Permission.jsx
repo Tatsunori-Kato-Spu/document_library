@@ -1,5 +1,6 @@
 import { userdata } from '../../data/userdata';  // นำเข้าข้อมูลจาก usersdata.js
 import React, { useState } from 'react';
+import Dropdown from "react-bootstrap/Dropdown";
 
 function Permission() {
 
@@ -31,7 +32,18 @@ function Permission() {
                 <td>{user.ตำแหน่ง}</td>
                 <td>{user.Email}</td>
                 <td>{user.ติดต่อ}</td>
-                <td>{user.role}</td>
+                <Dropdown>
+                          <Dropdown.Toggle variant="success" id="dropdown-basic">
+                          {user.role}
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Admin</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">worker</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                  
+                  
               </tr>
             ))}
           </tbody>
