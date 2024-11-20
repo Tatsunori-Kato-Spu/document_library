@@ -17,7 +17,7 @@ function Login({ onLoginSuccess }) {
     if (userInfo === null) {
       Swal.fire({
         title: "Error!",
-        text: "User not found or incorrect credentials!",
+        text: "รหัสผ่านไม่ถูกต้อง!",
         icon: "error",
         confirmButtonText: "Try Again",
       });
@@ -25,7 +25,7 @@ function Login({ onLoginSuccess }) {
     } else {
       Swal.fire({
         title: "Welcome!",
-        text: `Welcome, ${userInfo.role}!`,
+        text: `ยินดีต้อนรับ, ${userInfo.role}!`,
         icon: "success",
         confirmButtonText: "Proceed",
       }).then(() => {

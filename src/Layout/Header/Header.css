@@ -10,6 +10,9 @@
   background-position: center;
   padding: 10px 0;
 } 
+/* Rectangle 53 */
+
+
 
 /* สไตล์สำหรับ header ที่ติดกับด้านบน */
 .header {
@@ -21,6 +24,7 @@
   color: white;
   display: flex;
   align-items: center;
+  border-bottom: 4px solid #E14E15;
   justify-content: space-between;
   padding: 10px 30px; /* เพิ่มระยะห่าง */
   z-index: 1000; /* ทำให้ header อยู่ข้างบนสุด */
