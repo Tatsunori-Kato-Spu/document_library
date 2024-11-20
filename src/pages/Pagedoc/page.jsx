@@ -108,7 +108,7 @@ const Pagedoc = ({ userRole }) => {
                     <td>{item["หน่วยงาน"]}</td>
                     <td>{item["วันที่"]}</td>
                     <td>{item["เวลา"]}</td>
-                    <td>
+                    
                       <div className="dropdown">
                         <Dropdown>
                           <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -121,7 +121,7 @@ const Pagedoc = ({ userRole }) => {
                           </Dropdown.Menu>
                         </Dropdown>
                       </div>
-                    </td>
+                    
                   </tr>
                 ))
               ) : (
