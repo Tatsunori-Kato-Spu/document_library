@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
-import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons"; // นำเข้า faRegStar จากชุด regular
+import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons";
 import "./page.css";
 import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
 import Dropdown from "react-bootstrap/Dropdown";
+import ButtonUpload from "../addflie/buttonupload"; // เส้นทางถูกต้อง
 
-const Pagedoc = () => {
-  const [filteredData, setFilteredData] = useState(docdata.map(item => ({ ...item, isFavorite: false }))); // เพิ่ม isFavorite เริ่มต้นเป็น false
+
+
+
+
+const Pagedoc = ({ userRole }) => {
+  const [filteredData, setFilteredData] = useState(docdata.map(item => ({ ...item, isFavorite: false })));
   const [sortOrder, setSortOrder] = useState("desc");
   const [activeDropdown, setActiveDropdown] = useState(null);
 
@@ -47,8 +52,8 @@ const Pagedoc = () => {
 
   const handleStarClick = (index) => {
     const newData = [...filteredData];
-    newData[index].isFavorite = !newData[index].isFavorite; // สลับสถานะของดาว
-    setFilteredData(newData); // อัพเดตข้อมูลที่กรองแล้ว
+    newData[index].isFavorite = !newData[index].isFavorite;
+    setFilteredData(newData);
   };
 
   return (
@@ -134,6 +139,9 @@ const Pagedoc = () => {
             </tbody>
           </table>
         </div>
+
+        {/* แสดงปุ่มอัพโหลดเฉพาะเมื่อ userRole เป็น admin */}
+        {userRole === "admin" && <ButtonUpload />}
       </div>
     </>
   );

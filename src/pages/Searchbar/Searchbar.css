@@ -75,31 +75,3 @@
   color: #ff6c00;
   font-size: 1.2rem;
 }
-
-
-
-
-
-
-
-/* ปุ่มอัปโหลด */
-.upload-button {
-  display: flex;
-
-
-  background-color: #FF8539;
-  border: none;
-  border-radius: 10px;
-
-  position: absolute;
-
-  cursor: pointer;
-
-  align-items: center;
-}
-
-.list-button {
-  background-color: transparent;
-  border: none;
-
-}

@@ -1,0 +1,28 @@
+/* ปุ่มอัปโหลด */
+.upload-button {
+    display: flex;
+    background-color: #FF8539;
+    border: none;
+    border-radius: 10px;
+  
+    position: fixed; 
+    top: 145px; /* ระยะห่างจากขอบบน */
+    right: 140px; /* ระยะห่างจากขอบขวา */
+    cursor: pointer;
+    align-items: center;
+    padding: 10px 20px; 
+    z-index: 1000; 
+    transition: background-color 0.3s ease; 
+  }
+  
+  /* เปลี่ยนสีเมื่อเมาส์เลื่อนผ่าน */
+  .upload-button:hover {
+    background-color: #3ead43;
+  }
+  
+  /* ปรับแต่งปุ่ม list-button */
+  .list-button {
+    background-color: transparent;
+    border: none;
+  }
+  

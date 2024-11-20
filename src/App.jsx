@@ -37,7 +37,7 @@ function App() {
     },
     {
       path: "pagedoc",
-      element: <Pagedoc />,
+      element: <Pagedoc userRole={userRole} />, // ส่ง userRole ไปที่ Pagedoc
     },
     {
       path: "permission",
