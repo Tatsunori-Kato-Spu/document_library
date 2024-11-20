@@ -18,14 +18,14 @@ function Permission() {
         <table className="table-container">
           <thead className="table-th">
             <tr >
-              <th className='topic-textBox-pic' >รูป</th>
-              <th>ชื่อ</th>
-              <th>รหัสประจำตัว</th>
-              <th>หน่วยงาน</th>
-              <th>ตำแหน่ง</th>
-              <th>E-mail</th>
-              <th>ติดต่อ</th>
-              <th>ระดับสิทธิ</th>
+              <th className='topic-textBox-1' >รูป</th>
+              <th className='topic-textBox-2'>ชื่อ</th>
+              <th className='topic-textBox-3'>รหัสประจำตัว</th>
+              <th className='topic-textBox-4'>หน่วยงาน</th>
+              <th className='topic-textBox-5'>ตำแหน่ง</th>
+              <th className='topic-textBox-6'>E-mail</th>
+              <th className='topic-textBox-7'>ติดต่อ</th>
+              <th className='topic-textBox-8'>ระดับสิทธิ</th>
             </tr>
           </thead>
           <tbody>
