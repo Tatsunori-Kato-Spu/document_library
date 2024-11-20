@@ -14,17 +14,17 @@ function Header() {
         <nav>
           <ul className="header-nav">
             <li className="nav-item">
-              <a href="#Notifications">
+              <a href="/Notifications">
                 <FontAwesomeIcon icon={faBell} size="lg" style={{ color: 'orange' }} />
               </a>
             </li>
             <li className="nav-item">
-              <a href="#profile">
+              <a href="/profile">
                 <FontAwesomeIcon icon={faUser} size="lg" style={{ color: 'orange' }} />
               </a>
             </li>
             <li className="nav-item">
-              <a href="#login-logout">
+              <a href="/login-logout">
                 <FontAwesomeIcon icon={faRightToBracket} size="lg" style={{ color: 'orange' }} />
               </a>
             </li>
