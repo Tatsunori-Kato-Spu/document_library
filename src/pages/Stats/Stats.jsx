@@ -31,14 +31,12 @@ function Stats() {
     total: userdata.length, // จำนวนผู้ใช้งานทั้งหมด
     admin: userdata.filter(user => user.role?.includes('admin')).length, // จำนวนผู้ใช้ใน role admin
     worker: userdata.filter(user => user.role?.includes('worker')).length, // จำนวนผู้ใช้ใน role worker
-    guest: userdata.filter(user => user.role?.includes('guest')).length, // จำนวนผู้ใช้ใน role guest
   };
 
   const displayUserData = [
     { name: 'จำนวนผู้ใช้ทั้งหมด', value: userCounts.total },
     { name: 'จำนวนผู้ใช้ใน admin', value: userCounts.admin },
-    { name: 'จำนวนผู้ใช้ใน worker', value: userCounts.worker },
-    { name: 'จำนวนผู้ใช้ใน guest', value: userCounts.guest },
+    { name: 'จำนวนผู้ใช้ใน worker', value: userCounts.worker }    
   ];
 
   const departmentStats = docdata.reduce((acc, doc) => {
