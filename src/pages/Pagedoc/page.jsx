@@ -1,33 +1,30 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as faRegStar } from "@fortawesome/free-regular-svg-icons"; // นำเข้า faRegStar จากชุด regular
 import "./page.css";
 import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
 import Dropdown from "react-bootstrap/Dropdown";
 
 const Pagedoc = () => {
-  const [filteredData, setFilteredData] = useState(docdata); // กำหนดค่าเริ่มต้นจาก docdata
-  const [sortOrder, setSortOrder] = useState("desc"); // เพิ่ม state สำหรับการเรียงลำดับ
+  const [filteredData, setFilteredData] = useState(docdata.map(item => ({ ...item, isFavorite: false }))); // เพิ่ม isFavorite เริ่มต้นเป็น false
+  const [sortOrder, setSortOrder] = useState("desc");
   const [activeDropdown, setActiveDropdown] = useState(null);
 
-  // ฟังก์ชันจัดการการค้นหา
   const handleSearch = (filtered) => {
     setFilteredData(filtered);
   };
 
-  // ฟังก์ชันคลิกที่แถวในตาราง
   const handleRowClick = (rowData) => {
     alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
   };
 
-  // ปุ่มลิส
   const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
     setActiveDropdown(activeDropdown === index ? null : index);
   };
 
-  // ฟังก์ชันจัดการการเรียงลำดับวันที่
   const handleSortByDate = () => {
     const sortedData = [...filteredData].sort((a, b) => {
       const dateA = new Date(a["วันที่"].split("/").reverse().join("-"));
@@ -38,7 +35,6 @@ const Pagedoc = () => {
     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
   };
 
-  // ฟังก์ชันจัดการการเรียงลำดับลำดับ
   const handleSortByOrder = () => {
     const sortedData = [...filteredData].sort((a, b) => {
       const orderA = parseInt(a["หมายเลข"]);
@@ -47,6 +43,12 @@ const Pagedoc = () => {
     });
     setFilteredData(sortedData);
     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
+  };
+
+  const handleStarClick = (index) => {
+    const newData = [...filteredData];
+    newData[index].isFavorite = !newData[index].isFavorite; // สลับสถานะของดาว
+    setFilteredData(newData); // อัพเดตข้อมูลที่กรองแล้ว
   };
 
   return (
@@ -60,6 +62,7 @@ const Pagedoc = () => {
           <table className="table-contenner">
             <thead className="table-th">
               <tr>
+                <th></th>
                 <th>
                   ลำดับ
                   <button className="icon-button" onClick={handleSortByOrder}>
@@ -90,6 +93,16 @@ const Pagedoc = () => {
               {filteredData.length > 0 ? (
                 filteredData.map((item, index) => (
                   <tr key={index} onClick={() => handleRowClick(item)}>
+                    <td>
+                      <FontAwesomeIcon
+                        icon={item.isFavorite ? faStar : faRegStar}
+                        style={{
+                          cursor: "pointer",
+                          color: item.isFavorite ? "#FF8539" : "#ccc",
+                        }}
+                        onClick={() => handleStarClick(index)}
+                      />
+                    </td>
                     <td>{index + 1}</td>
                     <td>{item["หมายเลข"]}</td>
                     <td>{item["ชื่อเอกสาร"]}</td>
