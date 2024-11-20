@@ -1,6 +1,7 @@
 import { userdata } from '../../data/userdata';  // นำเข้าข้อมูลจาก usersdata.js
 import React, { useState } from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
+import "./permission.css";
 
 function Permission() {
   const [users, setUsers] = useState(userdata); // สร้าง state เพื่อจัดการข้อมูลผู้ใช้
@@ -16,8 +17,8 @@ function Permission() {
       <div className="table-wrapper">
         <table className="table-container">
           <thead className="table-th">
-            <tr>
-              <th>รูป</th>
+            <tr >
+              <th className='topic-textBox-pic' >รูป</th>
               <th>ชื่อ</th>
               <th>รหัสประจำตัว</th>
               <th>หน่วยงาน</th>
@@ -31,7 +32,7 @@ function Permission() {
             {userdata.map((user, index) => (
               <tr key={index}>
                 <td>
-
+                  <img src="../../importProfile/profile1.png" alt="" srcset="" className="profilePic" />
                 </td>
                 <td>{user.ชื่อ}</td>
                 <td>{user.รหัสประจำตัว}</td>
