@@ -33,6 +33,20 @@
   flex-wrap: wrap;
 }
 
+.statsContainer2 {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  /* background-color: green; */
+  /* border: #E14E15 1px solid; */
+  flex-wrap: wrap;
+}
+
 
 
 .BarChartContainer {
@@ -49,14 +63,23 @@
 
 .DoughnutChartContainer {
   width: 496px;
-  height: 644px;
   display: flex;
+  align-items: center;
   justify-self: center;
-  /* flex-direction: row; */
+  flex-direction: column;
   background-color: #373A40;
   border-radius: 20px;
+  height: 100%;
+  min-height: 550px;
 }
 
+.DoughnutChartText {
+ color: white;
+ text-align: center;
+ margin-top: 20px;
+ font-size: 40px;
+ padding-bottom: 40px;
+}
 .DoughnutChartBg {
   margin-left: 65px;
   width: 100%;
@@ -84,12 +107,13 @@
   align-items: center;
   text-align: center;
   margin-top: 10px;
-  font-size: 24px;
+  font-size: 20px;
   /* border: #E14E15 0.125rem solid; */
 }
 
 .textStatsNum {
-  margin-top: 5px;
+  /* margin-top: 5px; */
+  margin-bottom: 10px;
   /* border: #E14E15 0.125rem solid; */
   font-size: 40px;
   justify-content: center;
