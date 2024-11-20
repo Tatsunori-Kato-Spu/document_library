@@ -1,8 +1,8 @@
-import { Chart as ChartJS,ArcElement, Tooltip, Legend } from 'chart.js/auto';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js/auto';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import './Stats.css'
 import { docdata } from '../../data/docdata';
-
+import { userdata } from '../../data/userdata';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -27,6 +27,19 @@ function Stats() {
     { name: 'จำนวนเอกสารใน guest', value: roleCounts.guest },
   ];
 
+  const userCounts = {
+    total: userdata.length, // จำนวนผู้ใช้งานทั้งหมด
+    admin: userdata.filter(user => user.role?.includes('admin')).length, // จำนวนผู้ใช้ใน role admin
+    worker: userdata.filter(user => user.role?.includes('worker')).length, // จำนวนผู้ใช้ใน role worker
+    guest: userdata.filter(user => user.role?.includes('guest')).length, // จำนวนผู้ใช้ใน role guest
+  };
+
+  const displayUserData = [
+    { name: 'จำนวนผู้ใช้ทั้งหมด', value: userCounts.total },
+    { name: 'จำนวนผู้ใช้ใน admin', value: userCounts.admin },
+    { name: 'จำนวนผู้ใช้ใน worker', value: userCounts.worker },
+    { name: 'จำนวนผู้ใช้ใน guest', value: userCounts.guest },
+  ];
 
   const departmentStats = docdata.reduce((acc, doc) => {
     const department = doc['roles'];
@@ -48,7 +61,6 @@ function Stats() {
       <div className='statsContainer'>
 
         <div>
-          <div className='statsContainer'>
 
 
             {/* Static document count boxes */}
@@ -59,6 +71,14 @@ function Stats() {
                   <div className='textStatsNum'>{data.value}</div>
                 </div>
               ))}
+                    {/* Static user count boxes */}
+                {displayUserData.map((data, index) => (
+                  <div key={index} className="boxStats">
+                    <div className="textStatsTopic">{data.name}</div>
+                    <div className="textStatsNum">{data.value}</div>
+                  </div>
+                ))}
+
               {/* {departments.map((department, index) => (
                 <div key={index} className='boxStats'>
                   <div className='textStatsTopic'>{`จำนวนเอกสารใน ${department}`}</div>
@@ -66,7 +86,6 @@ function Stats() {
                 </div>
               ))} */}
             </div>
-          </div>
         </div>
 
         <div>
@@ -94,22 +113,22 @@ function Stats() {
         {/* Doughnut Chart */}
         <div className='DoughnutChartBg'>
           <div className='DoughnutChartContainer'>
-          <div className='DoughnutChartText'>
-            <h1 >จำนวนเอกสาร</h1>
-          </div>
-          <div>
+            <div className='DoughnutChartText'>
+              <h1 >จำนวนเอกสาร</h1>
+            </div>
+            <div>
 
-            <Doughnut
-              data={{
-                labels: departments,
-                datasets: [
-                  {
-                    label: 'จำนวนเอกสารแต่ละแผนก',
-                    data: departmentValues,
-                    backgroundColor: ['red', 'green', 'blue'],
-                  },
-                ],
-              }} 
+              <Doughnut
+                data={{
+                  labels: departments,
+                  datasets: [
+                    {
+                      label: 'จำนวนเอกสารแต่ละแผนก',
+                      data: departmentValues,
+                      backgroundColor: ['red', 'green', 'blue'],
+                    },
+                  ],
+                }}
                 options={{
                   plugins: {
                     legend: {
@@ -126,7 +145,7 @@ function Stats() {
                   },
                 }}
               />
-              </div>
+            </div>
           </div>
         </div>
       </div>
