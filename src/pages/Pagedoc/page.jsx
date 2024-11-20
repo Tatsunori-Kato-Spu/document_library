@@ -21,9 +21,6 @@ const Pagedoc = ({ userRole }) => {
     setFilteredData(filtered);
   };
 
-  const handleRowClick = (rowData) => {
-    alert(`ข้อมูลที่เลือก: ${JSON.stringify(rowData)}`);
-  };
 
   const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
@@ -76,10 +73,6 @@ const Pagedoc = ({ userRole }) => {
                 </th>
                 <th>หมายเลข</th>
                 <th>
-                  <FontAwesomeIcon
-                    icon={faEnvelope}
-                    style={{ cursor: "pointer", marginRight: "10px" }}
-                  />
                   ชื่อเอกสาร
                 </th>
                 <th>เรื่อง</th>
