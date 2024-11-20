@@ -9,7 +9,7 @@
 .statsContainer {
   width: 1125px;
   /* background-color: red; */
-  border: black 1px solid;
+  /* border: black 1px solid; */
   display: flex;
   flex-direction: column;
   align-items: center;
