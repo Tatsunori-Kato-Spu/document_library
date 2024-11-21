@@ -21,7 +21,9 @@ function Profile() {
                             className='photo'
                             />
                     </div>
-                    <div className='box-1'>ข้อมูลพื้นฐาน</div>
+                    
+                    <button className='button-box-1'>ข้อมูลพื้นฐาน</button>
+                    
                     <div>
 
                     <a href="/history">
