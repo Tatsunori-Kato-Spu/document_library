@@ -30,12 +30,12 @@ function History() {
                             />
                     </div>
                     <button className='button-style' onClick={() => navigate('/profile')}>ข้อมูลพื้นฐาน</button>
-                    <div className='box-1'>ประวัติ</div>
+                    <button className='button-style' >ประวัติ</button>
                     <button className='button-style' onClick={() => navigate('/permission')}>กำหนดสิทธิ</button>
                     <button className='button-style' onClick={() => navigate('/stats')}>สถิติ</button>
                 </div>
                 <div className="profile-content-2">
-                    <div>
+                    <div className="searchbar-box">
                     <Searchbar onSearch={handleSearch} searchType="documents" />
                     </div>
                     <div className="table-wrapper2">
