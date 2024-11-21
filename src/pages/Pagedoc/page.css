@@ -13,24 +13,25 @@
 
 /* ตาราง */
 .table-wrapper {
-  width: 100%; /* ความกว้างของกล่องครอบ */
+  position: absolute;  /* ให้คงตำแหน่งเดิม */
+  top: 50%;  
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;  /* ให้อยู่ข้างล่าง popup */
+  width: 100%;
   max-width: 1800px;
   height: 100%;
-  max-height: 600px; /* กำหนดความสูงสูงสุดของตาราง (ไม่ให้เลื่อนเกินไป) */
-  overflow-y: auto;  /* เพิ่มฟังก์ชั่นเลื่อนขึ้น-ลง */
+  max-height: 600px;
+  overflow-y: auto;
   word-wrap: break-word;
-  display: block;    /* ทำให้ td เป็น block element เพื่อให้ overflow ทำงาน */
+  display: block;
   background-color: #373a40;
   border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* padding: 20px; */
+  box-shadow: 0 4px 8px rgba(36, 24, 24, 0.1);
   margin-top: 50px;
   border: 2px solid #ff6c00;
 
-  position: absolute;
-  top: 50%; /* ตั้งให้กล่องอยู่กลางแนวตั้ง */
-  left: 50%; /* ตั้งให้กล่องอยู่กลางแนวนอน */
-  transform: translate(-50%, -50%); /* เคลื่อนย้ายกล่องกลับให้อยู่กลาง */
+
 }
 
 /* ตกแต่ง track ของ scrollbar */

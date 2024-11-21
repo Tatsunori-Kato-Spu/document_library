@@ -1,30 +1,62 @@
-/* NotificationsA.css */
+/* กำหนดรูปแบบของ container */
 .notification-container {
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
   }
   
-  .notification-list {
-    list-style-type: none;
-    padding: 0;
+  /* ปรับหัวข้อ h2 ให้อยู่ในกล่องและเป็นสีส้ม */
+  .notification-container h2 {
+    position: fixed;  /* ให้อยู่ที่ตำแหน่งที่กำหนด */
+    top: 0;  /* อยู่ที่ด้านบนสุดของหน้าจอ */
+    right: 30px;  /* อยู่ทางขวาของหน้าจอ */
+    width: 300px;  /* กำหนดความกว้างของกล่อง */
+    max-height: 100vh;  
+    overflow-y: auto;
+    color: #f8f8f8;
+    background: #ff8539;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;  /* ให้แสดงอยู่บนสุดของหน้า */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 110px; /* ขยับลงจากขอบบนเพื่อไม่ให้ทับปุ่มหรือหัวข้อ */
   }
   
-  .notification-item {
-    display: flex;
-    align-items: center;
+  /* การตั้งตำแหน่งของ notifications-list ให้อยู่ขวาบนสุด */
+  .notifications-list {
+    position: fixed;  /* ให้อยู่ที่ตำแหน่งที่กำหนด */
+    top: 0;  /* อยู่ที่ด้านบนสุดของหน้าจอ */
+    right: 0;  /* อยู่ทางขวาของหน้าจอ */
+    right: 30px;
+    width: 300px;  /* กำหนดความกว้างของกล่อง */
+    max-height: 60vh;  /* ความสูงของกล่องสูงสุดเป็นความสูงของหน้าจอ */
+    overflow-y: auto;  /* ให้สามารถเลื่อนกล่องแนวตั้งได้ */
+    background-color: #f8f8f8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;  /* ให้แสดงอยู่บนสุดของหน้า */
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 200px; /* ขยับลงจากขอบบนเพื่อไม่ให้ทับปุ่มหรือหัวข้อ */
+  }
+  
+  /* กำหนดสไตล์ของรายการแจ้งเตือน */
+  .custom-notification-item {
+    background-color: #f8f8f8;
+    padding: 15px;
     margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
-  .notification-message {
-    margin-left: 10px;
-    font-size: 16px;
+  /* สไตล์ของหัวข้อในรายการแจ้งเตือน */
+  .custom-notification-item h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #f60;
   }
   
-  .timestamp {
-    font-size: 12px;
-    color: gray;
-    margin-left: auto;
+  /* สไตล์ของข้อความในรายการแจ้งเตือน */
+  .custom-notification-item p {
+    margin: 5px 0;
+    color: #555;
   }
   
