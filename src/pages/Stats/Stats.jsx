@@ -3,6 +3,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import './Stats.css'
 import { docdata } from '../../data/docdata';
 import { userdata } from '../../data/userdata';
+import Header from '../../Layout/Header/Header';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -53,6 +54,9 @@ function Stats() {
   // const departmentValues = Object.values(departmentStats);
 
   return (
+    <div>
+
+      <Header/>
     <div className='stats'>
 
 
@@ -142,12 +146,13 @@ function Stats() {
                     },
                   },
                 }}
-              />
+                />
             </div>
           </div>
         </div>
       </div>
     </div>
+                </div>
   )
 }
 
