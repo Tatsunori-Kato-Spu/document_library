@@ -2,6 +2,7 @@ import { userdata } from '../../data/userdata';  // นำเข้าข้อ�
 import React, { useState } from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
 import "./permission.css";
+import Header from '../../Layout/Header/Header';
 
 function Permission() {
   const [users, setUsers] = useState(userdata); // สร้าง state เพื่อจัดการข้อมูลผู้ใช้
@@ -14,6 +15,7 @@ function Permission() {
   };
   return (
     <div className="background">
+      <Header />
       <div className="table-wrapper">
         <table className="table-container">
           <thead className="table-th">
@@ -41,7 +43,7 @@ function Permission() {
                 <td>{user.Email}</td>
                 <td>{user.ติดต่อ}</td>
                 <Dropdown>
-                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  <Dropdown.Toggle variant="success" id="dropdown-basic" className='dropdown-button'>
                     {user.role}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
