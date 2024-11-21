@@ -20,9 +20,25 @@ function Profile() {
                             />
                     </div>
                     <div className='box-1'>ข้อมูลพื้นฐาน</div>
-                    <div className='box-1'>ประวัติ</div>
-                    <div className='box-1'>กำหนดสิทธิ</div>
-                    <div className='box-1'>สถิติ</div>
+                    <div>
+
+                    <a href="/history">
+                    <button className='button-box-1'>ประวัติ</button>
+                    </a>
+                    </div>
+<div>
+
+                    <a href="/permission">
+                    <button className='button-box-1'>กำหนดสิทธิ</button>
+                    </a>
+</div>
+
+<div>
+
+                    <a href="/stats">
+                    <button className='button-box-1'>สถิติ</button>
+                    </a>
+</div>
                 </div>
                 <div className="profile-content-2">
                     <div className="user-profile">
