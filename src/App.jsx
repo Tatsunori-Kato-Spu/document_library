@@ -12,7 +12,6 @@ import Profile from './pages/profile/profile';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import './App.css';
-import Header from './Layout/Header/Header';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะการล็อกอิน
@@ -59,15 +58,15 @@ function App() {
     ,
     {
       
-     path: "profile", 
-     element: <Profile user={user} />
-   
+      path: "profile", 
+      element: <Profile user={user} />
+      
     }
   ]);
-
+  
   return (
     <div>
-      <Header />
+      
       <RouterProvider router={router} />
       
     </div>

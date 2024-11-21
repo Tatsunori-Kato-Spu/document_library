@@ -7,7 +7,7 @@ import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
 import Dropdown from "react-bootstrap/Dropdown";
 import ButtonUpload from "../addflie/buttonupload"; // เส้นทางถูกต้อง
-
+import Header from '../../Layout/Header/Header';
 
 
 
@@ -56,6 +56,7 @@ const Pagedoc = ({ userRole }) => {
   return (
     <>
       <div className="page-container">
+    <Header/>
         <div className="searchbar-container">
           <Searchbar onSearch={handleSearch} />
         </div>
