@@ -8,7 +8,7 @@ import Pagedoc from './pages/Pagedoc/page';
 import Homepage from './pages/Home/homepage';  // นำเข้า Homepage
 import Profile from './pages/profile/profile';
 import History from './pages/history/history';
-import Updoc from './pages/Updoc/Updoc';
+import AddDoc from './pages/AddDoc/AddDoc';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
@@ -69,14 +69,14 @@ function App() {
       path: "history", 
       element: <History user={user} />
       
-    }
-    ,
+    },
     {
       
-      path: "upload", 
-      element: <Updoc />
+      path: "addDoc", 
+      element: <AddDoc />
       
     }
+
   ]);
   
   return (
