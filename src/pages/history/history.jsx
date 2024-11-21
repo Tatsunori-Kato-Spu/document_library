@@ -4,10 +4,16 @@ import { userdata } from '../../data/userdata'; // Import userdata.js
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { docdata } from "../../data/docdata";
 import Header from '../../Layout/Header/Header';
+import Searchbar from '../Searchbar/Searchbar';
 
 function History() {
     const [users, setUsers] = useState(userdata); // ใช้ state สำหรับจัดการข้อมูลผู้ใช้
+    const [filteredData, setFilteredData] = useState(docdata);
     const navigate = useNavigate(); // Use navigate hook
+
+    const handleSearch = (filtered) => {
+        setFilteredData(filtered);
+      };
 
     return (
         <div>
@@ -29,6 +35,9 @@ function History() {
                     <button className='button-style' onClick={() => navigate('/stats')}>สถิติ</button>
                 </div>
                 <div className="profile-content-2">
+                    <div>
+                    <Searchbar onSearch={handleSearch} searchType="documents" />
+                    </div>
                     <div className="table-wrapper2">
                         <table className="table-contenner">
                             <thead className="table-th">
@@ -48,7 +57,7 @@ function History() {
                             </thead>
                             <tbody>
 
-                                {docdata.map((item, index) => (
+                                {filteredData.map((item, index) => (
                                     <tr key={index}>
                                         <td>{item["หมายเลข"]}</td>
                                         <td>{item["ชื่อเอกสาร"]}</td>

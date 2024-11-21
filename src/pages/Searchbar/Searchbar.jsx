@@ -1,28 +1,54 @@
 import React, { useState } from "react";
+import { userdata } from "../../data/userdata";
 import { docdata } from "../../data/docdata";
 import Form from "react-bootstrap/Form";
 import "../Searchbar/Searchbar.css";
 import Filtersearch from "./Filtersearch/Filtersearch";
 
-function SearchBar({ onSearch }) {
+function SearchBar({ onSearch, searchType }) {
   const [query, setQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(docdata);
+  const [filteredData, setFilteredData] = useState({users: userdata,
+    documents: docdata});
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSearch = (searchQuery) => {
-    if (!searchQuery.trim()) return;
-    const filtered = docdata.filter(
-      (item) =>
-        item.หมายเลข.includes(searchQuery) ||
-        item.ชื่อเอกสาร.includes(searchQuery) ||
-        item.เรื่อง.toLowerCase().includes(searchQuery) ||
-        item.หน่วยงาน.includes(searchQuery) ||
-        item.วันที่.includes(searchQuery) ||
-        item.เวลา.includes(searchQuery)
+    if (!searchQuery.trim()) {
+      // ส่งข้อมูลทั้งหมดกลับตามประเภท
+      if (searchType === "users") {
+        onSearch(userdata); // ส่งข้อมูลผู้ใช้ทั้งหมดกลับ
+      } else if (searchType === "documents") {
+        onSearch(docdata); // ส่งข้อมูลเอกสารทั้งหมดกลับ
+      }
+      return;
+    }
+
+    // กรองข้อมูลผู้ใช้
+    if (searchType === "users") {
+      // ค้นหาผู้ใช้
+      const filteredUsers = userdata.filter(
+        (user) =>
+          user.ชื่อ.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.รหัสประจำตัว.includes(searchQuery) ||
+          user.หน่วยงาน.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      onSearch(filteredUsers); // ส่งผลลัพธ์ผู้ใช้กลับ
+
+    // กรองข้อมูลเอกสาร
+  } else if (searchType === "documents") {
+    // ค้นหาเอกสาร
+    const filteredDocuments = docdata.filter(
+      (doc) =>
+        doc.หมายเลข.includes(searchQuery) ||
+        doc.ชื่อเอกสาร.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.เรื่อง.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.หน่วยงาน.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.วันที่.includes(searchQuery) ||
+        doc.เวลา.includes(searchQuery)
     );
-    setFilteredData(filtered);
-    onSearch(filtered);
-  };
+    onSearch(filteredDocuments); // ส่งผลลัพธ์เอกสารกลับ
+  }
+};
 
   const handleInputChange = (e) => {
     const newQuery = e.target.value;

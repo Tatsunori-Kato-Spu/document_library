@@ -1,18 +1,15 @@
 /* ฟอร์ม */
 .search-form {
   width: 1200px;
-  min-width: none;
-  max-width: none;
-  /* position: absolute; */
+  max-width: 100%;
   justify-content: center;
-  /* margin-left: 100px; */
   display: flex;
   flex-direction: row;
+  align-items: center; /* เพื่อจัดแนวแนวตั้งให้ตรงกลาง */
 }
 
 /* ช่องกรอกข้อมูล */
 .search-input {
-  /* padding: 0 90px 0 20px;  */
   flex-grow: 1;
   margin-right: 10px;
   border-radius: 20px;
@@ -24,31 +21,24 @@
   height: 40px;
   font-size: 1rem;
   padding-left: 2.5rem;
-  padding-right: 1rem;
+  padding-right: 2.5rem; /* เพิ่มพื้นที่เพื่อให้ปุ่มค้นหาอยู่ในตำแหน่งที่ถูกต้อง */
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  /* border: 1px solid #d1d5db; */
   text-overflow: ellipsis;
-
-  
-
-
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 /* ปุ่มค้นหาภายในช่อง */
 .search-button {
   background-color: transparent;
   border: none;
-  position: absolute;
-
-  top: 50%;
-  right: 100px;
-  transform: translateY(-50%);
+  position: relative;
   cursor: pointer;
-  padding: 0;
   display: flex;
   align-items: center;
-  
+  margin-left: -8rem; /* ทำให้ปุ่มค้นหาอยู่ภายใน search bar */
 }
 
 /* ไอคอนค้นหา */
@@ -61,14 +51,11 @@
 .Slider-button {
   background-color: transparent;
   border: none;
-  position: absolute;
-  top: 50%;
-  right: 65px;
-  transform: translateY(-50%);
+  position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;
-  
+  margin-left: 10px; /* ระยะห่างระหว่างปุ่มค้นหากับปุ่มเลื่อน */
 }
 
 /* ไอคอนตัวเลื่อน */
