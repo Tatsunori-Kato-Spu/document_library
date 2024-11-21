@@ -134,7 +134,7 @@ const Filtersearch = ({ open, onClose, onApply }) => {
             )}
           </Select>
         </FormControl>
-        <FormControl fullWidth margin="normal">
+        {/* <FormControl fullWidth margin="normal">
           <InputLabel>ประเภทเอกสาร</InputLabel>
           <Select
             name="docType"
@@ -145,7 +145,7 @@ const Filtersearch = ({ open, onClose, onApply }) => {
             <MenuItem value="type1">ประเภท 1</MenuItem>
             <MenuItem value="type2">ประเภท 2</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
         <FormControl fullWidth margin="normal">
           <InputLabel>ช่วงเวลา</InputLabel>
           <Select

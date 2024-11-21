@@ -5,7 +5,7 @@ import Header from "../Header/Header";
 function Navber() {
     return ( 
         <div>
-            <Header/>
+            {/* <Header/> */}
             <SearchBar/>
         </div>
      );
