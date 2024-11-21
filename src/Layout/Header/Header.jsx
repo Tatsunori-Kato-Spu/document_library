@@ -14,12 +14,15 @@ function Header() {
 
     return ( 
         <div className="header-container">
+
             <header className="header">
+            <a href="/pagedoc">
                 <img
                     src='/public/Logo.png' // โลโก้ที่อยู่ใน public
                     alt="Logo"
                     className="header-logo"
-                />
+                    />
+                    </a>
                 <nav>
                     <ul className="header-nav">
                         <li className="nav-item">
@@ -29,14 +32,18 @@ function Header() {
                             </button>
                         </li>
                         <li className="nav-item">
+                          <a href="/profile">
                             <button className="header-icon-button">
                                 <FontAwesomeIcon icon={faUser} size="lg" style={{ color: 'orange' }} />
                             </button>
+                          </a>
                         </li>
                         <li className="nav-item">
+                          <a href="/login">
                             <button className="header-icon-button">
                                 <FontAwesomeIcon icon={faRightToBracket} size="lg" style={{ color: 'orange' }} />
                             </button>
+                          </a>
                         </li>
                     </ul>
                 </nav>
