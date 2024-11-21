@@ -3,8 +3,9 @@
   width: 1200px;
   min-width: none;
   max-width: none;
-  position: absolute;
+  /* position: absolute; */
   justify-content: center;
+  /* margin-left: 100px; */
   display: flex;
   flex-direction: row;
 }
@@ -41,7 +42,7 @@
   position: absolute;
 
   top: 50%;
-  right: 80px;
+  right: 100px;
   transform: translateY(-50%);
   cursor: pointer;
   padding: 0;
@@ -62,7 +63,7 @@
   border: none;
   position: absolute;
   top: 50%;
-  right: 45px;
+  right: 65px;
   transform: translateY(-50%);
   cursor: pointer;
   display: flex;
