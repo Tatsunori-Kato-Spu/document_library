@@ -19,9 +19,10 @@ const Pagedoc = ({ userRole }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
-  const handleSearch = (filtered) => {
-    setFilteredData(filtered);
+  const handleSearch = (filteredDocuments) => {
+    setFilteredData(filteredDocuments); // อัปเดตข้อมูลเอกสารที่กรองแล้ว
   };
+  
 
   const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
@@ -80,7 +81,7 @@ const Pagedoc = ({ userRole }) => {
       <div className="page-container">
         <Header />
         <div className="searchbar-container">
-          <Searchbar onSearch={handleSearch} />
+        <Searchbar onSearch={handleSearch} searchType="documents" />
         </div>
 
         <div className="table-wrapper">
@@ -171,7 +172,7 @@ const Pagedoc = ({ userRole }) => {
                             onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                           >
                             {" "}
-                            &nbsp;Downlode
+                            &nbsp;Download
                           </Dropdown.Item>
                           </>
                           )}
@@ -183,7 +184,7 @@ const Pagedoc = ({ userRole }) => {
                             onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                           >
                             {" "}
-                            &nbsp;Downlode
+                            &nbsp;Download
                           </Dropdown.Item>
                           </>
                           )}

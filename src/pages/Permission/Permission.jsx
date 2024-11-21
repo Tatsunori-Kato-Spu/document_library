@@ -3,19 +3,32 @@ import React, { useState } from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
 import "./permission.css";
 import Header from '../../Layout/Header/Header';
+import Searchbar from '../Searchbar/Searchbar';
 
 function Permission() {
   const [users, setUsers] = useState(userdata); // สร้าง state เพื่อจัดการข้อมูลผู้ใช้
-
+  // const [query, setQuery] = useState(''); // สร้าง state สำหรับคำค้นหา
+  const [filteredData, setFilteredData] = useState(userdata);
+  // const [filteredUsers, setFilteredUsers] = useState(userdata); // เก็บข้อมูลผู้ใช้ที่กรองแล้ว
+// console.log(userdata);
   // ฟังก์ชันสำหรับเปลี่ยน role
   const handleRoleChange = (index, newRole) => {
     const updatedUsers = [...users];
     updatedUsers[index].role = newRole;
     setUsers(updatedUsers);
   };
+
+  // ฟังก์ชันสำหรับคำค้นหา
+  const handleSearch = (filteredUsers) => {
+    setFilteredData(filteredUsers); // อัปเดตข้อมูลผู้ใช้ที่กรองแล้ว
+  };
+  
   return (
     <div className="background">
       <Header />
+      <div className="searchbar">
+      <Searchbar onSearch={handleSearch} searchType="users" />
+      </div>
       <div className="table-wrapper">
         <table className="table-container">
           <thead className="table-th">
@@ -31,7 +44,7 @@ function Permission() {
             </tr>
           </thead>
           <tbody>
-            {userdata.map((user, index) => (
+          {Array.isArray(filteredData) && filteredData.map((user, index) => (
               <tr key={index}>
                 <td>
                   <img src="../../importProfile/profile1.png" alt="" srcset="" className="profilePic" />
