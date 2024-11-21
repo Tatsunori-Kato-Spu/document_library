@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import { verifyUser, verifyGuestLogin } from "../../data/userdata"; // ดึงฟังก์ชันมาใช้
 import "./Login.css";
 import Swal from "sweetalert2";
+import Headerprofile from "../../Layout/Header/Headerprofile";
 
 function Login({ onLoginSuccess }) {
   const userRef = useRef();
@@ -47,47 +48,50 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div className="Login-container">
-      {/* โลโก้ */}
-      <div className="logo-container">
-        <img
-          src="/logo-login.png" // โลโก้ใน public directory
-          alt="Login Logo"
-          className="login-logo"
-        />
-      </div>
-
-      {/* ฟอร์ม */}
-      <form>
-        <Form.Control
-          type="text"
-          id="username"
-          placeholder="Username"
-          ref={userRef}
-          className="input-field"
-        />
-        <Form.Control
-          type="password"
-          id="password"
-          placeholder="Password"
-          ref={passRef}
-          className="input-field"
-        />
-
-        <div className="button-container">
-          <button className="btn-login" onClick={handleLogin} type="button">
-            Login
-          </button>
-          <button
-            className="guest-button"
-            onClick={handleGuestLogin}
-            type="button"
-          >
-            Sign In as Guest
-          </button>
+    <>
+      <Headerprofile />
+      <div className="Login-container">
+        {/* โลโก้ */}
+        <div className="logo-container">
+          <img
+            src="/logo-login.png" // โลโก้ใน public directory
+            alt="Login Logo"
+            className="login-logo"
+          />
         </div>
-      </form>
-    </div>
+
+        {/* ฟอร์ม */}
+        <form>
+          <Form.Control
+            type="text"
+            id="username"
+            placeholder="Username"
+            ref={userRef}
+            className="input-field"
+          />
+          <Form.Control
+            type="password"
+            id="password"
+            placeholder="Password"
+            ref={passRef}
+            className="input-field"
+          />
+
+          <div className="button-container">
+            <button className="btn-login" onClick={handleLogin} type="button">
+              Login
+            </button>
+            <button
+              className="guest-button"
+              onClick={handleGuestLogin}
+              type="button"
+            >
+              Sign In as Guest
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
 

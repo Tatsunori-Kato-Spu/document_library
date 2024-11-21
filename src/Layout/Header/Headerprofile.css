@@ -1,0 +1,36 @@
+.header-profile-container {
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 70px;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    padding: 10px 0;
+}
+
+.header-profile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #373A40;
+    color: white;
+    display: flex;
+    align-items: flex-start; /* เพิ่ม align-items เพื่อให้อยู่ซ้าย */
+    border-bottom: 4px solid #E14E15;
+    justify-content: space-between;
+    padding: 10px 30px;
+    z-index: 1000;
+}
+
+.header-profile-logo {
+    padding: 5px;
+    margin-left: 0; /* ให้โลโก้อยู่ทางซ้ายสุด */
+    width: 267px;
+    height: 68px;
+    object-fit: contain;
+    cursor: pointer; 
+}
+
