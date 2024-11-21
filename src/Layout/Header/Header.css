@@ -1,4 +1,3 @@
-/* Container หลัก */
 .header-container {
   font-family: Arial, sans-serif;
   display: flex;
@@ -6,10 +5,16 @@
   width: 100%;
   height: 70px;
   flex-direction: column;
+  /* background-image: url('/images/background.png'); ใช้ภาพพื้นหลังจากโฟลเดอร์ public */
+  background-size: cover; 
+  background-position: center;
   padding: 10px 0;
-}
+} 
+/* Rectangle 53 */
 
-/* Header ที่ติดกับด้านบน */
+
+
+/* สไตล์สำหรับ header ที่ติดกับด้านบน */
 .header {
   position: fixed;
   top: 0;
@@ -21,17 +26,37 @@
   align-items: center;
   border-bottom: 4px solid #E14E15;
   justify-content: space-between;
-  padding: 10px 30px;
-  z-index: 1000;
-}
+  padding: 10px 30px; /* เพิ่มระยะห่าง */
+  z-index: 1000; /* ทำให้ header อยู่ข้างบนสุด */
+}  
 
 /* โลโก้ */
 .header-logo {
   padding: 5px;
   margin-right: 20px;
-  width: 267px;
-  height: 68px;
-  object-fit: contain;
+  /* width: 267px; */
+  height: 50px;
+  object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+
+}
+/* โลโก้ */
+.header-logo {
+padding: 5px;
+margin-right: 20px;
+width: 267px;
+height: 68px;
+object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+}
+
+
+
+/* สไตล์สำหรับ navigation */
+.header-nav {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
 }
 
 /* สไตล์ของ navigation */
@@ -47,6 +72,7 @@ main {
   padding: 20px;
 }
 
+/* ปรับระยะห่างระหว่างปุ่มใน header-nav */
 .header-nav {
   display: flex;
   gap: 25px;  /* เพิ่มระยะห่างระหว่างปุ่ม */
@@ -62,7 +88,7 @@ main {
 
 /* สไตล์ของปุ่มไอคอน */
 .header-icon-button {
-  font-size: 19px;
+  font-size: 24px;
   background: none;
   border: none;
   cursor: pointer;

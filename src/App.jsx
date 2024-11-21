@@ -6,6 +6,7 @@ import Stats from './pages/Stats/Stats';
 import Login from './pages/Login/Login';
 import Pagedoc from './pages/Pagedoc/page';
 import Homepage from './pages/Home/homepage';  // นำเข้า Homepage
+import Profile from './pages/profile/profile';
 
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -16,12 +17,18 @@ import Header from './Layout/Header/Header';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะการล็อกอิน
   const [userRole, setUserRole] = useState(null); // สถานะเก็บบทบาทผู้ใช้
+  const [user, setUser] = useState(null); // สถานะเก็บข้อมูลผู้ใช้
+
 
   const handleLoginSuccess = (userInfo) => {
     setIsLoggedIn(true);
     setUserRole(userInfo.role);
-    console.log("User logged in with role:", userInfo.role);
+    setUser(userInfo);  // เก็บข้อมูลผู้ใช้
+        
+    localStorage.setItem('token', userInfo.token);  // สมมติว่า userInfo.token คือ token ที่ได้รับจากเซิร์ฟเวอร์
   };
+
+
 
   const router = createBrowserRouter([
     {
@@ -39,6 +46,7 @@ function App() {
     {
       path: "pagedoc",
       element: <Pagedoc userRole={userRole} />, // ส่ง userRole ไปที่ Pagedoc
+      
     },
     {
       path: "permission",
@@ -48,12 +56,20 @@ function App() {
       path: "stats",
       element: <Stats />,
     },
+    ,
+    {
+      
+     path: "profile", 
+     element: <Profile user={user} />
+   
+    }
   ]);
 
   return (
     <div>
       <Header />
       <RouterProvider router={router} />
+      
     </div>
   );
 }
