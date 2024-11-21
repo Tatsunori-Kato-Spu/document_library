@@ -9,6 +9,7 @@ import Actiondropdown from "../actiondropdown/actiondropdown";
 import Dropdown from "react-bootstrap/Dropdown";
 import ButtonUpload from "../AddDoc/buttonupload"; // เส้นทางถูกต้อง
 import Header from "../../Layout/Header/Header";
+import { useNavigate } from "react-router-dom";
 
 const Pagedoc = ({ userRole }) => {
   const [filteredData, setFilteredData] = useState(
@@ -18,11 +19,12 @@ const Pagedoc = ({ userRole }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const navigate = useNavigate();
 
   const handleSearch = (filteredDocuments) => {
     setFilteredData(filteredDocuments); // อัปเดตข้อมูลเอกสารที่กรองแล้ว
   };
-  
+
 
   const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
@@ -81,7 +83,7 @@ const Pagedoc = ({ userRole }) => {
       <div className="page-container">
         <Header />
         <div className="searchbar-container">
-        <Searchbar onSearch={handleSearch} searchType="documents" />
+          <Searchbar onSearch={handleSearch} searchType="documents" />
         </div>
 
         <div className="table-wrapper">
@@ -140,8 +142,8 @@ const Pagedoc = ({ userRole }) => {
                           {userRole === "admin" && (
                             <>
                               <Dropdown.Item
-                                href="#/action-1"
                                 className="bi bi-pencil-square"
+                                onClick={() => navigate("/addDoc", { state: { doc: item } })}
                               >
                                 {" "}
                                 &nbsp;แก้ไข
@@ -166,27 +168,27 @@ const Pagedoc = ({ userRole }) => {
                           )}
                           {userRole === "worker" && (
                             <>
-                          <Dropdown.Item
-                            href="#/action-2"
-                            className="bi bi-box-arrow-down"
-                            onClick={() => handleDownload(item["ชื่อเอกสาร"])}
-                          >
-                            {" "}
-                            &nbsp;Download
-                          </Dropdown.Item>
-                          </>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                className="bi bi-box-arrow-down"
+                                onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              >
+                                {" "}
+                                &nbsp;Download
+                              </Dropdown.Item>
+                            </>
                           )}
                           {userRole === "guest" && (
                             <>
-                          <Dropdown.Item
-                            href="#/action-2"
-                            className="bi bi-box-arrow-down"
-                            onClick={() => handleDownload(item["ชื่อเอกสาร"])}
-                          >
-                            {" "}
-                            &nbsp;Download
-                          </Dropdown.Item>
-                          </>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                className="bi bi-box-arrow-down"
+                                onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              >
+                                {" "}
+                                &nbsp;Download
+                              </Dropdown.Item>
+                            </>
                           )}
                         </Dropdown.Menu>
                       </Dropdown>
