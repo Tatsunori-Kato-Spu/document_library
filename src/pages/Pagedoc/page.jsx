@@ -143,7 +143,7 @@ const Pagedoc = ({ userRole }) => {
                                 className="bi bi-pencil-square"
                               >
                                 {" "}
-                                &nbsp;แก้ไข้
+                                &nbsp;แก้ไข
                               </Dropdown.Item>
                               <Dropdown.Item
                                 href="#/action-2"
@@ -151,7 +151,7 @@ const Pagedoc = ({ userRole }) => {
                                 onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                               >
                                 {" "}
-                                &nbsp;Downlode
+                                &nbsp;Download
                               </Dropdown.Item>
                               <Dropdown.Item
                                 href="#/action-3"
