@@ -152,7 +152,7 @@ const Pagedoc = ({ userRole }) => {
                                 onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                               >
                                 {" "}
-                                &nbsp;Downlode
+                                &nbsp;Download
                               </Dropdown.Item>
                               <Dropdown.Item
                                 href="#/action-3"
@@ -172,7 +172,7 @@ const Pagedoc = ({ userRole }) => {
                             onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                           >
                             {" "}
-                            &nbsp;Downlode
+                            &nbsp;Download
                           </Dropdown.Item>
                           </>
                           )}
@@ -184,7 +184,7 @@ const Pagedoc = ({ userRole }) => {
                             onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                           >
                             {" "}
-                            &nbsp;Downlode
+                            &nbsp;Download
                           </Dropdown.Item>
                           </>
                           )}
