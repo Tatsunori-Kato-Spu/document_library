@@ -4,43 +4,45 @@
     font-family: Arial, sans-serif;
   }
   
-  /* ปรับหัวข้อ h2 ให้อยู่ในกล่องและเป็นสีส้ม */
   .notification-container h2 {
-    position: fixed;  /* ให้อยู่ที่ตำแหน่งที่กำหนด */
-    top: 0;  /* อยู่ที่ด้านบนสุดของหน้าจอ */
-    right: 30px;  /* อยู่ทางขวาของหน้าจอ */
-    width: 300px;  /* กำหนดความกว้างของกล่อง */
-    max-height: 100vh;  
-    overflow-y: auto;
+    position: fixed;  
+    top: 0;  
+    right: 30px;  
+    width: 300px;  
+    height: 60px;
     color: #f8f8f8;
     background: #ff8539;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 9999;  /* ให้แสดงอยู่บนสุดของหน้า */
+    z-index: 9999;  
     padding: 20px;
     border-radius: 10px;
-    margin-top: 110px; /* ขยับลงจากขอบบนเพื่อไม่ให้ทับปุ่มหรือหัวข้อ */
-  }
+    margin-top: 110px; 
+    display: flex;  
+    justify-content: center;  
+    align-items: center; 
+}
+
   
   /* การตั้งตำแหน่งของ notifications-list ให้อยู่ขวาบนสุด */
   .notifications-list {
-    position: fixed;  /* ให้อยู่ที่ตำแหน่งที่กำหนด */
-    top: 0;  /* อยู่ที่ด้านบนสุดของหน้าจอ */
-    right: 0;  /* อยู่ทางขวาของหน้าจอ */
+    position: fixed;  
+    top: 0;  
+    right: 0;  
     right: 30px;
-    width: 300px;  /* กำหนดความกว้างของกล่อง */
-    max-height: 60vh;  /* ความสูงของกล่องสูงสุดเป็นความสูงของหน้าจอ */
-    overflow-y: auto;  /* ให้สามารถเลื่อนกล่องแนวตั้งได้ */
+    width: 300px;  
+    max-height: 60vh;  
+    overflow-y: auto;  
     background-color: #f8f8f8;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 9999;  /* ให้แสดงอยู่บนสุดของหน้า */
+    z-index: 9999; 
     padding: 20px;
     border-radius: 10px;
-    margin-top: 200px; /* ขยับลงจากขอบบนเพื่อไม่ให้ทับปุ่มหรือหัวข้อ */
+    margin-top: 190px; 
   }
   
   /* กำหนดสไตล์ของรายการแจ้งเตือน */
   .custom-notification-item {
-    background-color: #f8f8f8;
+    background-color: #cac8c6;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
