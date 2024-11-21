@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Pagedoc from './pages/Pagedoc/page';
 import Homepage from './pages/Home/homepage';  // นำเข้า Homepage
 import Profile from './pages/profile/profile';
+import History from './pages/history/history';
 
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -60,6 +61,13 @@ function App() {
       
       path: "profile", 
       element: <Profile user={user} />
+      
+    }
+    ,
+    {
+      
+      path: "history", 
+      element: <History user={user} />
       
     }
   ]);

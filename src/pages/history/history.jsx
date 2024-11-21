@@ -3,13 +3,16 @@ import './history.css';
 import { userdata } from '../../data/userdata'; // Import userdata.js
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { docdata } from "../../data/docdata";
-
+import Header from '../../Layout/Header/Header';
 
 function History() {
     const [users, setUsers] = useState(userdata); // ใช้ state สำหรับจัดการข้อมูลผู้ใช้
     const navigate = useNavigate(); // Use navigate hook
 
     return (
+        <div>
+
+            <Header />
         <div className='container'>
             <div className="profile-container2">
                 <div className="profile-content-1">
@@ -18,7 +21,7 @@ function History() {
                             src={('../../importProfile/profile1.png')} // ใช้ require สำหรับรูปภาพโลคอล
                             alt="รูปโปรไฟล์"
                             className='photo'
-                        />
+                            />
                     </div>
                     <button className='button-style' onClick={() => navigate('/profile')}>ข้อมูลพื้นฐาน</button>
                     <div className='box-1'>ประวัติ</div>
@@ -61,6 +64,7 @@ function History() {
                 </div>
             </div>
         </div>
+                                </div>
     );
 }
 
