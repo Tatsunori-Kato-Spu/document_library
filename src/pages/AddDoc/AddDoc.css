@@ -16,9 +16,10 @@
       border: 2px solid #ff6b00;
       border-radius: 50px;
       padding: 20px;
-      width: 1160px;
+      width: 1100px;
       height: 680;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      font-size: 24px;
   }
 
   .form-group {
@@ -36,7 +37,8 @@
       display: flex;
       flex-direction: row;
       gap: 60px;
-      margin-left: 125px;
+      align-content: center;
+      margin-left: 80px;
       margin-top: 50px;
 
   }
@@ -50,15 +52,15 @@
   .doc-Text-label {
       text-align: left;
       color: white;
-      width: 510px;
+      width: 520px;
   }
 
   .colum-2 {
       display: flex;
       flex-direction: row;
       gap: 80px;
-      margin-left: 125px;
-      margin-top: 30px;
+      margin-left: 80px;
+      margin-top: 50px;
 
   }
 
@@ -93,7 +95,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 20px;
+      margin-top: 50px;
+      margin-bottom: 50px;
   }
 
   .file-upload-label {
@@ -108,8 +111,8 @@
       background: rgba(255, 107, 0, 0.1);
       color: #ff6b00;
       cursor: pointer;
-      width: 350px;
-      height: 80px;
+      width: 500px;
+      height: 120px;
   }
 
   .file-upload {
@@ -131,6 +134,8 @@
     color: black;
     cursor: pointer;
     font-size: 24px;
+    margin-left: 50px;
+    margin-bottom: 25px;
 }
 
   .submit-button {
@@ -142,6 +147,8 @@
       color: white;
       font-size: 24px;
       cursor: pointer;
+      margin-right: 50px;
+    margin-bottom: 25px;
   }
 
   .cancel-button {
