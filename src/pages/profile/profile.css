@@ -10,7 +10,7 @@
     display: flex;
     justify-content: center; /* จัดกลางแนวนอน */
     align-items: center; /* จัดกลางแนวตั้ง */
-    margin: auto;
+    
 }
 
 .profile-container {

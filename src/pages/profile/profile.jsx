@@ -2,12 +2,14 @@ import React, { useState } from 'react'; // Import useState
 import './profile.css';
 
 import { userdata } from '../../data/userdata'; // Import userdata.js
+import Header from '../../Layout/Header/Header';
 
 function Profile() {
     const [users, setUsers] = useState(userdata); // ใช้ state สำหรับจัดการข้อมูลผู้ใช้
 
     return (
-       
+       <div>
+            <Header/>
         <div className='container'>
             <div className="profile-container">
                 <div className="profile-content-1">
@@ -102,6 +104,7 @@ function Profile() {
                 </div>
             </div>
         </div>
+    </div>
     );
 }
 
