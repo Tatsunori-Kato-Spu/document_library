@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Header from "../../Layout/Header/Header";
 import { docdata } from "../../data/docdata"; // อัปเดต path ให้ถูกต้อง
 import "./AddDoc.css";
 
 function AddDoc() {
-    // State สำหรับฟอร์ม
+    const navigate = useNavigate(); // เรียกใช้งาน useNavigate
     const [formData, setFormData] = useState({
         docNumber: "",
         docName: "",
@@ -14,18 +15,15 @@ function AddDoc() {
         file: null,
     });
 
-    // อัปเดต state เมื่อมีการเปลี่ยนแปลงค่าในฟอร์ม
     const handleChange = (e) => {
         const { id, value } = e.target;
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
-    // อัปเดตไฟล์เมื่อมีการเลือกไฟล์ใหม่
     const handleFileChange = (e) => {
         setFormData((prev) => ({ ...prev, file: e.target.files[0] }));
     };
 
-    // ฟังก์ชันสำหรับเพิ่มข้อมูลใหม่ใน docdata
     const handleSubmit = () => {
         const newDoc = {
             หมายเลข: formData.docNumber,
@@ -33,22 +31,14 @@ function AddDoc() {
             เรื่อง: `เรื่องของเอกสาร ${formData.docName}`,
             หน่วยงาน: formData.department,
             วันที่: formData.date,
-            เวลา: new Date().toLocaleTimeString(),
+            เวลา: new Date().toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit', hour12: false }), // รูปแบบ 24 ชั่วโมง ไม่มีวินาที
             roles: ["admin"], // ค่า roles สามารถปรับได้ตามต้องการ
         };
 
         docdata.push(newDoc); // เพิ่มข้อมูลใหม่ลงใน docdata
-        console.log("Updated docdata:", docdata);
 
-        // หลังเพิ่มข้อมูลแล้วล้างฟอร์ม
-        setFormData({
-            docNumber: "",
-            docName: "",
-            budgetYear: "",
-            date: "",
-            department: "",
-            file: null,
-        });
+        // เปลี่ยนไปหน้า Pagedoc
+        navigate("/pagedoc");
     };
 
     return (

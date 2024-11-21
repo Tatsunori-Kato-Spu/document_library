@@ -45,7 +45,7 @@ function App() {
     },
     {
       path: "pagedoc",
-      element: <Pagedoc userRole={userRole} />, // ส่ง userRole ไปที่ Pagedoc
+      element: isLoggedIn ? <Pagedoc userRole={userRole} /> : <Navigate to="/login" />,
       
     },
     {
@@ -72,8 +72,8 @@ function App() {
     },
     {
       
-      path: "addDoc", 
-      element: <AddDoc />
+      path: "addDoc",
+      element: isLoggedIn ? <AddDoc /> : <Navigate to="/login" />,
       
     }
 
