@@ -25,12 +25,18 @@ function AddDoc() {
     };
 
     const handleSubmit = () => {
+        const formattedDate = new Date(formData.date)
+        .toLocaleDateString("th-TH", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
         const newDoc = {
             หมายเลข: formData.docNumber,
             ชื่อเอกสาร: formData.docName,
             เรื่อง: `เรื่องของเอกสาร ${formData.docName}`,
             หน่วยงาน: formData.department,
-            วันที่: formData.date,
+            วันที่: formattedDate, // ใช้วันที่ที่ฟอร์แมตแล้ว
             เวลา: new Date().toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit', hour12: false }), // รูปแบบ 24 ชั่วโมง ไม่มีวินาที
             roles: ["admin"], // ค่า roles สามารถปรับได้ตามต้องการ
         };
