@@ -10,7 +10,7 @@ function Permission() {
   // const [query, setQuery] = useState(''); // สร้าง state สำหรับคำค้นหา
   const [filteredData, setFilteredData] = useState(userdata);
   // const [filteredUsers, setFilteredUsers] = useState(userdata); // เก็บข้อมูลผู้ใช้ที่กรองแล้ว
-// console.log(userdata);
+  // console.log(userdata);
   // ฟังก์ชันสำหรับเปลี่ยน role
   const handleRoleChange = (index, newRole) => {
     const updatedUsers = [...users];
@@ -22,14 +22,17 @@ function Permission() {
   const handleSearch = (filteredUsers) => {
     setFilteredData(filteredUsers); // อัปเดตข้อมูลผู้ใช้ที่กรองแล้ว
   };
-  
+
   return (
     <div className="background">
+
       <Header />
+
+
       <div className="searchbar">
-      <Searchbar onSearch={handleSearch} searchType="users" />
+        <Searchbar onSearch={handleSearch} searchType="users" />
       </div>
-      <div className="table-wrapper">
+      <div className="table-wrapper-permission">
         <table className="table-container">
           <thead className="table-th">
             <tr >
@@ -44,7 +47,7 @@ function Permission() {
             </tr>
           </thead>
           <tbody>
-          {Array.isArray(filteredData) && filteredData.map((user, index) => (
+            {Array.isArray(filteredData) && filteredData.map((user, index) => (
               <tr key={index}>
                 <td>
                   <img src="../../importProfile/profile1.png" alt="" srcset="" className="profilePic" />
