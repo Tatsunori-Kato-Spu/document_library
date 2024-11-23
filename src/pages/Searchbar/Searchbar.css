@@ -38,7 +38,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-left: -8rem; /* ทำให้ปุ่มค้นหาอยู่ภายใน search bar */
+  margin-left: -3.5rem;
 }
 
 /* ไอคอนค้นหา */

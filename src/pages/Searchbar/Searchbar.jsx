@@ -84,6 +84,8 @@ function SearchBar({ onSearch, searchType }) {
             onKeyDown={handleEnter}
             style={{ flexGrow: 1 }}
           />
+          <div className="search-button">
+
           <button className="search-button" type="submit" title="Search">
             <span className="search-icon">
               <i className="bi bi-search"></i>
@@ -92,12 +94,12 @@ function SearchBar({ onSearch, searchType }) {
           <button
             className="Slider-button"
             type="button"
-            onClick={() => setDialogOpen(true)}
-          >
+            onClick={() => setDialogOpen(true)}>
             <span className="slider-icon">
               <i className="bi bi-sliders2"></i>
             </span>
           </button>
+              </div>
         </Form>
         <Filtersearch
           open={dialogOpen}
