@@ -4,6 +4,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "./permission.css";
 import Header from '../../Layout/Header/Header';
 import Searchbar from '../Searchbar/Searchbar';
+import Swal from "sweetalert2";
 
 function Permission() {
   const [users, setUsers] = useState(userdata); // สร้าง state เพื่อจัดการข้อมูลผู้ใช้
@@ -16,6 +17,24 @@ function Permission() {
     const updatedUsers = [...users];
     updatedUsers[index].role = newRole;
     setUsers(updatedUsers);
+  };
+
+  const handleRoleChangeConfirm = (index, newRole) => {
+    Swal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Call the handleRoleChange function if confirmed
+        handleRoleChange(index, newRole);
+        Swal.fire("Saved!", "", "success");
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
   };
 
   // ฟังก์ชันสำหรับคำค้นหา
@@ -63,10 +82,12 @@ function Permission() {
                     {user.role}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleRoleChange(index, "admin")}>
+                    <Dropdown.Item onClick={() => handleRoleChangeConfirm(index, "admin")}>
                       Admin
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleRoleChange(index, "worker")}>
+                
+                    <Dropdown.Item onClick={() => handleRoleChangeConfirm(index, "worker")}>
+                      
                       Worker
                     </Dropdown.Item>
                   </Dropdown.Menu>
