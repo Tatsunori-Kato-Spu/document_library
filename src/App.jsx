@@ -55,7 +55,7 @@ function App() {
     {
       path: "stats",
       element: <Stats />,
-    },
+    }
     ,
     {
       
