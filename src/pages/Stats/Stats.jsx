@@ -22,10 +22,10 @@ function Stats() {
   const departmentValues = [roleCounts.admin, roleCounts.worker, roleCounts.guest];
 
   const displayData = [
-    { name: 'เอกสารทั้งหมด', value: totalDocuments },
-    { name: 'จำนวนเอกสารใน admin', value: roleCounts.admin },
-    { name: 'จำนวนเอกสารใน worker', value: roleCounts.worker },
-    { name: 'จำนวนเอกสารใน guest', value: roleCounts.guest },
+    { name: 'จำนวนเอกสารทั้งหมด', value: totalDocuments },
+    { name: 'จำนวนเอกสาร admin', value: roleCounts.admin },
+    { name: 'จำนวนเอกสาร worker', value: roleCounts.worker },
+    { name: 'จำนวนเอกสาร guest', value: roleCounts.guest },
   ];
 
   const userCounts = {
@@ -98,7 +98,7 @@ function Stats() {
                 labels: departments,
                 datasets: [
                   {
-                    label: 'จำนวนเอกสารแต่ละแผนก',
+                    label: 'จำนวนเอกสาร',
                     data: departmentValues,
                     backgroundColor: [
                       'red', 'green', 'blue', 'yellow', 'orange', 'purple', 'brown', 'pink'
