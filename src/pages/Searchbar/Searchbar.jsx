@@ -76,7 +76,7 @@ function SearchBar({ onSearch, searchType }) {
         <Form className="search-form" role="search" onSubmit={handleSubmit}>
           <input
             className="search-input"
-            type="search"
+            // type="search"
             placeholder="Search"
             aria-label="Search"
             value={query}
