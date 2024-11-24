@@ -91,7 +91,11 @@ const Pagedoc = ({ userRole }) => {
     const link = document.createElement('a');
     link.href = fileUrl;
     link.download = `${docId}.pdf`; 
+    document.body.appendChild(link); // เพิ่มลิงก์ลงใน DOM
+    link.click(); // กระตุ้นการคลิก
+    document.body.removeChild(link); // ลบลิงก์ออกจาก DOM
   };
+  
 
   return (
     <>
