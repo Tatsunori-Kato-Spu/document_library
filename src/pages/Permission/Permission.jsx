@@ -28,6 +28,7 @@ function Permission() {
       denyButtonText: `ยกเลิก`,
     }).then((result) => {
       if (result.isConfirmed) {
+        
         // Call the handleRoleChange function if confirmed
         handleRoleChange(index, newRole);
         Swal.fire("Saved!", "", "success");
@@ -83,12 +84,12 @@ function Permission() {
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleRoleChangeConfirm(index, "admin")}>
-                      Admin
+                      admin
                     </Dropdown.Item>
                 
                     <Dropdown.Item onClick={() => handleRoleChangeConfirm(index, "worker")}>
                       
-                      Worker
+                      worker
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
