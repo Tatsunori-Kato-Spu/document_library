@@ -6,8 +6,8 @@
     border-radius: 10px;
   
     position: fixed; 
-    top: 145px; /* ระยะห่างจากขอบบน */
-    right: 140px; /* ระยะห่างจากขอบขวา */
+    top: 145px; 
+    right: 140px; 
     cursor: pointer;
     align-items: center;
     padding: 10px 20px; 

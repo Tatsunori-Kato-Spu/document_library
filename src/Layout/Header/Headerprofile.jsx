@@ -1,22 +1,22 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // นำเข้า useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import './Headerprofile.css';
 
 function Headerprofile() {
-    const navigate = useNavigate(); // สร้างฟังก์ชัน navigate
+    const navigate = useNavigate(); 
 
     const handleLogoClick = () => {
-        navigate('/'); // นำทางไปยังหน้าแรก
+        navigate('/'); 
     };
 
     return ( 
         <div className="header-profile-container">
             <header className="header-profile">
                 <img
-                    src="/public/Logo.png" // โลโก้ที่อยู่ใน public
+                    src="/public/Logo.png" 
                     alt="Logo"
                     className="header-profile-logo"
-                    onClick={handleLogoClick} // กำหนดฟังก์ชันคลิก
+                    onClick={handleLogoClick} 
                 
                 />
             </header>

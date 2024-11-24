@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import './buttonupload.css';
 
 const ButtonUpload = () => {
-  const navigate = useNavigate();  // ใช้ useNavigate
+  const navigate = useNavigate();  
 
   const handleUploadClick = () => {
-    navigate('/adddoc');  // นำทางไปหน้า adddoc.jsx
+    navigate('/adddoc');  
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Form from "react-bootstrap/Form";
-import { verifyUser, verifyGuestLogin } from "../../data/userdata"; // ดึงฟังก์ชันมาใช้
+import { verifyUser, verifyGuestLogin } from "../../data/userdata"; 
 import "./Login.css";
 import Swal from "sweetalert2";
 import Headerprofile from "../../Layout/Header/Headerprofile";
@@ -43,7 +43,7 @@ function Login({ onLoginSuccess }) {
       icon: "info",
       confirmButtonText: "OK",
     }).then(() => {
-      onLoginSuccess(guestInfo); // ส่ง guestInfo ไป
+      onLoginSuccess(guestInfo); // ส่ง guestInfo 
     });
   };
 
@@ -54,13 +54,13 @@ function Login({ onLoginSuccess }) {
         {/* โลโก้ */}
         <div className="logo-container">
           <img
-            src="/logo-login.png" // โลโก้ใน public directory
+            src="/logo-login.png" 
             alt="Login Logo"
             className="login-logo"
           />
         </div>
 
-        {/* ฟอร์ม */}
+       
         <form>
           <Form.Control
             type="text"
