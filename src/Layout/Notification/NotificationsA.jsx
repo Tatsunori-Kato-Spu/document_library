@@ -3,7 +3,7 @@ import "./NotificationsA.css";
 import { docdata } from "../../data/docdata";
 
 const NotificationsA = () => {
-  const [notifications, setNotifications] = useState(docdata);  // ใช้ข้อมูลที่ดึงมาจาก docdata.jsx
+  const [notifications, setNotifications] = useState(docdata); 
 
   return (
     <div className="notification-container">

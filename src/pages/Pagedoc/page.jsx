@@ -27,10 +27,10 @@ const Pagedoc = ({ userRole }) => {
   };
 
 
-  // const handleDropdownToggle = (e, index) => {
-  //   e.stopPropagation();
-  //   setActiveDropdown(activeDropdown === index ? null : index);
-  // };
+  const handleDropdownToggle = (e, index) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === index ? null : index);
+  };
 
   const handleSortByDate = () => {
     const sortedData = [...filteredData].sort((a, b) => {

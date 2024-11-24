@@ -1,6 +1,6 @@
 /* pages/Home/Homepage.css */
 body.homepage-background {
-  background-image: url('/home.png');  /* ใช้ภาพจากโฟลเดอร์ public */
+  background-image: url('/home.png');  
   background-size: cover;
   background-position: center;
   min-height: 100vh;
@@ -24,25 +24,25 @@ body.homepage-background {
   border-radius: 50px;
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* จัดเนื้อหาทั้งหมดให้อยู่ตรงกลาง */
-  align-items: center;      /* จัดเนื้อหาทั้งหมดให้อยู่ตรงกลาง */
+  justify-content: center;  
+  align-items: center;     
 }
 
 .homepage-content h1 {
-  font-size: 4rem;  /* เพิ่มขนาดตัวหนังสือ */
+  font-size: 4rem;  
   margin-bottom: 1rem;
 }
 
 .homepage-content p {
-  font-size: 1.5rem;  /* เพิ่มขนาดตัวหนังสือ */
+  font-size: 1.5rem;  
   margin-bottom: 2rem;
   margin-top: 2rem;
 }
 
 .homepage-content button {
   color: white;
-  font-size: 1.2rem;  /* เพิ่มขนาดตัวหนังสือ */
-  padding: 1rem 2rem;  /* เพิ่มขนาดปุ่ม */
+  font-size: 1.2rem;  
+  padding: 1rem 2rem;  
   width: auto;
   height: 60px;
   border: none;

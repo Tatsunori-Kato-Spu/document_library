@@ -18,7 +18,7 @@ function Homepage() {
 
   return (
     <div>
-      <Headerprofile /> {/* เพิ่ม Headerprofile ไว้ด้านบน */}
+      <Headerprofile /> 
       <div className="homepage-content">
         <h1>กรรมเชื้อเพลิงธรรมชาติ</h1>
         <p>

@@ -7,17 +7,17 @@
   align-items: center;
   align-self: center;
   position: absolute;
-  top: 12%; /* ตั้งให้กล่องอยู่กลางแนวตั้ง */
-  left: 20%; /* ตั้งให้กล่องอยู่กลางแนวนอน */
+  top: 12%; 
+  left: 20%; 
 }
 
 /* ตาราง */
 .table-wrapper {
-  position: absolute;  /* ให้คงตำแหน่งเดิม */
+  position: absolute;
   top: 50%;  
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1;  /* ให้อยู่ข้างล่าง popup */
+  z-index: 1;  
   width: 100%;
   max-width: 1800px;
   height: 100%;
@@ -34,17 +34,30 @@
 
 }
 
+/* สไตล์สำหรับเอกสารที่ยังไม่อ่าน */
+.row-unread {
+  background-color: #373a40;
+  font-weight: 900; 
+}
+
+/* สไตล์สำหรับเอกสารที่อ่านแล้ว */
+.row-read {
+  background-color: #373a40;
+  font-weight: 100; 
+}
+
+
 /* ตกแต่ง track ของ scrollbar */
 .table-wrapper::-webkit-scrollbar-track {
-  background-color: #373a40; /* สีของ track */
+  background-color: #373a40; 
   border-radius: 10px;
 }
 
 /* ตกแต่ง thumb (ตัวเลื่อน) ของ scrollbar */
 .table-wrapper::-webkit-scrollbar-thumb {
-  background-color: #373a40; /* สีของตัวเลื่อน */
+  background-color: #373a40; 
   border-radius: 10px;
-  border: 3px solid #373a40; /* ขอบของตัวเลื่อน */
+  border: 3px solid #373a40; 
 }
 
 /* เปลี่ยนสีเมื่อ hover ที่ scrollbar */
@@ -65,15 +78,15 @@ table {
 }
 
 .icon-button {
-  background: none; /* ไม่มีพื้นหลัง */
-  border: none; /* ไม่มีขอบ */
+  background: none; 
+  border: none; 
   color: black; 
-  font-size: 18px; /* ขนาดไอคอน */
-  cursor: pointer; /* เปลี่ยนเมาส์เป็นรูปมือ */
+  font-size: 18px; 
+  cursor: pointer; 
 }
 
 .icon-button:hover {
-  color: #555; /* สีอ่อนลงเมื่อ hover */
+  color: #555; 
 }
 
 
@@ -97,10 +110,10 @@ th {
   padding: 1rem;
   font-weight: 600;
   text-align: left;
-  position: sticky;  /* ทำให้ sticky */
-  top: 0px; /* ทำให้ยึดติดที่ด้านบน */
-  z-index: 1; /* ให้แน่ใจว่า th อยู่บนสุดเมื่อเลื่อน */
-  border-bottom: 2px solid #ff6c00; /* ขอบล่างเพื่อความชัดเจน */
+  position: sticky;  
+  top: 0px; 
+  z-index: 1; 
+  border-bottom: 2px solid #ff6c00; 
 }
 
 /* การตกแต่ง td */

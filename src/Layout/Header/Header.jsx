@@ -6,10 +6,10 @@ import NotificationsA from "../Notification/NotificationsA";
 import './Header.css';
 
 function Header() {
-    const [showNotifications, setShowNotifications] = useState(false); // สถานะการแสดง/ซ่อน NotificationsA
+    const [showNotifications, setShowNotifications] = useState(false); 
 
     const toggleNotifications = () => {
-        setShowNotifications(!showNotifications); // สลับการแสดง/ซ่อน
+        setShowNotifications(!showNotifications); 
     };
 
     return ( 
@@ -18,7 +18,7 @@ function Header() {
             <header className="header">
             <a href="/pagedoc">
                 <img
-                    src='/public/Logo.png' // โลโก้ที่อยู่ใน public
+                    src='/public/Logo.png' 
                     alt="Logo"
                     className="header-logo"
                     />
