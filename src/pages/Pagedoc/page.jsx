@@ -7,13 +7,13 @@ import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
 import Actiondropdown from "../actiondropdown/actiondropdown";
 import Dropdown from "react-bootstrap/Dropdown";
-import ButtonUpload from "../AddDoc/buttonupload";
+import ButtonUpload from "../AddDoc/buttonupload"; // เส้นทางถูกต้อง
 import Header from "../../Layout/Header/Header";
 import { useNavigate } from "react-router-dom";
 
 const Pagedoc = ({ userRole }) => {
   const [filteredData, setFilteredData] = useState(
-    docdata.map((item) => ({ ...item, isFavorite: false, isRead: false }))
+    docdata.map((item) => ({ ...item, isFavorite: false, isRead: false })) // ตั้งค่าเริ่มต้น isRead เป็น false
   );
   const [sortOrder, setSortOrder] = useState("desc");
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -22,7 +22,7 @@ const Pagedoc = ({ userRole }) => {
   const navigate = useNavigate();
 
   const handleSearch = (filteredDocuments) => {
-    setFilteredData(filteredDocuments);
+    setFilteredData(filteredDocuments); // อัปเดตข้อมูลเอกสารที่กรองแล้ว
   };
 
   const handleDropdownToggle = (e, index) => {
@@ -56,13 +56,15 @@ const Pagedoc = ({ userRole }) => {
     setFilteredData(newData);
   };
 
+  // ฟังก์ชันการคลิกแถวเพื่อเปลี่ยนสถานะเอกสาร
   const handleRowClick = (item) => {
-    const updatedData = filteredData.map((doc) =>
-      doc["หมายเลข"] === item["หมายเลข"] ? { ...doc, isRead: true } : doc
-    );
-    setFilteredData(updatedData);
+    const newData = [...filteredData];
+    const index = filteredData.findIndex(doc => doc["หมายเลข"] === item["หมายเลข"]);
+    newData[index].isRead = true; // เปลี่ยนสถานะเป็น 'อ่านแล้ว'
+    setFilteredData(newData); // อัปเดตสถานะใหม่
   };
 
+  // dropdwon ลบ
   const handleShowModal = (doc) => {
     setSelectedDoc(doc);
     setShowModal(true);
@@ -76,11 +78,12 @@ const Pagedoc = ({ userRole }) => {
     setSelectedDoc(null);
   };
 
+  // dropdwon download
   const handleDownload = (docId) => {
-    const fileUrl = `/files/${docId}.pdf`;
-    const link = document.createElement("a");
+    const fileUrl = `/files/${docId}.pdf`;  // แทนที่ด้วย URL หรือเส้นทางที่ไฟล์จริงๆ อยู่
+    const link = document.createElement('a');
     link.href = fileUrl;
-    link.download = `${docId}.pdf`;
+    link.download = `${docId}.pdf`; // ตั้งชื่อไฟล์ที่ดาวน์โหลด
     link.click();
   };
 
@@ -122,8 +125,8 @@ const Pagedoc = ({ userRole }) => {
                 filteredData.map((item, index) => (
                   <tr
                     key={index}
-                    className={item.isRead ? "row-read" : "row-unread"}
-                    onClick={() => handleRowClick(item)}
+                    className={item.isRead ? "row-read" : "row-unread"} // เปลี่ยน class ตามสถานะ isRead
+                    onClick={() => handleRowClick(item)} // เรียกใช้ handleRowClick เมื่อคลิกแถว
                   >
                     <td>
                       <FontAwesomeIcon
@@ -142,45 +145,63 @@ const Pagedoc = ({ userRole }) => {
                     <td>{item["หน่วยงาน"]}</td>
                     <td>{item["วันที่"]}</td>
                     <td>{item["เวลา"]}</td>
-                    <td>
-                      <div className="dropdown">
-                        <Dropdown>
-                          <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            <i className="bi bi-list"></i>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            {userRole === "admin" && (
-                              <>
-                                <Dropdown.Item
-                                  className="bi bi-pencil-square"
-                                  onClick={() =>
-                                    navigate("/addDoc", { state: { doc: item } })
-                                  }
-                                >
-                                  &nbsp;แก้ไข
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                  href="#/action-2"
-                                  className="bi bi-box-arrow-down"
-                                  onClick={() =>
-                                    handleDownload(item["ชื่อเอกสาร"])
-                                  }
-                                >
-                                  &nbsp;Download
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                  href="#/action-3"
-                                  className="bi bi-trash"
-                                  onClick={() => handleShowModal(item)}
-                                >
-                                  &nbsp;ลบ
-                                </Dropdown.Item>
-                              </>
-                            )}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
-                    </td>
+
+                    <div className="dropdown">
+                      <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                          <i className="bi bi-list"></i>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          {userRole === "admin" && (
+                            <>
+                              <Dropdown.Item
+                                className="bi bi-pencil-square"
+                                onClick={() => navigate("/addDoc", { state: { doc: item } })}
+                              >
+                                {" "}
+                                &nbsp;แก้ไข
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                className="bi bi-box-arrow-down"
+                                onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              >
+                                {" "}&nbsp;Download
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                href="#/action-3"
+                                className="bi bi-trash"
+                                onClick={() => handleShowModal(item)}
+                              >
+                                {" "}&nbsp;ลบ
+                              </Dropdown.Item>
+                            </>
+                          )}
+                          {userRole === "worker" && (
+                            <>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                className="bi bi-box-arrow-down"
+                                onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              >
+                                {" "}&nbsp;Download
+                              </Dropdown.Item>
+                            </>
+                          )}
+                          {userRole === "guest" && (
+                            <>
+                              <Dropdown.Item
+                                href="#/action-2"
+                                className="bi bi-box-arrow-down"
+                                onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              >
+                                {" "}&nbsp;Download
+                              </Dropdown.Item>
+                            </>
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
                   </tr>
                 ))
               ) : (
@@ -193,7 +214,6 @@ const Pagedoc = ({ userRole }) => {
         </div>
 
         {userRole === "admin" && <ButtonUpload />}
-
         <Actiondropdown
           show={showModal}
           onClose={() => setShowModal(false)}
