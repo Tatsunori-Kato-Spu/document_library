@@ -34,7 +34,7 @@ function AddDoc() {
         const newDoc = {
             หมายเลข: formData.docNumber,
             ชื่อเอกสาร: formData.docName,
-            เรื่อง: `เรื่องของเอกสาร ${formData.docName}`,
+            เรื่อง: `${formData.docName}`,
             หน่วยงาน: formData.department,
             วันที่: formattedDate, // ใช้วันที่ที่ฟอร์แมตแล้ว
             เวลา: new Date().toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit', hour12: false }), // รูปแบบ 24 ชั่วโมง ไม่มีวินาที
