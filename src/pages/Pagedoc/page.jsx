@@ -7,13 +7,14 @@ import { docdata } from "../../data/docdata";
 import Searchbar from "../Searchbar/Searchbar";
 import Actiondropdown from "../actiondropdown/actiondropdown";
 import Dropdown from "react-bootstrap/Dropdown";
-import ButtonUpload from "../AddDoc/buttonupload"; // เส้นทางถูกต้อง
+import ButtonUpload from "../AddDoc/buttonupload"; 
 import Header from "../../Layout/Header/Header";
 import { useNavigate } from "react-router-dom";
 
 const Pagedoc = ({ userRole }) => {
+  // ตัวแปรสำหรับจัดการสถานะ (State variables)
   const [filteredData, setFilteredData] = useState(
-    docdata.map((item) => ({ ...item, isFavorite: false, isRead: false })) // ตั้งค่าเริ่มต้น isRead เป็น false
+    docdata.map((item) => ({ ...item, isFavorite: false, isRead: false })) 
   );
   const [sortOrder, setSortOrder] = useState("desc");
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -21,15 +22,18 @@ const Pagedoc = ({ userRole }) => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const navigate = useNavigate();
 
+  // ฟังก์ชันสำหรับค้นหาเอกสาร
   const handleSearch = (filteredDocuments) => {
-    setFilteredData(filteredDocuments); // อัปเดตข้อมูลเอกสารที่กรองแล้ว
+    setFilteredData(filteredDocuments); 
   };
 
+  // ฟังก์ชันสำหรับเปิด/ปิด Dropdown
   const handleDropdownToggle = (e, index) => {
     e.stopPropagation();
     setActiveDropdown(activeDropdown === index ? null : index);
   };
 
+  // ฟังก์ชันสำหรับจัดเรียงตามวันที่
   const handleSortByDate = () => {
     const sortedData = [...filteredData].sort((a, b) => {
       const dateA = new Date(a["วันที่"].split("/").reverse().join("-"));
@@ -40,6 +44,7 @@ const Pagedoc = ({ userRole }) => {
     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
   };
 
+  // ฟังก์ชันสำหรับจัดเรียงตามลำดับ
   const handleSortByOrder = () => {
     const sortedData = [...filteredData].sort((a, b) => {
       const orderA = parseInt(a["หมายเลข"]);
@@ -50,26 +55,28 @@ const Pagedoc = ({ userRole }) => {
     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
   };
 
+  // ฟังก์ชันสำหรับคลิกไอคอนดาวเพื่อทำเครื่องหมายเป็น Favorite
   const handleStarClick = (index) => {
     const newData = [...filteredData];
     newData[index].isFavorite = !newData[index].isFavorite;
     setFilteredData(newData);
   };
 
-  // ฟังก์ชันการคลิกแถวเพื่อเปลี่ยนสถานะเอกสาร
+  // ฟังก์ชันเมื่อคลิกที่แถว (เปลี่ยนสถานะเป็น "อ่านแล้ว")
   const handleRowClick = (item) => {
     const newData = [...filteredData];
     const index = filteredData.findIndex(doc => doc["หมายเลข"] === item["หมายเลข"]);
-    newData[index].isRead = true; // เปลี่ยนสถานะเป็น 'อ่านแล้ว'
-    setFilteredData(newData); // อัปเดตสถานะใหม่
+    newData[index].isRead = true; 
+    setFilteredData(newData); 
   };
 
-  // dropdwon ลบ
+  // ฟังก์ชันแสดง Modal สำหรับลบเอกสาร
   const handleShowModal = (doc) => {
     setSelectedDoc(doc);
     setShowModal(true);
   };
 
+  // ฟังก์ชันลบเอกสาร
   const handleDelete = () => {
     setFilteredData(
       filteredData.filter((item) => item["หมายเลข"] !== selectedDoc["หมายเลข"])
@@ -78,23 +85,24 @@ const Pagedoc = ({ userRole }) => {
     setSelectedDoc(null);
   };
 
-  // dropdwon download
+  // ฟังก์ชันสำหรับดาวน์โหลดเอกสาร
   const handleDownload = (docId) => {
-    const fileUrl = `/files/${docId}.pdf`;  // แทนที่ด้วย URL หรือเส้นทางที่ไฟล์จริงๆ อยู่
+    const fileUrl = `/files/${docId}.pdf`;  
     const link = document.createElement('a');
     link.href = fileUrl;
-    link.download = `${docId}.pdf`; // ตั้งชื่อไฟล์ที่ดาวน์โหลด
-    link.click();
+    link.download = `${docId}.pdf`; 
   };
 
   return (
     <>
       <div className="page-container">
         <Header />
+        {/* ส่วนของแถบค้นหา */}
         <div className="searchbar-container">
           <Searchbar onSearch={handleSearch} searchType="documents" />
         </div>
 
+        {/* ตารางแสดงเอกสาร */}
         <div className="table-wrapper">
           <table className="table-contenner">
             <thead className="table-th">
@@ -125,9 +133,10 @@ const Pagedoc = ({ userRole }) => {
                 filteredData.map((item, index) => (
                   <tr
                     key={index}
-                    className={item.isRead ? "row-read" : "row-unread"} // เปลี่ยน class ตามสถานะ isRead
-                    onClick={() => handleRowClick(item)} // เรียกใช้ handleRowClick เมื่อคลิกแถว
+                    className={item.isRead ? "row-read" : "row-unread"} 
+                    onClick={() => handleRowClick(item)} 
                   >
+                    {/* คอลัมน์ Favorite */}
                     <td>
                       <FontAwesomeIcon
                         icon={item.isFavorite ? faStar : faRegStar}
@@ -146,6 +155,7 @@ const Pagedoc = ({ userRole }) => {
                     <td>{item["วันที่"]}</td>
                     <td>{item["เวลา"]}</td>
 
+                    {/* Dropdown สำหรับการกระทำ */}
                     <div className="dropdown">
                       <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -158,8 +168,7 @@ const Pagedoc = ({ userRole }) => {
                                 className="bi bi-pencil-square"
                                 onClick={() => navigate("/addDoc", { state: { doc: item } })}
                               >
-                                {" "}
-                                &nbsp;แก้ไข
+                                {" "}&nbsp;แก้ไข
                               </Dropdown.Item>
                               <Dropdown.Item
                                 href="#/action-2"
@@ -213,7 +222,10 @@ const Pagedoc = ({ userRole }) => {
           </table>
         </div>
 
+        {/* ปุ่มอัพโหลดเอกสารสำหรับ Admin */}
         {userRole === "admin" && <ButtonUpload />}
+
+        {/* Modal ยืนยันการลบ */}
         <Actiondropdown
           show={showModal}
           onClose={() => setShowModal(false)}

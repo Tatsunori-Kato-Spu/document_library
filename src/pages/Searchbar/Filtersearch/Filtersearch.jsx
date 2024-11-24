@@ -80,20 +80,20 @@ const Filtersearch = ({ open, onClose, onApply }) => {
       const pastDate = new Date(today.setDate(today.getDate() - days));
 
       filtered = filtered.filter((doc) => {
-        const dateParts = doc["วันที่"].split("/"); // แยกวันที่
+        const dateParts = doc["วันที่"].split("/"); 
         const docDate = new Date(
-          parseInt(dateParts[2]) - 543, // ปีเป็นพุทธศักราช ต้องลบ 543
-          parseInt(dateParts[1]) - 1, // เดือนเริ่มที่ 0
-          parseInt(dateParts[0]) // วัน
+          parseInt(dateParts[2]) - 543, 
+          parseInt(dateParts[1]) - 1, 
+          parseInt(dateParts[0]) 
         );
-        console.log("Doc Date:", docDate); // ดีบักวันที่ที่แปลงแล้ว
+        console.log("Doc Date:", docDate); 
         return docDate >= pastDate;
       });
     }
 
-    setFilteredDocs(filtered); // ปรับปรุงข้อมูลที่กรองแล้ว
+    setFilteredDocs(filtered); 
     onClose();
-    onApply(filtered); // ส่งข้อมูลที่กรองแล้วไปยัง Pagedoc
+    onApply(filtered); 
   };
 
   return (
@@ -134,18 +134,6 @@ const Filtersearch = ({ open, onClose, onApply }) => {
             )}
           </Select>
         </FormControl>
-        {/* <FormControl fullWidth margin="normal">
-          <InputLabel>ประเภทเอกสาร</InputLabel>
-          <Select
-            name="docType"
-            value={formData.docType}
-            onChange={handleChange}
-          >
-            <MenuItem value="">เลือกทั้งหมด</MenuItem>
-            <MenuItem value="type1">ประเภท 1</MenuItem>
-            <MenuItem value="type2">ประเภท 2</MenuItem>
-          </Select>
-        </FormControl> */}
         <FormControl fullWidth margin="normal">
           <InputLabel>ช่วงเวลา</InputLabel>
           <Select
@@ -168,10 +156,10 @@ const Filtersearch = ({ open, onClose, onApply }) => {
           onClick={handleSubmit}
           color="primary"
           sx={{
-            backgroundColor: "#FF8539", // สีพื้นหลังของปุ่ม "ค้นหา" เป็นสีส้ม
+            backgroundColor: "#FF8539", 
             color: "white",
             "&:hover": {
-              backgroundColor: "#ff6c00", // เมื่อ hover ปุ่ม "ค้นหา" เป็นส้มเข้ม
+              backgroundColor: "#ff6c00",
             },
           }}
         >

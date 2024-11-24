@@ -5,7 +5,7 @@
   justify-content: center;
   display: flex;
   flex-direction: row;
-  align-items: center; /* เพื่อจัดแนวแนวตั้งให้ตรงกลาง */
+  align-items: center; 
 }
 
 /* ช่องกรอกข้อมูล */
@@ -21,7 +21,7 @@
   height: 40px;
   font-size: 1rem;
   padding-left: 2.5rem;
-  padding-right: 2.5rem; /* เพิ่มพื้นที่เพื่อให้ปุ่มค้นหาอยู่ในตำแหน่งที่ถูกต้อง */
+  padding-right: 2.5rem; 
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   text-overflow: ellipsis;
@@ -55,7 +55,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-left: 10px; /* ระยะห่างระหว่างปุ่มค้นหากับปุ่มเลื่อน */
+  margin-left: 10px; 
 }
 
 /* ไอคอนตัวเลื่อน */
