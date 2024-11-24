@@ -21,18 +21,18 @@ function Permission() {
 
   const handleRoleChangeConfirm = (index, newRole) => {
     Swal.fire({
-      title: "Do you want to save the changes?",
+      title: "คุณต้องการบันทึกการเปลี่ยนแปลงหรือไม่?",
       showDenyButton: true,
       showCancelButton: true,
-      confirmButtonText: "Save",
-      denyButtonText: `Don't save`,
+      confirmButtonText: "ยืนยัน",
+      denyButtonText: `ยกเลิก`,
     }).then((result) => {
       if (result.isConfirmed) {
         // Call the handleRoleChange function if confirmed
         handleRoleChange(index, newRole);
         Swal.fire("Saved!", "", "success");
       } else if (result.isDenied) {
-        Swal.fire("Changes are not saved", "", "info");
+        Swal.fire("การเปลี่ยนแปลงไม่ได้ถูกบันทึก", "", "info");
       }
     });
   };
