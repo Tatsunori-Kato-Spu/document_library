@@ -13,11 +13,10 @@ function SearchBar({ onSearch, searchType }) {
 
   const handleSearch = (searchQuery) => {
     if (!searchQuery.trim()) {
-      // ส่งข้อมูลทั้งหมดกลับตามประเภท
       if (searchType === "users") {
-        onSearch(userdata); // ส่งข้อมูลผู้ใช้ทั้งหมดกลับ
+        onSearch(userdata); 
       } else if (searchType === "documents") {
-        onSearch(docdata); // ส่งข้อมูลเอกสารทั้งหมดกลับ
+        onSearch(docdata); 
       }
       return;
     }
@@ -32,7 +31,7 @@ function SearchBar({ onSearch, searchType }) {
           user.รหัสประจำตัว.includes(searchQuery) ||
           user.หน่วยงาน.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      onSearch(filteredUsers); // ส่งผลลัพธ์ผู้ใช้กลับ
+      onSearch(filteredUsers); 
 
     // กรองข้อมูลเอกสาร
   } else if (searchType === "documents") {
@@ -46,7 +45,7 @@ function SearchBar({ onSearch, searchType }) {
         doc.วันที่.includes(searchQuery) ||
         doc.เวลา.includes(searchQuery)
     );
-    onSearch(filteredDocuments); // ส่งผลลัพธ์เอกสารกลับ
+    onSearch(filteredDocuments); 
   }
 };
 
@@ -71,7 +70,6 @@ function SearchBar({ onSearch, searchType }) {
 
   return (
     <div>
-      {/* container สำหรับค้นหา */}
       <div className="container">
         <Form className="search-form" role="search" onSubmit={handleSubmit}>
           <input

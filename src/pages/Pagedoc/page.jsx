@@ -21,15 +21,16 @@ const Pagedoc = ({ userRole }) => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const navigate = useNavigate();
 
+  // ฟังก์ชั้นค้นหา
   const handleSearch = (filteredDocuments) => {
-    setFilteredData(filteredDocuments); // อัปเดตข้อมูลเอกสารที่กรองแล้ว
+    setFilteredData(filteredDocuments); 
   };
 
 
-  const handleDropdownToggle = (e, index) => {
-    e.stopPropagation();
-    setActiveDropdown(activeDropdown === index ? null : index);
-  };
+  // const handleDropdownToggle = (e, index) => {
+  //   e.stopPropagation();
+  //   setActiveDropdown(activeDropdown === index ? null : index);
+  // };
 
   const handleSortByDate = () => {
     const sortedData = [...filteredData].sort((a, b) => {
