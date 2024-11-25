@@ -15,7 +15,7 @@ const ButtonUpload = () => {
         <span className="upload-icon">
           <i className="bi bi-plus"></i>
         </span>
-        อัพโหลด
+        อัปโหลด
       </button>
     </div>
   );
