@@ -5,6 +5,7 @@
   z-index: 1000;
   min-width: 150px;
   border-radius: 5px;
+  font-family: 'Roboto';
 }
 
 .dropdown-menu {

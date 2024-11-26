@@ -12,6 +12,7 @@
       height: 680;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       font-size: 24px;
+      font-family: 'Roboto';
   }
 
   .form-group {

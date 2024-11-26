@@ -1,7 +1,7 @@
 /* กำหนดรูปแบบของ container */
 .notification-container {
     padding: 20px;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto';
   }
   
   .notification-container h2 {
