@@ -26,11 +26,11 @@ function AddDoc() {
 
     const handleSubmit = () => {
         const formattedDate = new Date(formData.date)
-        .toLocaleDateString("th-TH", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        });
+            .toLocaleDateString("th-TH", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            });
         const newDoc = {
             หมายเลข: formData.docNumber,
             ชื่อเอกสาร: formData.docName,
@@ -38,6 +38,7 @@ function AddDoc() {
             หน่วยงาน: formData.department,
             วันที่: formattedDate, // ใช้วันที่ที่ฟอร์แมตแล้ว
             เวลา: new Date().toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit', hour12: false }), // รูปแบบ 24 ชั่วโมง ไม่มีวินาที
+            ระดับ: formData.roles,
             roles: ["admin"], // ค่า roles สามารถปรับได้ตามต้องการ
         };
 
@@ -108,6 +109,19 @@ function AddDoc() {
                                 <option value="การเงิน">การเงิน</option>
                             </select>
                         </div>
+                        <div className="form-group">
+                            <label htmlFor="roles" className="doc-role">ระดับ</label>
+                            <select
+                                id="roles"
+                                value={formData.roles}
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled>โปรดเลือก...</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Worker">Worker</option>
+                                <option value="Guest">Guest</option>
+                            </select>
+                        </div>;
                     </div>
                     <div className="file-upload-container">
                         <label htmlFor="file-upload" className="file-upload-label">อัปโหลดไฟล์</label>
