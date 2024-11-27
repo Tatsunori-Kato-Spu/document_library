@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { userdata } from "../../data/userdata";
 import { docdata } from "../../data/docdata";
 import Form from "react-bootstrap/Form";
-import "../Searchbar/Searchbar.css";
+import "./Searchbar.css";
 import Filtersearch from "./Filtersearch/Filtersearch";
 
 function SearchBar({ onSearch, searchType }) {
