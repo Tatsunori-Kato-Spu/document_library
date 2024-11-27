@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Homepage.css'; 
+import './homepage.css'; 
 import Headerprofile from '../../Layout/Header/Headerprofile'; 
 
 function Homepage() {
