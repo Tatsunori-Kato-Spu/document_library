@@ -1,5 +1,6 @@
 {
   "name": "document_library",
+  "homepage": "https://tatsunori-kato-spu.github.io/document_library/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -20,6 +21,7 @@
     "bootstrap-icons": "^1.11.3",
     "chart.js": "^4.4.6",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "gh-pages": "^6.2.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-chartjs-2": "^5.2.0",
