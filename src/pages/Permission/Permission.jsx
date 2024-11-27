@@ -70,7 +70,7 @@ function Permission() {
             {Array.isArray(filteredData) && filteredData.map((user, index) => (
               <tr key={index}>
                 <td>
-                  <img src="/document_library/profile1.png" alt="" srcset="" className="profilePic" />
+                  <img src='/document_library/profile1.png' alt="" srcset="" className="profilePic" />
                 </td>
                 <td>{user.ชื่อ}</td>
                 <td>{user.รหัสประจำตัว}</td>
