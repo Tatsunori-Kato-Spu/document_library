@@ -54,7 +54,7 @@ function Login({ onLoginSuccess }) {
         {/* โลโก้ */}
         <div className="logo-container">
           <img
-            src="/logo-login.png" 
+            src="/document_library/logo-login.png" 
             alt="Login Logo"
             className="login-logo"
           />

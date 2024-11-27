@@ -23,7 +23,7 @@ function History() {
           <div className="profile-content-1">
             <div>
               <img
-                src={"../../importProfile/profile1.png"} // ใช้ require สำหรับรูปภาพโลคอล
+                src={"../../importProfile/profile1.png"} 
                 alt="รูปโปรไฟล์"
                 className="photo"
               />

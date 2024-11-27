@@ -2,27 +2,40 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUser, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import NotificationsA from "../Notification/NotificationsA";
-
+import { useNavigate } from 'react-router-dom'; 
 import './Header.css';
 
 function Header() {
     const [showNotifications, setShowNotifications] = useState(false); 
+    const navigate = useNavigate();
 
     const toggleNotifications = () => {
         setShowNotifications(!showNotifications); 
+    };
+
+    const handleLogoClick = () => {
+        navigate('/pagedoc'); 
+    };
+
+    const handleProfileClick = () => {
+        navigate('/profile'); 
+    };
+
+    const handleLogoutClick = () => {
+        navigate('/document_library/'); 
     };
 
     return ( 
         <div className="header-container">
 
             <header className="header">
-            <a href="/pagedoc">
-                <img
-                    src='/public/Logo.png' 
+            <img 
+                    src= '/document_library/Logo.png'
                     alt="Logo"
-                    className="header-logo"
-                    />
-                    </a>
+                    className="header-profile-logo"
+                    onClick={handleLogoClick} 
+                />
+
                 <nav>
                     <ul className="header-nav">
                         <li className="nav-item">
@@ -32,18 +45,16 @@ function Header() {
                             </button>
                         </li>
                         <li className="nav-item">
-                          <a href="/profile">
-                            <button className="header-icon-button">
+                         
+                            <button onClick={handleProfileClick} className="header-icon-button">
                                 <FontAwesomeIcon icon={faUser} size="lg" style={{ color: 'orange' }} />
                             </button>
-                          </a>
+                        
                         </li>
                         <li className="nav-item">
-                          <a href="/login">
-                            <button className="header-icon-button">
+                            <button onClick={handleLogoutClick} className="header-icon-button">
                                 <FontAwesomeIcon icon={faRightToBracket} size="lg" style={{ color: 'orange' }} />
                             </button>
-                          </a>
                         </li>
                     </ul>
                 </nav>

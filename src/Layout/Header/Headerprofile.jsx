@@ -13,7 +13,7 @@ function Headerprofile() {
         <div className="header-profile-container">
             <header className="header-profile">
                 <img
-                    src="/public/Logo.png" 
+                    src="/document_library/Logo.png"
                     alt="Logo"
                     className="header-profile-logo"
                     onClick={handleLogoClick} 

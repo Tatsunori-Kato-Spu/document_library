@@ -24,6 +24,10 @@ function AddDoc() {
         setFormData((prev) => ({ ...prev, file: e.target.files[0] }));
     };
 
+    const handleCancel = () => {
+        navigate("/pagedoc");
+    };
+
     const handleSubmit = () => {
         const formattedDate = new Date(formData.date)
             .toLocaleDateString("th-TH", {
@@ -133,9 +137,9 @@ function AddDoc() {
                         />
                     </div>
                     <div className="button-group">
-                        <a href="/pagedoc">
-                            <button className="cancel-button">ยกเลิก</button>
-                        </a>
+
+                        <button onClick={handleCancel} className="cancel-button">ยกเลิก</button>
+
                         <button
                             className="submit-button"
                             onClick={handleSubmit}
