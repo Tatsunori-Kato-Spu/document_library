@@ -32,11 +32,11 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "document_library/",
       element: <Homepage />,  // หน้าแรกจะเป็น Homepage
     },
     {
-      path: "/login",
+      path: "login",
       element: isLoggedIn ? (
         <Navigate to="/pagedoc" />  // ถ้า login แล้วจะไปที่ /pagedoc
       ) : (
@@ -45,7 +45,7 @@ function App() {
     },
     {
       path: "pagedoc",
-      element: isLoggedIn ? <Pagedoc userRole={userRole} /> : <Navigate to="/login" />,
+      element: isLoggedIn ? <Pagedoc userRole={userRole} /> : <Navigate to="login" />,
       
     },
     {
