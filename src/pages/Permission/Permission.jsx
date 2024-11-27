@@ -1,7 +1,7 @@
 import { userdata } from '../../data/userdata';  // นำเข้าข้อมูลจาก usersdata.js
 import React, { useState } from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
-import "./permission.css";
+import "./Permission.css";
 import Header from '../../Layout/Header/Header';
 import Searchbar from '../Searchbar/Searchbar';
 import Swal from "sweetalert2";
