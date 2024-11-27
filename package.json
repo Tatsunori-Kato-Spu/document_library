@@ -1,7 +1,5 @@
 {
   "name": "document_library",
-  "homepage": "https://tatsunori-kato-spu.github.io/document_library/",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
