@@ -32,7 +32,7 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "document_library/",
+      path: "/",
       element: <Homepage />,  // หน้าแรกจะเป็น Homepage
     },
     {
