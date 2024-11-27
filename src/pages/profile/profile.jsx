@@ -29,7 +29,7 @@ function Profile() {
 
                         <div >
                             <img
-                                src="/document_library/importProfile/profile1.png" // ใช้ require สำหรับรูปภาพโลคอล
+                                src="/document_library/profile1.png" 
                                 alt="รูปโปรไฟล์"
                                 className='photo'
                             />
