@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
+
 import Permission from './pages/Permission/Permission';
 import Stats from './pages/Stats/Stats';
 import Login from './pages/Login/Login';
@@ -9,7 +10,6 @@ import Homepage from './pages/Home/homepage';  // นำเข้า Homepage
 import Profile from './pages/profile/profile';
 import History from './pages/history/history';
 import AddDoc from './pages/AddDoc/AddDoc';
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import './App.css';
@@ -81,8 +81,9 @@ function App() {
   
   return (
     <div>
-      
+   
       <RouterProvider router={router} />
+
       
     </div>
   );
