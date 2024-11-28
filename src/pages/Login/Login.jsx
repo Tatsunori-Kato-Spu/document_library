@@ -4,10 +4,12 @@ import { verifyUser, verifyGuestLogin } from "../../data/userdata";
 import "./Login.css";
 import Swal from "sweetalert2";
 import Headerprofile from "../../Layout/Header/Headerprofile";
+import { useNavigate } from "react-router-dom"; // เพิ่มการใช้งาน useNavigate
 
 function Login({ onLoginSuccess }) {
   const userRef = useRef();
   const passRef = useRef();
+  const navigate = useNavigate(); // สร้างการใช้งาน useNavigate
 
   const handleLogin = () => {
     const user = userRef.current.value;
@@ -31,6 +33,7 @@ function Login({ onLoginSuccess }) {
         confirmButtonText: "Proceed",
       }).then(() => {
         onLoginSuccess(userInfo); // ส่งข้อมูล userInfo หลังจากเข้าสู่ระบบ
+        navigate("/pagedoc"); // นำทางไปยังหน้า pagedoc หลังจาก login สำเร็จ
       });
     }
   };
@@ -44,6 +47,7 @@ function Login({ onLoginSuccess }) {
       confirmButtonText: "OK",
     }).then(() => {
       onLoginSuccess(guestInfo); // ส่ง guestInfo 
+      navigate("/pagedoc"); // นำทางไปยังหน้า pagedoc หลังจาก login สำเร็จ
     });
   };
 

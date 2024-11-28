@@ -25,7 +25,7 @@ function App() {
     setUserRole(userInfo.role);
     setUser(userInfo);  // เก็บข้อมูลผู้ใช้
         
-    console.log("Setting token in localStorage:", userInfo.token);
+    
     localStorage.setItem('token', userInfo.token);  // สมมติว่า userInfo.token คือ token ที่ได้รับจากเซิร์ฟเวอร์
   };
 
@@ -38,11 +38,7 @@ function App() {
     },
     {
       path: "/login",
-      element: isLoggedIn ? (
-        <Navigate to="/pagedoc" />  // ถ้า login แล้วจะไปที่ /pagedoc
-      ) : (
-        <Login onLoginSuccess={handleLoginSuccess} />
-      ),
+      element: <Login onLoginSuccess={handleLoginSuccess} />
     },
     {
       path: "/pagedoc",
