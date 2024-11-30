@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './homepage.css'; 
 import Headerprofile from '../../Layout/Header/Headerprofile'; 
+import Develope from '../develope/develope';
 
 function Homepage() {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ function Homepage() {
           Go to Login
         </button>
       </div>
+      <Develope />
     </div>
   );
 }

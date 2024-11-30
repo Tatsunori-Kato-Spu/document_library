@@ -13,6 +13,7 @@ import AddDoc from './pages/AddDoc/AddDoc';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import './App.css';
+import Develope from './pages/develope/develope';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // สถานะการล็อกอิน
@@ -24,8 +25,8 @@ function App() {
     setIsLoggedIn(true);
     setUserRole(userInfo.role);
     setUser(userInfo);  // เก็บข้อมูลผู้ใช้
-        
-    
+
+
     localStorage.setItem('token', userInfo.token);  // สมมติว่า userInfo.token คือ token ที่ได้รับจากเซิร์ฟเวอร์
   };
 
@@ -43,7 +44,7 @@ function App() {
     {
       path: "/pagedoc",
       element: isLoggedIn ? <Pagedoc userRole={userRole} /> : <Navigate to="login" />,
-      
+
     },
     {
       path: "/permission",
@@ -55,33 +56,30 @@ function App() {
     }
     ,
     {
-      
-      path: "/profile", 
+
+      path: "/profile",
       element: <Profile user={user} token={user?.token} />
-      
+
     }
     ,
     {
-      
-      path: "/history", 
+
+      path: "/history",
       element: <History user={user} />
-      
+
     },
     {
-      
+
       path: "addDoc",
       element: isLoggedIn ? <AddDoc /> : <Navigate to="/login" />,
-      
+
     }
 
   ]);
-  
+
   return (
     <div>
-   
       <RouterProvider router={router} />
-
-      
     </div>
   );
 }
