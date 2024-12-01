@@ -8,17 +8,17 @@ function Develope() {
 
 
                 <div className='container-develope'>
-                    <span> <img src="profile1.png" alt="" srcset="" className='develope-img' /> </span>
+                    <span> <img src="1.jpg" alt="" srcset="" className='develope-img' /> </span>
                     <span className='develope-name'> 66038668 </span>
                     <span className='develope-name'> นาย สรชา ชายไพฑูรย์</span>
                 </div>
                 <div className='container-develope'>
-                    <span> <img src="profile1.png" alt="" srcset="" className='develope-img' /> </span>
+                    <span> <img src="2.jpg" alt="" srcset="" className='develope-img' /> </span>
                     <span className='develope-name'> 66044011 </span>
                     <span className='develope-name'> นาย ทัตซึโนริ คาโต้ </span>
                 </div >
                 <div className='container-develope'>
-                    <span> <img src="profile1.png" alt="" srcset="" className='develope-img' /> </span>
+                    <span> <img src="3.jpg" alt="" srcset="" className='develope-img' /> </span>
                     <span className='develope-name'> 66070195 </span>
                     <span className='develope-name'> นางสาว ณัฐธิชา ลาสองชั้น </span>
                 </div>
