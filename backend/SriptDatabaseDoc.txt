@@ -1,30 +1,28 @@
--- ✅ สร้าง database ถ้ายังไม่มี
-IF DB_ID('userdocs') IS NULL
+-- 🔹 สร้างฐานข้อมูล
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'userdocs')
+BEGIN
     CREATE DATABASE userdocs;
+END;
 GO
 
--- ✅ ใช้งาน database
 USE userdocs;
 GO
 
--- 🔍 ดูว่ามีตารางอะไรอยู่บ้าง (สำหรับตรวจสอบเท่านั้น)
--- SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE';
-
--- 🔥 ลบตารางเก่าหากมีอยู่
+-- 🔹 ลบตารางเดิมหากมีอยู่
 IF OBJECT_ID('document_roles', 'U') IS NOT NULL DROP TABLE document_roles;
 IF OBJECT_ID('documents', 'U') IS NOT NULL DROP TABLE documents;
 IF OBJECT_ID('users', 'U') IS NOT NULL DROP TABLE users;
 IF OBJECT_ID('roles', 'U') IS NOT NULL DROP TABLE roles;
 GO
 
--- 📄 roles table
+-- 🔹 roles table
 CREATE TABLE roles (
     id INT PRIMARY KEY IDENTITY(1,1),
     name NVARCHAR(50) NOT NULL UNIQUE
 );
 GO
 
--- 👤 users table
+-- 🔹 users table
 CREATE TABLE users (
     id INT PRIMARY KEY IDENTITY(1,1),
     username NVARCHAR(50) NOT NULL UNIQUE,
@@ -42,7 +40,7 @@ CREATE TABLE users (
 );
 GO
 
--- 📑 documents table
+-- 🔹 documents table
 CREATE TABLE documents (
     id INT PRIMARY KEY IDENTITY(1,1),
     doc_number NVARCHAR(20) NOT NULL,
@@ -54,7 +52,7 @@ CREATE TABLE documents (
 );
 GO
 
--- 🔗 document_roles table
+-- 🔹 document_roles table
 CREATE TABLE document_roles (
     id INT PRIMARY KEY IDENTITY(1,1),
     document_id INT NOT NULL,
@@ -64,7 +62,7 @@ CREATE TABLE document_roles (
 );
 GO
 
--- 🌟 Insert roles
+-- 🔹 Insert roles
 INSERT INTO roles (name)
 VALUES 
 ('admin'),
@@ -72,7 +70,7 @@ VALUES
 ('guest');
 GO
 
--- 👥 Insert users
+-- 🔹 Insert users
 INSERT INTO users (username, password, role_id, token, image, name, id_card, department, position, email, contact)
 VALUES
 ('admin', 'adminpass', 1, 'admin123', '1', N'นายสมชาย ใจดี', '123456', N'ฝ่ายการตลาด', N'ผู้จัดการ', 'somchai@example.com', '081-1234567'),
@@ -82,7 +80,7 @@ VALUES
 ('user3', 'pass3', 2, 'token3', '5', N'นายวิทยา ชาญชัย', '778899', N'ฝ่ายไอที', N'โปรแกรมเมอร์', 'wittaya@example.com', '081-7788990');
 GO
 
--- 📄 Insert documents
+-- 🔹 Insert documents
 INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time)
 VALUES
 ('426333', N'รายงานปี2550', N'เอกสารรายงานประจำปี 2550', N'บัญชี', '2006-12-21', '14:12:00'),
@@ -92,7 +90,7 @@ VALUES
 ('426337', N'รายงานปี2554', N'เอกสารรายงานประจำปี 2554', N'บัญชี', '2010-12-17', '18:50:00');
 GO
 
--- 🔗 Insert document_roles
+-- 🔹 Insert document_roles
 INSERT INTO document_roles (document_id, role_id) VALUES 
 (1, 1), (1, 2),        -- doc 1 → admin, worker
 (2, 1), (2, 2), (2, 3),-- doc 2 → admin, worker, guest
