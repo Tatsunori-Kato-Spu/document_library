@@ -1,51 +1,37 @@
-import React, { useState, useEffect } from 'react'; // Import useState
+import React, { useState, useEffect } from 'react';
 import './profile.css';
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { userdata } from '../../data/userdata'; // Import userdata.js
+import { useNavigate } from "react-router-dom";
 import Header from '../../Layout/Header/Header';
 
 function Profile() {
-    const [user, setUser] = useState(null); // ตั้งค่า state สำหรับเก็บข้อมูลผู้ใช้
+    const [user, setUser] = useState(null);
     const navigate = useNavigate();
-    const [token, setToken] = useState(null);
-    useEffect(() => {
-        // ดึง token จาก localStorage เมื่อ component โหลด
-        const storedToken = localStorage.getItem('token');
-        console.log('Retrieved token from localStorage:', storedToken);
-        setToken(storedToken); // ตั้งค่า token ใน state
 
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            fetch(`http://localhost:3001/api/profile?token=${storedToken}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        setUser(data.user);
+                    } else {
+                        console.log('ไม่พบผู้ใช้');
+                    }
+                })
+                .catch(err => {
+                    console.error('เกิดข้อผิดพลาด:', err);
+                });
+        }
     }, []);
 
-
-
-    useEffect(() => {
-        // ตรวจสอบว่า token ถูกตั้งค่าแล้ว
-        if (token) {
-            const currentUser = userdata.find(u => u.token === token);
-            if (currentUser) {
-                setUser(currentUser); // กำหนดข้อมูลผู้ใช้ใน state
-            } else {
-                console.log('ไม่พบผู้ใช้สำหรับ token นี้');
-            }
-        }
-    }, [token]); // ใช้ token เป็น dependency เพื่อให้ effect นี้ทำงานเมื่อ token ถูกเปลี่ยนแปลง
-
-
     if (!user) {
-        return <div>กำลังโหลดข้อมูล...</div>;  // หรือสามารถแสดงหน้าจอโหลด
+        return <div>กำลังโหลดข้อมูล...</div>;
     }
 
-    const historyClick = () => {
-        navigate('/history');
-    };
-
-    const permissionClick = () => {
-        navigate('/permission');
-    };
-
-    const statsClick = () => {
-        navigate('/stats');
-    };
+    const historyClick = () => navigate('/history');
+    const permissionClick = () => navigate('/permission');
+    const statsClick = () => navigate('/stats');
 
     return (
         <div>
@@ -53,64 +39,27 @@ function Profile() {
             <div className='container'>
                 <div className="profile-container">
                     <div className="profile-content-1">
-                        <div>
-                            <img
-                                src="/document_library/profile1.png"
-                                alt="รูปโปรไฟล์"
-                                className='photo'
-                            />
-                        </div>
-
+                        <img src="/document_library/profile1.png" alt="รูปโปรไฟล์" className='photo' />
                         <button className='button-box-1'>ข้อมูลพื้นฐาน</button>
-
-                        <div>
-                            <button onClick={historyClick} className='button-box-1'>ประวัติ</button>
-                        </div>
+                        <button onClick={historyClick} className='button-box-1'>ประวัติ</button>
 
                         {user.role === "admin" && (
                             <>
-                                <div>
-                                    <button onClick={permissionClick} className='button-box-1'>กำหนดสิทธิ</button>
-                                </div>
-
-                                <div>
-                                    <button onClick={statsClick} className='button-box-1'>สถิติ</button>
-                                </div>
+                                <button onClick={permissionClick} className='button-box-1'>กำหนดสิทธิ</button>
+                                <button onClick={statsClick} className='button-box-1'>สถิติ</button>
                             </>
                         )}
                     </div>
+
                     <div className="profile-content-2">
                         <div className="user-profile">
-                            <div className='text-box'>
-                                <span className='text-left'>ชื่อ :</span>
-                                <span className='text-right'>{user.ชื่อ}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>รหัสประจำตัว :</span>
-                                <span className='text-right'>{user.รหัสประจำตัว}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>หน่วยงาน :</span>
-                                <span className='text-right'>{user.หน่วยงาน}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>ตำแหน่ง :</span>
-                                <span className='text-right'>{user.ตำแหน่ง}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>ระดับ :</span>
-                                <span className='text-right'>{user.role}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>Email :</span>
-                                <span className='text-right'>{user.Email}</span>
-                            </div>
-                            <div className='text-box'>
-                                <span className='text-left'>ติดต่อ :</span>
-                                <span className='text-right'>{user.ติดต่อ}</span>
-                            </div>
-
-
+                            <div className='text-box'><span className='text-left'>ชื่อ :</span><span className='text-right'>{user.name}</span></div>
+                            <div className='text-box'><span className='text-left'>รหัสประจำตัว :</span><span className='text-right'>{user.id_card}</span></div>
+                            <div className='text-box'><span className='text-left'>หน่วยงาน :</span><span className='text-right'>{user.department}</span></div>
+                            <div className='text-box'><span className='text-left'>ตำแหน่ง :</span><span className='text-right'>{user.position}</span></div>
+                            <div className='text-box'><span className='text-left'>ระดับ :</span><span className='text-right'>{user.role}</span></div>
+                            <div className='text-box'><span className='text-left'>Email :</span><span className='text-right'>{user.email}</span></div>
+                            <div className='text-box'><span className='text-left'>ติดต่อ :</span><span className='text-right'>{user.contact}</span></div>
                         </div>
                     </div>
                 </div>
@@ -118,6 +67,5 @@ function Profile() {
         </div >
     );
 }
-
 
 export default Profile;

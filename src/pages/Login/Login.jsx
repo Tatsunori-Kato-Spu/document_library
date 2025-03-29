@@ -25,6 +25,7 @@ function Login({ onLoginSuccess }) {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        console.log("✅ userInfo:", data.userInfo);
         Swal.fire({
           title: "Welcome!",
           text: `ยินดีต้อนรับ, ${data.userInfo.name || data.userInfo.username}`,

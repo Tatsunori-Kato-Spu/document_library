@@ -26,7 +26,12 @@ app.post('/api/login', async (req, res) => {
       .request()
       .input('username', sql.VarChar, username)
       .input('password', sql.VarChar, password)
-      .query('SELECT * FROM users WHERE username = @username AND password = @password');
+      .query(`
+        SELECT users.*, roles.name AS role 
+        FROM users 
+        JOIN roles ON users.role_id = roles.id 
+        WHERE users.username = @username AND users.password = @password
+      `);
 
     if (result.recordset.length === 1) {
       res.json({ success: true, userInfo: result.recordset[0] });
@@ -38,6 +43,7 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 // -------------------------- Documents --------------------------
 // ✅ API ดึงเอกสารตาม role ของ username
@@ -91,6 +97,77 @@ app.get("/api/documents/:id", async (req, res) => {
 });
 
 
+// -------------------------- Users: Get + Update Role --------------------------
+app.get('/api/users', async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.query(`
+      SELECT users.id, users.name, users.id_card, users.department, users.position, users.email, users.contact, roles.name AS role
+      FROM users
+      JOIN roles ON users.role_id = roles.id
+    `);
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("Error fetching users:", err.message);
+    res.status(500).json({ message: "Database error", error: err.message });
+  }
+});
+
+app.put('/api/users/:id/role', async (req, res) => {
+  const userId = req.params.id;
+  const { role } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+    const roleResult = await pool
+      .request()
+      .input('role', sql.NVarChar, role)
+      .query('SELECT id FROM roles WHERE name = @role');
+
+    if (roleResult.recordset.length === 0) {
+      return res.status(400).json({ message: 'Role not found' });
+    }
+
+    const roleId = roleResult.recordset[0].id;
+
+    await pool
+      .request()
+      .input('role_id', sql.Int, roleId)
+      .input('id', sql.Int, userId)
+      .query('UPDATE users SET role_id = @role_id WHERE id = @id');
+
+    res.json({ message: 'Role updated' });
+  } catch (err) {
+    console.error("Error updating role:", err.message);
+    res.status(500).json({ message: "Update error", error: err.message });
+  }
+});
+
+// -------------------------- Profile: user  --------------------------
+app.get('/api/profile', async (req, res) => {
+  const { token } = req.query;
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool
+      .request()
+      .input('token', sql.VarChar, token)
+      .query(`
+        SELECT users.*, roles.name AS role 
+        FROM users 
+        JOIN roles ON users.role_id = roles.id 
+        WHERE users.token = @token
+      `);
+
+    if (result.recordset.length === 1) {
+      res.json({ success: true, user: result.recordset[0] });
+    } else {
+      res.json({ success: false, message: "ไม่พบผู้ใช้สำหรับ token นี้" });
+    }
+  } catch (err) {
+    console.error("Profile error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 
 // -------------------------- Start server --------------------------
