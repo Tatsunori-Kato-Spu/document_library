@@ -107,14 +107,23 @@ app.get("/api/documents", async (req, res) => {
   try {
     await sql.connect(config);
 
+<<<<<<< HEAD
     const userQuery =
       await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
+=======
+    // ค้นหา role_id ของ user
+    const userQuery = await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
+>>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
     if (userQuery.recordset.length === 0) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
     }
 
     const roleId = userQuery.recordset[0].role_id;
 
+<<<<<<< HEAD
+=======
+    // ดึงเอกสารที่ตรงกับ role_id ของ user
+>>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
     const documentQuery = await sql.query`
       SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
       FROM documents d
@@ -122,12 +131,19 @@ app.get("/api/documents", async (req, res) => {
       WHERE dr.role_id = ${roleId}
     `;
 
+<<<<<<< HEAD
     res.json(documentQuery.recordset);
   } catch (err) {
     console.error("SQL error:", err.message);
     res
       .status(500)
       .json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+=======
+    res.json(documentQuery.recordset); // ส่งข้อมูลเอกสารที่สามารถเข้าถึงได้
+  } catch (err) {
+    console.error('SQL error:', err.message);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+>>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
   }
 });
 

@@ -19,25 +19,39 @@ const Pagedoc = ({ userRole }) => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const navigate = useNavigate();
 
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+
+    const storedUsername = localStorage.getItem("username");
+
+    if (storedUsername) {
+      setUsername(storedUsername);
+    } else {
+      console.error("Username not found in storage");
+    }
+  }, []);
+  
+
   // ฟังก์ชันสำหรับดึงข้อมูลเอกสารจาก API
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/documents?username=admin"); // API สำหรับดึงเอกสาร
+        const response = await fetch(`http://localhost:3001/api/documents?username=${username}`);
         const data = await response.json();
-        const documents = data.map((item) => ({
-          ...item,
-          isFavorite: false,
-          isRead: false,
-        }));
-        setFilteredData(documents); // อัพเดต state ด้วยข้อมูลที่ดึงมา
+        setFilteredData(data); // อัพเดต state
       } catch (error) {
         console.error("Error fetching documents:", error);
       }
     };
-
-    fetchDocuments();
-  }, []); // useEffect จะถูกเรียกครั้งเดียวเมื่อคอมโพเนนต์ถูกโหลด
+    if (username) {
+      fetchDocuments();  // เรียกฟังก์ชัน fetchDocuments เมื่อ username ถูกตั้งค่า
+    } else {
+      console.log("Username is missing or incorrect");
+    }
+  }, [username]);
+  
 
   // ฟังก์ชันสำหรับค้นหาเอกสาร
   const handleSearch = (filteredDocuments) => {
@@ -53,8 +67,8 @@ const Pagedoc = ({ userRole }) => {
   // ฟังก์ชันสำหรับจัดเรียงตามวันที่
   const handleSortByDate = () => {
     const sortedData = [...filteredData].sort((a, b) => {
-      const dateA = new Date(a["วันที่"].split("/").reverse().join("-"));
-      const dateB = new Date(b["วันที่"].split("/").reverse().join("-"));
+      const dateA = new Date(a["doc_date"].split("/").reverse().join("-"));
+      const dateB = new Date(b["doc_date"].split("/").reverse().join("-"));
       return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
     });
     setFilteredData(sortedData);
@@ -250,7 +264,7 @@ const Pagedoc = ({ userRole }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7">ไม่พบผลลัพธ์</td>
+                  <td colSpan="6">ไม่พบผลลัพธ์</td>
                 </tr>
               )}
             </tbody>

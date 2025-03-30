@@ -17,20 +17,26 @@ function Login({ onLoginSuccess }) {
       const res = await fetch("http://localhost:3001/api/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
 
       if (res.ok && data.success) {
         console.log("✅ userInfo:", data.userInfo);
+
+        // ✅ บันทึกข้อมูลลง LocalStorage
+        localStorage.setItem("username", data.userInfo.username);
+        localStorage.setItem("role", data.userInfo.role);
+        localStorage.setItem("token", data.token);
+
         Swal.fire({
           title: "Welcome!",
           text: `ยินดีต้อนรับ, ${data.userInfo.name || data.userInfo.username}`,
           icon: "success",
-          confirmButtonText: "Proceed"
+          confirmButtonText: "Proceed",
         }).then(() => {
           onLoginSuccess(data.userInfo);
           navigate("/pagedoc");
@@ -40,7 +46,7 @@ function Login({ onLoginSuccess }) {
           title: "Error!",
           text: data.message || "Login failed!",
           icon: "error",
-          confirmButtonText: "Try Again"
+          confirmButtonText: "Try Again",
         });
         userRef.current.focus();
       }
@@ -50,7 +56,7 @@ function Login({ onLoginSuccess }) {
         title: "Error!",
         text: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
         icon: "error",
-        confirmButtonText: "Try Again"
+        confirmButtonText: "Try Again",
       });
     }
   };
@@ -59,13 +65,18 @@ function Login({ onLoginSuccess }) {
     const guestInfo = {
       username: "guest",
       role: "guest",
-      name: "Guest User"
+      name: "Guest User",
     };
+
+    // ✅ บันทึก Guest ลงใน LocalStorage
+    localStorage.setItem("username", guestInfo.username);
+    localStorage.setItem("role", guestInfo.role);
+
     Swal.fire({
       title: "Logged In!",
       text: "Logged in as Guest",
       icon: "info",
-      confirmButtonText: "OK"
+      confirmButtonText: "OK",
     }).then(() => {
       onLoginSuccess(guestInfo);
       navigate("/pagedoc");
@@ -77,7 +88,11 @@ function Login({ onLoginSuccess }) {
       <Headerprofile />
       <div className="Login-container">
         <div className="logo-container">
-          <img src="/document_library/logo-login.png" alt="Login Logo" className="login-logo" />
+          <img
+            src="/document_library/logo-login.png"
+            alt="Login Logo"
+            className="login-logo"
+          />
         </div>
 
         <form>
@@ -100,7 +115,11 @@ function Login({ onLoginSuccess }) {
             <button className="btn-login" onClick={handleLogin} type="button">
               Login
             </button>
-            <button className="guest-button" onClick={handleGuestLogin} type="button">
+            <button
+              className="guest-button"
+              onClick={handleGuestLogin}
+              type="button"
+            >
               Sign In as Guest
             </button>
           </div>
