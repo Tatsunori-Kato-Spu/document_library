@@ -4,12 +4,7 @@ import cors from "cors";
 
 const app = express();
 app.use(cors());
-app.use(express.json()); // ✅ รองรับ JSON request
-
-// 📦 ฟังก์ชันแปลงเวลาให้อยู่ในรูปแบบ HH:mm:ss
-function formatTimeToSQL(date) {
-  return date.toTimeString().split(" ")[0];
-}
+app.use(express.json());
 
 const config = {
   user: "sa",
@@ -46,15 +41,16 @@ app.post("/api/documents/upload", async (req, res) => {
 
     const docId = result.recordset[0].id;
 
-    // ดึง role_id จากชื่อ role
+    // ดึง role_id ของ role ที่เลือก (case-insensitive)
     const roleResult = await pool
       .request()
       .input("role", sql.NVarChar, role)
-      .query(`SELECT id FROM roles WHERE name = @role`);
+      .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
 
     const roleId = roleResult.recordset[0]?.id;
 
     if (roleId) {
+      // ใส่ role ที่เลือก
       await pool
         .request()
         .input("document_id", sql.Int, docId)
@@ -62,6 +58,26 @@ app.post("/api/documents/upload", async (req, res) => {
         .query(
           `INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`
         );
+
+      // ถ้าไม่ใช่ admin → เพิ่ม admin ด้วย
+      if (role.toLowerCase() !== "admin") {
+        const adminRole = await pool
+          .request()
+          .input("name", sql.NVarChar, "admin")
+          .query(`SELECT id FROM roles WHERE LOWER(name) = @name`);
+
+        const adminId = adminRole.recordset[0]?.id;
+
+        if (adminId && adminId !== roleId) {
+          await pool
+            .request()
+            .input("document_id", sql.Int, docId)
+            .input("role_id", sql.Int, adminId)
+            .query(
+              `INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`
+            );
+        }
+      }
     }
 
     res.json({ success: true, message: "Document uploaded (no file)" });
@@ -100,30 +116,23 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// -------------------------- Documents: Get by Role --------------------------
+// -------------------------- Documents by Role --------------------------
 app.get("/api/documents", async (req, res) => {
   const { username } = req.query;
 
   try {
     await sql.connect(config);
 
-<<<<<<< HEAD
-    const userQuery =
-      await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
-=======
-    // ค้นหา role_id ของ user
-    const userQuery = await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
->>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
+    const userQuery = await sql.query`
+      SELECT role_id FROM users WHERE username = ${username}
+    `;
+
     if (userQuery.recordset.length === 0) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
     }
 
     const roleId = userQuery.recordset[0].role_id;
 
-<<<<<<< HEAD
-=======
-    // ดึงเอกสารที่ตรงกับ role_id ของ user
->>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
     const documentQuery = await sql.query`
       SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
       FROM documents d
@@ -131,19 +140,10 @@ app.get("/api/documents", async (req, res) => {
       WHERE dr.role_id = ${roleId}
     `;
 
-<<<<<<< HEAD
     res.json(documentQuery.recordset);
   } catch (err) {
     console.error("SQL error:", err.message);
-    res
-      .status(500)
-      .json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
-=======
-    res.json(documentQuery.recordset); // ส่งข้อมูลเอกสารที่สามารถเข้าถึงได้
-  } catch (err) {
-    console.error('SQL error:', err.message);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
->>>>>>> b4950a0b584b8791ba3495df7beb5ccbcca9e063
+    res.status(500).json({ message: "Database error", error: err.message });
   }
 });
 
@@ -152,8 +152,9 @@ app.get("/api/documents/:id", async (req, res) => {
   try {
     const docId = req.params.id;
     await sql.connect(config);
-    const result =
-      await sql.query`SELECT * FROM documents WHERE doc_number = ${docId}`;
+    const result = await sql.query`
+      SELECT * FROM documents WHERE doc_number = ${docId}
+    `;
 
     if (result.recordset.length > 0) {
       res.json(result.recordset[0]);
@@ -162,13 +163,11 @@ app.get("/api/documents/:id", async (req, res) => {
     }
   } catch (err) {
     console.error("SQL error:", err.message);
-    res
-      .status(500)
-      .json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+    res.status(500).json({ message: "Database error", error: err.message });
   }
 });
 
-// -------------------------- Users: Get + Update Role --------------------------
+// -------------------------- Users --------------------------
 app.get("/api/users", async (req, res) => {
   try {
     const pool = await sql.connect(config);
@@ -209,7 +208,7 @@ app.put("/api/users/:id/role", async (req, res) => {
 
     res.json({ message: "Role updated" });
   } catch (err) {
-    console.error("Error updating role:", err.message);
+    console.error("Update role error:", err.message);
     res.status(500).json({ message: "Update error", error: err.message });
   }
 });
@@ -219,7 +218,9 @@ app.get("/api/profile", async (req, res) => {
   const { token } = req.query;
   try {
     const pool = await sql.connect(config);
-    const result = await pool.request().input("token", sql.VarChar, token)
+    const result = await pool
+      .request()
+      .input("token", sql.VarChar, token)
       .query(`
         SELECT users.*, roles.name AS role 
         FROM users 
