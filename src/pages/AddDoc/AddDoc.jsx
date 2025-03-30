@@ -1,18 +1,17 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../Layout/Header/Header";
-import { docdata } from "../../data/docdata"; // อัปเดต path ให้ถูกต้อง
 import "./AddDoc.css";
 
 function AddDoc() {
-    const navigate = useNavigate(); // เรียกใช้งาน useNavigate
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         docNumber: "",
         docName: "",
         budgetYear: "",
         date: "",
         department: "",
-        file: null,
+        roles: "",
     });
 
     const handleChange = (e) => {
@@ -20,36 +19,39 @@ function AddDoc() {
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
-    const handleFileChange = (e) => {
-        setFormData((prev) => ({ ...prev, file: e.target.files[0] }));
-    };
-
     const handleCancel = () => {
         navigate("/pagedoc");
     };
 
-    const handleSubmit = () => {
-        const formattedDate = new Date(formData.date)
-            .toLocaleDateString("th-TH", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-            });
-        const newDoc = {
-            หมายเลข: formData.docNumber,
-            ชื่อเอกสาร: formData.docName,
-            เรื่อง: `${formData.docName}`,
-            หน่วยงาน: formData.department,
-            วันที่: formattedDate, // ใช้วันที่ที่ฟอร์แมตแล้ว
-            เวลา: new Date().toLocaleTimeString("th-TH", { hour: '2-digit', minute: '2-digit', hour12: false }), // รูปแบบ 24 ชั่วโมง ไม่มีวินาที
-            ระดับ: formData.roles,
-            roles: ["admin"], // ค่า roles สามารถปรับได้ตามต้องการ
+    const handleSubmit = async () => {
+        const payload = {
+            docNumber: formData.docNumber,
+            docName: formData.docName,
+            department: formData.department,
+            date: formData.date,
+            role: formData.roles,
         };
 
-        docdata.push(newDoc); // เพิ่มข้อมูลใหม่ลงใน docdata
+        try {
+            const res = await fetch("http://localhost:3001/api/documents/upload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
 
-        // เปลี่ยนไปหน้า Pagedoc
-        navigate("/pagedoc");
+            const data = await res.json();
+            if (data.success) {
+                alert("อัปโหลดสำเร็จ");
+                navigate("/pagedoc");
+            } else {
+                alert("อัปโหลดไม่สำเร็จ: " + data.message);
+            }
+        } catch (err) {
+            console.error("Upload failed:", err);
+            alert("เกิดข้อผิดพลาดในการอัปโหลด");
+        }
     };
 
     return (
@@ -121,30 +123,20 @@ function AddDoc() {
                                 onChange={handleChange}
                             >
                                 <option value="" disabled>โปรดเลือก...</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Worker">Worker</option>
-                                <option value="Guest">Guest</option>
+                                <option value="admin">Admin</option>
+                                <option value="worker">Worker</option>
+                                <option value="guest">Guest</option>
                             </select>
-                        </div>;
+                        </div>
                     </div>
-                    <div className="file-upload-container">
-                        <label htmlFor="file-upload" className="file-upload-label">อัปโหลดไฟล์</label>
-                        <input
-                            id="file-upload"
-                            type="file"
-                            className="file-upload"
-                            onChange={handleFileChange}
-                        />
-                    </div>
+
+                    {/* ไม่แสดงส่วนอัปโหลดไฟล์ */}
+                    {/* <div className="file-upload-container"> ... </div> */}
+
                     <div className="button-group">
-
                         <button onClick={handleCancel} className="cancel-button">ยกเลิก</button>
-
-                        <button
-                            className="submit-button"
-                            onClick={handleSubmit}
-                        >
-                            อัปโหลด
+                        <button className="submit-button" onClick={handleSubmit}>
+                            บันทึก
                         </button>
                     </div>
                 </div>
