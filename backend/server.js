@@ -304,6 +304,95 @@ app.delete("/api/documents/:docNumber", async (req, res) => {
   }
 });
 
+// -------------------------- Update edit Document --------------------------
+app.put("/api/documents/:docNumber", async (req, res) => {
+  const { docNumber } = req.params;
+  const { doc_name, subject, department, date, role } = req.body;
+
+  try {
+    const pool = await sql.connect(config);
+
+    // อัปเดตตาราง documents
+    await pool
+      .request()
+      .input("doc_number", sql.NVarChar, docNumber)
+      .input("doc_name", sql.NVarChar, doc_name)
+      .input("subject", sql.NVarChar, subject)
+      .input("department", sql.NVarChar, department)
+      .input("doc_date", sql.Date, date)
+      .query(`
+        UPDATE documents
+        SET doc_name = @doc_name,
+            subject = @subject,
+            department = @department,
+            doc_date = @doc_date
+        WHERE doc_number = @doc_number
+      `);
+
+    // อัปเดต role ใน document_roles
+    if (role) {
+      const roleResult = await pool
+        .request()
+        .input("role", sql.NVarChar, role)
+        .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
+
+      const roleId = roleResult.recordset[0]?.id;
+
+      if (roleId) {
+        // ลบ role เดิมก่อน
+        await pool.request().input("doc_number", sql.NVarChar, docNumber).query(`
+          DELETE FROM document_roles
+          WHERE document_id = (SELECT id FROM documents WHERE doc_number = @doc_number)
+        `);
+
+        // ใส่ role ใหม่
+        await pool
+          .request()
+          .input("role_id", sql.Int, roleId)
+          .input("doc_number", sql.NVarChar, docNumber)
+          .query(`
+            INSERT INTO document_roles (document_id, role_id)
+            SELECT id, @role_id FROM documents WHERE doc_number = @doc_number
+          `);
+      }
+    }
+
+    res.json({ success: true, message: "อัปเดตสำเร็จ" });
+  } catch (err) {
+    console.error("Error updating document:", err.message);
+    res.status(500).json({ success: false, message: "อัปเดตล้มเหลว" });
+  }
+});
+
+app.get("/api/roles", async (req, res) => {
+  try {
+    const result = await sql.connect(config);
+    const roles = await result.request().query(`SELECT id, name FROM roles`);
+    res.json(roles.recordset);
+  } catch (err) {
+    console.error("Error fetching roles:", err.message);
+    res.status(500).json({ message: "Error fetching roles" });
+  }
+});
+
+
+// -------------------------- edit department --------------------------
+app.get("/api/departments", async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+
+    const result = await pool.query(`
+      SELECT DISTINCT department
+      FROM documents
+      WHERE department IS NOT NULL AND department <> ''
+    `);
+
+    res.json(result.recordset); // จะได้ [{ department: "บัญชี" }, { department: "การเงิน" }]
+  } catch (err) {
+    console.error("Error fetching departments:", err.message);
+    res.status(500).json({ message: "Error fetching departments" });
+  }
+});
 
 // -------------------------- Start server --------------------------
 app.listen(3001, () => {
