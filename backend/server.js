@@ -9,13 +9,14 @@ app.use(express.json());
 const config = {
   user: "sa",
   password: "Sa123456!",
-  server: "localhost",
+  server: "171.96.189.80", // public IP ของคุณ
   port: 1433,
   database: "userdocs",
   options: {
     trustServerCertificate: true,
   },
 };
+
 
 // -------------------------- Upload Document (No PDF) --------------------------
 app.post("/api/documents/upload", async (req, res) => {
