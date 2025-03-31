@@ -32,6 +32,7 @@ const Pagedoc = ({ userRole }) => {
 
   // ดึงเอกสารจาก backend
   useEffect(() => {
+
     const fetchDocuments = async () => {
       try {
         const response = await fetch(
@@ -78,29 +79,30 @@ const Pagedoc = ({ userRole }) => {
   };
 
   // ฟังก์ชันเมื่อคลิกอ่าน
-  const handleRowClick = async (docNumber) => {
+  const handleReadClick = async (docNumber) => {
     console.log("Clicked document number:", docNumber);
     if (!docNumber) {
       console.error("Document number is undefined");
-      return; // ไม่ให้ดำเนินการต่อถ้า docNumber เป็น undefined
+      return;
     }
 
     try {
-      // เมื่อคลิกที่บรรทัดนี้ ดึงข้อมูลเอกสาร
       const response = await fetch(
         `http://localhost:3001/api/documents/${docNumber}`
       );
 
       if (response.ok) {
-        const data = await response.json(); // ดึงข้อมูล JSON ออกจาก response
+        const data = await response.json();
         console.log("API Response:", data);
-        setSelectedDocument(data); // เก็บข้อมูลเอกสารใน state
+        setSelectedDocument(data);
+        handleRowClick(docNumber);
       } else {
-        console.error("Error: ", response.statusText); // ถ้าไม่สำเร็จ
+        console.error("Error: ", response.statusText);
       }
     } catch (error) {
       console.error("Error fetching document:", error);
     }
+  };
 
     const handleRowClick = (item) => {
       const index = filteredData.findIndex(
@@ -186,7 +188,7 @@ const Pagedoc = ({ userRole }) => {
                   <tr
                     key={item.id}
                     className={item.isRead ? "row-read" : "row-unread"}
-                    onClick={() => handleRowClick(item.doc_number)}
+                    onClick={() => handleReadClick(item.doc_number)}
                   >
                     {/* คอลัมน์ Favorite */}
                     <td>
@@ -442,6 +444,5 @@ const Pagedoc = ({ userRole }) => {
       </div>
     );
   };
-};
 
 export default Pagedoc;
