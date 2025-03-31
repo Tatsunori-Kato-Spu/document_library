@@ -1,38 +1,25 @@
 import React, { useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Button, TextField, Select, MenuItem, FormControl, InputLabel,
 } from "@mui/material";
-
-import { docdata } from "../../../data/docdata"; // ข้อมูลเอกสาร
-
+import axios from "axios";
 import "./Filtersearch.css";
 
-const Filtersearch = ({ open, onClose, onApply }) => {
+const Filtersearch = ({ open, onClose, onApply, username }) => {
   const [formData, setFormData] = useState({
     docNumber: "",
     docName: "",
     department: "",
-    docType: "",
     timeRange: "ทั้งหมด",
   });
 
-  const [filteredDocs, setFilteredDocs] = useState(docdata);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const handleReset = () => {
@@ -40,60 +27,32 @@ const Filtersearch = ({ open, onClose, onApply }) => {
       docNumber: "",
       docName: "",
       department: "",
-      docType: "",
       timeRange: "ทั้งหมด",
     });
-    setFilteredDocs(docdata);
   };
 
-  const handleSubmit = () => {
-    let filtered = docdata;
+  const handleSubmit = async () => {
+    let keyword = `${formData.docNumber} ${formData.docName}`.trim();
+    let days = null;
 
-    // กรองตามหมายเลขเอกสาร
-    if (formData.docNumber) {
-      filtered = filtered.filter(
-        (doc) => doc["หมายเลข"] && doc["หมายเลข"].includes(formData.docNumber)
-      );
+    if (formData.timeRange === "1 วัน") days = 1;
+    if (formData.timeRange === "7 วัน") days = 7;
+    if (formData.timeRange === "30 วัน") days = 30;
+
+    try {
+      const res = await axios.post(
+        `http://localhost:3001/api/documents/search/filter?username=${username}`,
+        {
+          keyword: keyword,
+          department: formData.department,
+          days: days,
+        }
+      );      
+      onApply(res.data);
+      onClose();
+    } catch (err) {
+      console.error("ค้นหาแบบฟิลเตอร์ล้มเหลว:", err);
     }
-
-    // กรองตามชื่อเอกสาร
-    if (formData.docName) {
-      filtered = filtered.filter(
-        (doc) =>
-          doc["ชื่อเอกสาร"] && doc["ชื่อเอกสาร"].includes(formData.docName)
-      );
-    }
-
-    // กรองตามหน่วยงาน
-    if (formData.department) {
-      filtered = filtered.filter(
-        (doc) => doc["หน่วยงาน"] && doc["หน่วยงาน"] === formData.department
-      );
-    }
-
-    // กรองตามช่วงเวลา
-    if (formData.timeRange && formData.timeRange !== "ทั้งหมด") {
-      const today = new Date();
-      let days = 1;
-      if (formData.timeRange === "7 วัน") days = 7;
-      if (formData.timeRange === "30 วัน") days = 30;
-      const pastDate = new Date(today.setDate(today.getDate() - days));
-
-      filtered = filtered.filter((doc) => {
-        const dateParts = doc["วันที่"].split("/"); 
-        const docDate = new Date(
-          parseInt(dateParts[2]) - 543, 
-          parseInt(dateParts[1]) - 1, 
-          parseInt(dateParts[0]) 
-        );
-        console.log("Doc Date:", docDate); 
-        return docDate >= pastDate;
-      });
-    }
-
-    setFilteredDocs(filtered); 
-    onClose();
-    onApply(filtered); 
   };
 
   return (
@@ -126,9 +85,9 @@ const Filtersearch = ({ open, onClose, onApply }) => {
           >
             <MenuItem value="">เลือกทั้งหมด</MenuItem>
             {["บัญชี", "การตลาด", "ไอที", "ทรัพยากรบุคคล", "การเงิน"].map(
-              (department) => (
-                <MenuItem key={department} value={department}>
-                  {department}
+              (dept) => (
+                <MenuItem key={dept} value={dept}>
+                  {dept}
                 </MenuItem>
               )
             )}
@@ -138,10 +97,11 @@ const Filtersearch = ({ open, onClose, onApply }) => {
           <InputLabel>ช่วงเวลา</InputLabel>
           <Select
             name="timeRange"
+            value={formData.timeRange}
             onChange={handleChange}
             sx={{ color: "white" }}
           >
-            <MenuItem value="">ทั้งหมด</MenuItem>
+            <MenuItem value="ทั้งหมด">ทั้งหมด</MenuItem>
             <MenuItem value="1 วัน">1 วัน</MenuItem>
             <MenuItem value="7 วัน">7 วัน</MenuItem>
             <MenuItem value="30 วัน">30 วัน</MenuItem>
@@ -156,7 +116,7 @@ const Filtersearch = ({ open, onClose, onApply }) => {
           onClick={handleSubmit}
           color="primary"
           sx={{
-            backgroundColor: "#FF8539", 
+            backgroundColor: "#FF8539",
             color: "white",
             "&:hover": {
               backgroundColor: "#ff6c00",

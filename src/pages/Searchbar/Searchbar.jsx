@@ -1,65 +1,58 @@
 import React, { useState } from "react";
-import { userdata } from "../../data/userdata";
-import { docdata } from "../../data/docdata";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
 import "./Searchbar.css";
 import Filtersearch from "./Filtersearch/Filtersearch";
 
-function SearchBar({ onSearch, searchType }) {
+function SearchBar({ onSearch, username }) {
   const [query, setQuery] = useState("");
-  const [filteredData, setFilteredData] = useState({users: userdata,
-    documents: docdata});
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleSearch = (searchQuery) => {
+  // ✅ เช็ค username fallback จาก localStorage
+  const safeUsername =
+    username ||
+    JSON.parse(localStorage.getItem("userInfo"))?.username ||
+    null;
+
+  const handleSearch = async (searchQuery) => {
+    console.log("🔍 เรียก handleSearch() ด้วย query:", searchQuery);
+
     if (!searchQuery.trim()) {
-      if (searchType === "users") {
-        onSearch(userdata); 
-      } else if (searchType === "documents") {
-        onSearch(docdata); 
-      }
+      console.warn("⚠️ ไม่มีคำค้นหา");
+      onSearch([]);
       return;
     }
 
-    // กรองข้อมูลผู้ใช้
-    if (searchType === "users") {
-      // ค้นหาผู้ใช้
-      const filteredUsers = userdata.filter(
-        (user) =>
-          user.ชื่อ.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.รหัสประจำตัว.includes(searchQuery) ||
-          user.หน่วยงาน.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      onSearch(filteredUsers); 
+    if (!safeUsername) {
+      console.warn("⚠️ ไม่พบ username");
+      return;
+    }
 
-    // กรองข้อมูลเอกสาร
-  } else if (searchType === "documents") {
-    // ค้นหาเอกสาร
-    const filteredDocuments = docdata.filter(
-      (doc) =>
-        doc.หมายเลข.includes(searchQuery) ||
-        doc.ชื่อเอกสาร.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.เรื่อง.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.หน่วยงาน.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.วันที่.includes(searchQuery) ||
-        doc.เวลา.includes(searchQuery)
-    );
-    onSearch(filteredDocuments); 
-  }
-};
+    try {
+      console.log("🟢 เรียก API (POST): /api/documents/search", {
+        keyword: searchQuery,
+        username: safeUsername,
+      });
+
+      const res = await axios.post(
+        "http://localhost:3001/api/documents/search",
+        {
+          keyword: searchQuery,
+          username: safeUsername,
+        }
+      );
+
+      console.log("✅ ผลลัพธ์ที่ได้:", res.data);
+      onSearch(res.data);
+    } catch (err) {
+      console.error("❌ ค้นหาล้มเหลว:", err.response?.data || err.message);
+    }
+  };
 
   const handleInputChange = (e) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
-    handleSearch(newQuery);
-  };
-
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSearch(query);
-    }
+    handleSearch(newQuery); // ✅ เรียกตรง ไม่ใช้ debounce ตอนนี้
   };
 
   const handleSubmit = (e) => {
@@ -67,48 +60,36 @@ function SearchBar({ onSearch, searchType }) {
     handleSearch(query);
   };
 
-
   return (
-    <div>
-      <div className="container">
-        <Form className="search-form" role="search" onSubmit={handleSubmit}>
-          <input
-            className="search-input"
-            // type="search"
-            placeholder="Search"
-            aria-label="Search"
-            value={query}
-            onChange={handleInputChange}
-            onKeyDown={handleEnter}
-            style={{ flexGrow: 1 }}
-          />
-          <div className="search-button">
-
-          <button className="search-button" type="submit" title="Search">
-            <span className="search-icon">
-              <i className="bi bi-search"></i>
-            </span>
+    <div className="container">
+      <Form className="search-form" onSubmit={handleSubmit}>
+        <input
+          className="search-input"
+          placeholder="ค้นหาเอกสาร..."
+          value={query}
+          onChange={handleInputChange}
+        />
+        <div className="search-button">
+          <button type="submit" className="search-button" title="Search">
+            <i className="bi bi-search"></i>
           </button>
           <button
-            className="Slider-button"
             type="button"
-            onClick={() => setDialogOpen(true)}>
-            <span className="slider-icon">
-              <i className="bi bi-sliders2"></i>
-            </span>
+            className="Slider-button"
+            onClick={() => setDialogOpen(true)}
+          >
+            <i className="bi bi-sliders2"></i>
           </button>
-              </div>
-        </Form>
-        <Filtersearch
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          onApply={(filtered) => {
-            setFilteredData(filtered);
-            onSearch(filtered);
-          }}
-        />
-      </div>  
-      </div>
+        </div>
+      </Form>
+
+      <Filtersearch
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        username={safeUsername}
+        onApply={onSearch}
+      />
+    </div>
   );
 }
 

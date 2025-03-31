@@ -7,9 +7,6 @@ GO
 USE userdocs;
 GO
 
--- 🔍 ดูว่ามีตารางอะไรอยู่บ้าง (สำหรับตรวจสอบเท่านั้น)
--- SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE';
-
 -- 🔥 ลบตารางเก่าหากมีอยู่
 IF OBJECT_ID('document_roles', 'U') IS NOT NULL DROP TABLE document_roles;
 IF OBJECT_ID('documents', 'U') IS NOT NULL DROP TABLE documents;
@@ -42,7 +39,7 @@ CREATE TABLE users (
 );
 GO
 
--- 📑 documents table
+-- 📑 documents table (✅ เพิ่ม pdf_file)
 CREATE TABLE documents (
     id INT PRIMARY KEY IDENTITY(1,1),
     doc_number NVARCHAR(20) NOT NULL,
@@ -50,7 +47,8 @@ CREATE TABLE documents (
     subject NVARCHAR(255),
     department NVARCHAR(100),
     doc_date DATE,
-    doc_time TIME
+    doc_time TIME,
+    pdf_file VARBINARY(MAX)  -- ✅ สำหรับเก็บไฟล์ PDF
 );
 GO
 
