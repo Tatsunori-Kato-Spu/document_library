@@ -77,24 +77,34 @@ app.get('/api/documents', async (req, res) => {
 });
 
 
-app.get("/api/documents/:id", async (req, res) => {
-  try {
-    const docId = req.params.id;
-    await sql.connect(config);
+// ดึงข้อมูลเอกสารตามหมายเลขเอกสาร
+app.get("/api/documents/:docNumber", async (req, res) => {
+  const { docNumber } = req.params; // รับ doc_number จาก URL
 
-    // ใช้ parameterized query แทน
-    const result = await sql.query`SELECT * FROM documents WHERE doc_number = ${docId}`;
+  try {
+    const pool = await sql.connect(config);
+    // ดึงข้อมูลเอกสารที่มี doc_number ตรงกับที่ผู้ใช้ระบุ
+    const result = await pool
+      .request()
+      .input('docNumber', sql.VarChar, docNumber)
+      .query(`
+        SELECT * 
+        FROM documents 
+        WHERE doc_number = @docNumber
+      `);
 
     if (result.recordset.length > 0) {
+      // ส่งข้อมูลเอกสารกลับไปให้ frontend
       res.json(result.recordset[0]);
     } else {
       res.status(404).json({ message: "ไม่พบเอกสารที่มีหมายเลขนี้" });
     }
   } catch (err) {
-    console.error('SQL error:', err.message);  
-    res.status(500).json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+    console.error("Error fetching document:", err);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล" });
   }
 });
+
 
 
 // -------------------------- Users: Get + Update Role --------------------------

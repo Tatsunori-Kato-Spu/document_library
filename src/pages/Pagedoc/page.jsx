@@ -21,6 +21,7 @@ const Pagedoc = ({ userRole }) => {
 
 
   const [username, setUsername] = useState("");
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   useEffect(() => {
 
@@ -93,14 +94,28 @@ const Pagedoc = ({ userRole }) => {
     setFilteredData(newData);
   };
 
-  // ฟังก์ชันเมื่อคลิกที่แถว (เปลี่ยนสถานะเป็น "อ่านแล้ว")
-  const handleRowClick = (item) => {
-    const newData = [...filteredData];
-    const index = filteredData.findIndex(
-      (doc) => doc["หมายเลข"] === item["หมายเลข"]
-    );
-    newData[index].isRead = true;
-    setFilteredData(newData);
+  // ฟังก์ชันเมื่อคลิกอ่าน
+  const handleRowClick = async (docNumber) => {
+    console.log("Clicked document number:", docNumber);
+    if (!docNumber) {
+      console.error("Document number is undefined");
+      return; // ไม่ให้ดำเนินการต่อถ้า docNumber เป็น undefined
+    }
+  
+    try {
+      // เมื่อคลิกที่บรรทัดนี้ ดึงข้อมูลเอกสาร
+      const response = await fetch(`http://localhost:3001/api/documents/${docNumber}`);
+      
+      if (response.ok) {
+        const data = await response.json(); // ดึงข้อมูล JSON ออกจาก response
+        console.log("API Response:", data);
+        setSelectedDocument(data); // เก็บข้อมูลเอกสารใน state
+      } else {
+        console.error("Error: ", response.statusText); // ถ้าไม่สำเร็จ
+      }
+    } catch (error) {
+      console.error("Error fetching document:", error);
+    }
   };
 
   // ฟังก์ชันแสดง Modal สำหรับลบเอกสาร
@@ -168,9 +183,9 @@ const Pagedoc = ({ userRole }) => {
               {filteredData.length > 0 ? (
                 filteredData.map((item, index) => (
                   <tr
-                    key={index}
+                    key={item.id}
                     className={item.isRead ? "row-read" : "row-unread"}
-                    onClick={() => handleRowClick(item)}
+                    onClick={() => handleRowClick(item.doc_number)}
                   >
                     {/* คอลัมน์ Favorite */}
                     <td>
