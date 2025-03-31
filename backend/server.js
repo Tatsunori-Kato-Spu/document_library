@@ -239,6 +239,40 @@ app.get("/api/profile", async (req, res) => {
   }
 });
 
+// -------------------------- Delete Document --------------------------
+app.delete("/api/documents/:docNumber", async (req, res) => {
+  const { docNumber } = req.params;
+
+  try {
+    const pool = await sql.connect(config);
+
+    // ลบจาก document_roles ก่อน (เพราะมี foreign key)
+    await pool
+      .request()
+      .input("doc_number", sql.NVarChar, docNumber)
+      .query(`
+        DELETE FROM document_roles
+        WHERE document_id IN (
+          SELECT id FROM documents WHERE doc_number = @doc_number
+        )
+      `);
+
+    // ลบจาก documents
+    await pool
+      .request()
+      .input("doc_number", sql.NVarChar, docNumber)
+      .query(`
+        DELETE FROM documents WHERE doc_number = @doc_number
+      `);
+
+    res.json({ success: true, message: "ลบเอกสารเรียบร้อยแล้ว" });
+  } catch (err) {
+    console.error("Delete error:", err.message);
+    res.status(500).json({ success: false, message: "ลบเอกสารล้มเหลว", error: err.message });
+  }
+});
+
+
 // -------------------------- Start server --------------------------
 app.listen(3001, () => {
   console.log("✅ Backend running on http://localhost:3001");
