@@ -9,7 +9,7 @@ app.use(express.json());
 const config = {
   user: "sa",
   password: "Sa123456!",
-  server: "171.96.189.80", // public IP ของคุณ
+  server: "localhost",
   port: 1433,
   database: "userdocs",
   options: {
