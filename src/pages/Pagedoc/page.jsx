@@ -28,7 +28,7 @@ const Pagedoc = ({ userRole }) => {
       console.error("Username not found in storage");
     }
   }, []);
-
+  
   // ดึงเอกสารจาก backend
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -40,7 +40,7 @@ const Pagedoc = ({ userRole }) => {
         console.error("Error fetching documents:", error);
       }
     };
-
+  
     if (username) fetchDocuments();
   }, [username]);
 
@@ -121,7 +121,11 @@ const Pagedoc = ({ userRole }) => {
 
       {/* ค้นหา */}
       <div className="searchbar-container">
-        <Searchbar onSearch={handleSearch} searchType="documents" />
+          <Searchbar
+            onSearch={handleSearch}
+            searchType="documents"
+            username={username}
+          />
       </div>
 
       {/* ตารางเอกสาร */}
