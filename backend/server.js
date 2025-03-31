@@ -88,6 +88,22 @@ app.post("/api/documents/upload", async (req, res) => {
       .json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+app.get("/api/documents", async (req, res) => {
+  try {
+    const pool = await sql.connect(config);
+    const result = await pool.query(`
+      SELECT doc_number, doc_name, subject, department, doc_date, doc_time
+      FROM documents
+    `);
+
+    // ส่งข้อมูลที่ได้กลับไปให้ frontend
+    res.json(result.recordset);
+  } catch (err) {
+    console.error("SQL error:", err.message);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลเอกสาร" });
+  }
+});
+
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
