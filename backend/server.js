@@ -199,6 +199,101 @@ app.get("/api/documents/:id", async (req, res) => {
   }
 });
 
+// -------------------------- Search --------------------------
+app.post("/api/documents/search", async (req, res) => {
+  const { keyword, username } = req.body; // รับข้อมูลจาก req.body
+
+  try {
+    await sql.connect(config);
+
+    const userResult = await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
+    if (userResult.recordset.length === 0) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    }
+
+    const roleId = userResult.recordset[0].role_id;
+
+    const docResult = await sql.query`
+      SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
+      FROM documents d
+      JOIN document_roles dr ON d.id = dr.document_id
+      WHERE dr.role_id = ${roleId}
+    `;
+
+    const docs = docResult.recordset;
+    const lowerKeyword = (keyword || "").trim().toLowerCase();
+
+    const filtered = docs.filter((doc) => {
+      return (
+        !lowerKeyword ||
+        doc.doc_name?.toLowerCase().includes(lowerKeyword) ||
+        doc.doc_number?.includes(lowerKeyword)
+      );
+    });
+
+    // ✅ Log ข้อมูลใน server ให้ชัวร์ (ไม่ crash แน่)
+    console.log("🔍 keyword (POST):", keyword);
+    console.log("👤 user:", username, "| roleId:", roleId);
+    console.log("📄 ทั้งหมด:", docs.length, "| ตรงกับ keyword:", filtered.length);
+
+    return res.json(filtered);
+  } catch (err) {
+    console.error("❌ Server error (POST search):", err.message);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาด", error: err.message });
+  }
+});
+
+
+app.post("/api/documents/search/filter", async (req, res) => {
+  const { keyword, department, days } = req.body;
+  const { username } = req.query;
+
+  try {
+    await sql.connect(config);
+
+    const userQuery =
+      await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
+    if (userQuery.recordset.length === 0) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    }
+
+    const roleId = userQuery.recordset[0].role_id;
+
+    const documentQuery = await sql.query`
+      SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
+      FROM documents d
+      JOIN document_roles dr ON d.id = dr.document_id
+      WHERE dr.role_id = ${roleId}
+    `;
+
+    const now = new Date();
+    const docs = documentQuery.recordset;
+
+    const filtered = docs.filter((doc) => {
+      const lowerKeyword = keyword?.toLowerCase() || "";
+      const matchKeyword = keyword
+        ? doc.doc_name.toLowerCase().includes(lowerKeyword) ||
+          doc.doc_number.includes(lowerKeyword)
+        : true;
+
+      const matchDept = department ? doc.department === department : true;
+
+      const createdAt = new Date(doc.doc_date);
+      const timeDiff = (now - createdAt) / (1000 * 60 * 60 * 24);
+      const matchDays = days ? timeDiff <= days : true;
+
+      return matchKeyword && matchDept && matchDays;
+    });
+
+    res.json(filtered);
+  } catch (err) {
+    console.error("SQL error:", err.message);
+    res
+      .status(500)
+      .json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+  }
+});
+
 // -------------------------- Users --------------------------
 app.get("/api/users", async (req, res) => {
   try {
