@@ -2,55 +2,45 @@ import React, { useState, useEffect } from "react";
 import "./history.css";
 import { userdata } from "../../data/userdata";
 import { useNavigate } from "react-router-dom";
-import { docdata } from "../../data/docdata";
 import Header from "../../Layout/Header/Header";
 import Searchbar from "../Searchbar/Searchbar";
 
 function History() {
-  const [user, setUser] = useState(null); // เพิ่ม state สำหรับ user
-  const [filteredData, setFilteredData] = useState(docdata);
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
   const [token, setToken] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-      // ดึง token จาก localStorage เมื่อ component โหลด
-      const storedToken = localStorage.getItem('token');
-      console.log('Retrieved token from localStorage:', storedToken);
-      setToken(storedToken); // ตั้งค่า token ใน state
-
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
   }, []);
 
-
+  useEffect(() => {
+    if (token) {
+      const currentUser = userdata.find((u) => u.token === token);
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    }
+  }, [token]);
 
   useEffect(() => {
-      // ตรวจสอบว่า token ถูกตั้งค่าแล้ว
-      if (token) {
-          const currentUser = userdata.find(u => u.token === token);
-          if (currentUser) {
-              setUser(currentUser); // กำหนดข้อมูลผู้ใช้ใน state
-          } else {
-              console.log('ไม่พบผู้ใช้สำหรับ token นี้');
-          }
-      }
-  }, [token]); // ใช้ token เป็น dependency เพื่อให้ effect นี้ทำงานเมื่อ token ถูกเปลี่ยนแปลง
-
+    fetch("http://localhost:3001/api/documents")
+      .then((response) => response.json())
+      .then((data) => {
+        setFilteredData(data);
+      })
+      .catch((error) => console.error("Error fetching documents:", error));
+  }, []);
 
   if (!user) {
-      return <div>กำลังโหลดข้อมูล...</div>;  // หรือสามารถแสดงหน้าจอโหลด
+    return <div>กำลังโหลดข้อมูล...</div>;
   }
+
   const handleSearch = (filtered) => {
     setFilteredData(filtered);
   };
-
-
-  
-  const permissionClick = () => {
-    navigate('/permission');
-};
-
-const statsClick = () => {
-    navigate('/stats');
-};
 
   return (
     <div>
@@ -60,34 +50,37 @@ const statsClick = () => {
           <div className="profile-content-1">
             <div>
               <img
-                src= "/document_library/profile1.png" 
+                src="/document_library/profile1.png"
                 alt="รูปโปรไฟล์"
                 className="photo"
               />
             </div>
-            <button
-              className="button-style"
-              onClick={() => navigate("/profile")}
-            >
+            <button className="button-style" onClick={() => navigate("/profile")}>
               ข้อมูลพื้นฐาน
             </button>
-            <button className="button-style">ประวัติ</button>
+            {/* แสดงปุ่ม "ประวัติ" เฉพาะถ้าผู้ใช้ไม่ใช่ worker */}
+            {user.role !== "worker" && (
+              <button className="button-style">ประวัติ</button>
+            )}
             {user.role === "admin" && (
-                            <>
-                                <div>
-                                    <button onClick={permissionClick} className='button-box-1'>กำหนดสิทธิ</button>
-                                </div>
-
-                                <div>
-                                    <button onClick={statsClick} className='button-box-1'>สถิติ</button>
-                                </div>
-                            </>
-                        )}
+              <>
+                <div>
+                  <button onClick={() => navigate("/permission")} className="button-box-1">
+                    กำหนดสิทธิ
+                  </button>
+                </div>
+                <div>
+                  <button onClick={() => navigate("/stats")} className="button-box-1">
+                    สถิติ
+                  </button>
+                </div>
+              </>
+            )}
           </div>
           <div className="profile-content-2">
-            <div className="searchbar-box">
+            {/* <div className="searchbar-box">
               <Searchbar onSearch={handleSearch} searchType="documents" />
-            </div>
+            </div> */}
             <div className="table-wrapper2">
               <table className="table-contenner">
                 <thead className="table-th">
@@ -103,12 +96,12 @@ const statsClick = () => {
                 <tbody>
                   {filteredData.map((item, index) => (
                     <tr key={index}>
-                      <td>{item["หมายเลข"]}</td>
-                      <td>{item["ชื่อเอกสาร"]}</td>
-                      <td>{item["เรื่อง"]}</td>
-                      <td>{item["หน่วยงาน"]}</td>
-                      <td>{item["วันที่"]}</td>
-                      <td>{item["เวลา"]}</td>
+                      <td>{item.doc_number}</td>
+                      <td>{item.doc_name}</td>
+                      <td>{item.subject}</td>
+                      <td>{item.department}</td>
+                      <td>{item.doc_date?.split("T")[0]}</td>
+                      <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
                     </tr>
                   ))}
                 </tbody>
