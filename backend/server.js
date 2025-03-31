@@ -121,31 +121,63 @@ app.get("/api/documents", async (req, res) => {
   const { username } = req.query;
 
   try {
-    await sql.connect(config);
+    const pool = await sql.connect(config);
 
-    const userQuery = await sql.query`
-      SELECT role_id FROM users WHERE username = ${username}
-    `;
+    // ดึง role_id ของผู้ใช้
+    const userResult = await pool
+      .request()
+      .input("username", sql.NVarChar, username)
+      .query(`SELECT role_id FROM users WHERE username = @username`);
 
-    if (userQuery.recordset.length === 0) {
+    if (userResult.recordset.length === 0) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
     }
 
-    const roleId = userQuery.recordset[0].role_id;
+    const userRoleId = userResult.recordset[0].role_id;
 
-    const documentQuery = await sql.query`
-      SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
-      FROM documents d
-      JOIN document_roles dr ON d.id = dr.document_id
-      WHERE dr.role_id = ${roleId}
-    `;
+    // ดึง role_id ของ guest และ admin
+    const roleResult = await pool.query(`SELECT id, name FROM roles`);
+    const rolesMap = Object.fromEntries(
+      roleResult.recordset.map((r) => [r.name.toLowerCase(), r.id])
+    );
 
-    res.json(documentQuery.recordset);
+    const guestId = rolesMap["guest"];
+    const adminId = rolesMap["admin"];
+
+    let query;
+
+    if (userRoleId === adminId) {
+      // ✅ Admin เห็นทุกอย่าง
+      query = `
+        SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
+        FROM documents d
+      `;
+    } else if (userRoleId === guestId) {
+      // ✅ Guest เห็นของตัวเอง
+      query = `
+        SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
+        FROM documents d
+        JOIN document_roles dr ON d.id = dr.document_id
+        WHERE dr.role_id = ${guestId}
+      `;
+    } else {
+      // ✅ Worker หรือ role อื่น เห็นของตัวเอง + guest
+      query = `
+        SELECT DISTINCT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
+        FROM documents d
+        JOIN document_roles dr ON d.id = dr.document_id
+        WHERE dr.role_id IN (${userRoleId}, ${guestId})
+      `;
+    }
+
+    const result = await pool.query(query);
+    res.json(result.recordset);
   } catch (err) {
     console.error("SQL error:", err.message);
     res.status(500).json({ message: "Database error", error: err.message });
   }
 });
+
 
 // -------------------------- Document by doc_number --------------------------
 app.get("/api/documents/:id", async (req, res) => {
