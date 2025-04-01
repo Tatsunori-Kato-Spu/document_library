@@ -30,6 +30,24 @@ const Pagedoc = ({ userRole }) => {
     }
   }, []);
 
+  //
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/documents?username=${username}`
+        );
+        const data = await response.json();
+
+        // ✅ ไม่ต้องกรองซ้ำ ถ้า backend กรอง role แล้ว
+        setFilteredData(data);
+      } catch (error) {
+        console.error("Error fetching documents:", error);
+      }
+    };
+
+    if (username) fetchDocuments();
+  }, [username]);
   // ดึงเอกสารจาก backend
   useEffect(() => {
 
@@ -104,268 +122,115 @@ const Pagedoc = ({ userRole }) => {
     }
   };
 
-    const handleRowClick = (item) => {
-      const index = filteredData.findIndex(
-        (doc) => doc.doc_number === item.doc_number
-      );
-      const updated = [...filteredData];
-      updated[index].isRead = true;
-      setFilteredData(updated);
-    };
+  const handleRowClick = (item) => {
+    const index = filteredData.findIndex(
+      (doc) => doc.doc_number === item.doc_number
+    );
+    const updated = [...filteredData];
+    updated[index].isRead = true;
+    setFilteredData(updated);
+  };
 
-    const handleShowModal = (doc) => {
-      setSelectedDoc(doc);
-      setShowModal(true);
-    };
+  const handleShowModal = (doc) => {
+    setSelectedDoc(doc);
+    setShowModal(true);
+  };
 
-    const handleDelete = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/api/documents/${selectedDoc.doc_number}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (response.ok) {
-          setFilteredData((prev) =>
-            prev.filter((doc) => doc.doc_number !== selectedDoc.doc_number)
-          );
-        } else {
-          console.error("ลบไม่สำเร็จ:", await response.json());
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/documents/${selectedDoc.doc_number}`,
+        {
+          method: "DELETE",
         }
-      } catch (err) {
-        console.error("เกิดข้อผิดพลาดตอนลบ:", err);
+      );
+
+      if (response.ok) {
+        setFilteredData((prev) =>
+          prev.filter((doc) => doc.doc_number !== selectedDoc.doc_number)
+        );
+      } else {
+        console.error("ลบไม่สำเร็จ:", await response.json());
       }
+    } catch (err) {
+      console.error("เกิดข้อผิดพลาดตอนลบ:", err);
+    }
 
-      setShowModal(false);
-      setSelectedDoc(null);
-    };
+    setShowModal(false);
+    setSelectedDoc(null);
+  };
 
-    const handleDownload = (docId) => {
-      const fileUrl = `/files/${docId}.pdf`;
-      const link = document.createElement("a");
-      link.href = fileUrl;
-      link.download = `${docId}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
+  const handleDownload = (docId) => {
+    const fileUrl = `/files/${docId}.pdf`;
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = `${docId}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-    return (
-      <div className="page-container">
-        <Header />
+  return (
+    <div className="page-container">
+      <Header />
 
-        {/* ตารางแสดงเอกสาร */}
-        <div className="table-wrapper">
-          <table className="table-contenner">
-            <thead className="table-th">
-              <tr>
-                <th></th>
-                <th>
-                  ลำดับ
-                  <button className="icon-button" onClick={handleSortByOrder}>
-                    {sortOrder === "desc" ? "🔽" : "🔼"}
-                  </button>
-                </th>
-                <th>หมายเลข</th>
-                <th>ชื่อเอกสาร</th>
-                <th>เรื่อง</th>
-                <th>หน่วยงาน</th>
-                <th>
-                  วันที่
-                  <button className="icon-button" onClick={handleSortByDate}>
-                    {sortOrder === "desc" ? "🔽" : "🔼"}
-                  </button>
-                </th>
-                <th>เวลา</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className={item.isRead ? "row-read" : "row-unread"}
-                    onClick={() => handleReadClick(item.doc_number)}
-                  >
-                    {/* คอลัมน์ Favorite */}
-                    <td>
-                      <FontAwesomeIcon
-                        icon={item.isFavorite ? faStar : faRegStar}
-                        style={{
-                          cursor: "pointer",
-                          color: item.isFavorite ? "#FF8539" : "#ccc",
-                        }}
-                        onClick={() => handleStarClick(index)}
-                      />
-                    </td>
-                    <td>{index + 1}</td>
-                    <td>{item["doc_number"]}</td>
-                    <td>{item["doc_name"]}</td>
-                    <td>{item["subject"]}</td>
-                    <td>{item["department"]}</td>
-                    <td>{item["doc_date"].split("T")[0]}</td>
-                    <td>{item["doc_time"].split("T")[1].split(".")[0]}</td>
+      {/* ตารางแสดงเอกสาร */}
+      <div className="table-wrapper">
+        <table className="table-contenner">
+          <thead className="table-th">
+            <tr>
+              <th></th>
+              <th>
+                ลำดับ
+                <button className="icon-button" onClick={handleSortByOrder}>
+                  {sortOrder === "desc" ? "🔽" : "🔼"}
+                </button>
+              </th>
+              <th>หมายเลข</th>
+              <th>ชื่อเอกสาร</th>
+              <th>เรื่อง</th>
+              <th>หน่วยงาน</th>
+              <th>
+                วันที่
+                <button className="icon-button" onClick={handleSortByDate}>
+                  {sortOrder === "desc" ? "🔽" : "🔼"}
+                </button>
+              </th>
+              <th>เวลา</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((item, index) => (
+                <tr
+                  key={item.id}
+                  className={item.isRead ? "row-read" : "row-unread"}
+                  onClick={() => handleReadClick(item.doc_number)}
+                >
+                  {/* คอลัมน์ Favorite */}
+                  <td>
+                    <FontAwesomeIcon
+                      icon={item.isFavorite ? faStar : faRegStar}
+                      style={{
+                        cursor: "pointer",
+                        color: item.isFavorite ? "#FF8539" : "#ccc",
+                      }}
+                      onClick={() => handleStarClick(index)}
+                    />
+                  </td>
+                  <td>{index + 1}</td>
+                  <td>{item["doc_number"]}</td>
+                  <td>{item["doc_name"]}</td>
+                  <td>{item["subject"]}</td>
+                  <td>{item["department"]}</td>
+                  <td>{item["doc_date"].split("T")[0]}</td>
+                  <td>{item["doc_time"].split("T")[1].split(".")[0]}</td>
 
-                    {/* Dropdown สำหรับการกระทำ */}
-                    <div className="dropdown">
-                      <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                          <i className="bi bi-list"></i>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          {userRole === "admin" && (
-                            <>
-                              <Dropdown.Item
-                                className="bi bi-pencil-square"
-                                onClick={() =>
-                                  navigate("/addDoc", { state: { doc: item } })
-                                }
-                              >
-                                {" "}
-                                &nbsp;แก้ไข
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                href="#/action-2"
-                                className="bi bi-box-arrow-down"
-                                onClick={() =>
-                                  handleDownload(item["ชื่อเอกสาร"])
-                                }
-                              >
-                                {" "}
-                                &nbsp;Download
-                              </Dropdown.Item>
-                              <Dropdown.Item
-                                href="#/action-3"
-                                className="bi bi-trash"
-                                onClick={() => handleShowModal(item)}
-                              >
-                                {" "}
-                                &nbsp;ลบ
-                              </Dropdown.Item>
-                            </>
-                          )}
-                          {userRole === "worker" && (
-                            <>
-                              <Dropdown.Item
-                                href="#/action-2"
-                                className="bi bi-box-arrow-down"
-                                onClick={() =>
-                                  handleDownload(item["ชื่อเอกสาร"])
-                                }
-                              >
-                                {" "}
-                                &nbsp;Download
-                              </Dropdown.Item>
-                            </>
-                          )}
-                          {userRole === "guest" && (
-                            <>
-                              <Dropdown.Item
-                                href="#/action-2"
-                                className="bi bi-box-arrow-down"
-                                onClick={() =>
-                                  handleDownload(item["ชื่อเอกสาร"])
-                                }
-                              >
-                                {" "}
-                                &nbsp;Download
-                              </Dropdown.Item>
-                            </>
-                          )}
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6">ไม่พบผลลัพธ์</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ปุ่มอัพโหลดเอกสารสำหรับ Admin */}
-        {userRole === "admin" && <ButtonUpload />}
-
-        {/* Modal ยืนยันการลบ */}
-        <Actiondropdown
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          onConfirm={handleDelete}
-          docName={selectedDoc?.["ชื่อเอกสาร"]}
-        />
-
-        {/* ค้นหา */}
-        <div className="searchbar-container">
-          <Searchbar
-            onSearch={handleSearch}
-            searchType="documents"
-            username={username}
-          />
-        </div>
-
-        {/* ตารางเอกสาร */}
-        <div className="table-wrapper">
-          <table className="table-contenner">
-            <thead className="table-th">
-              <tr>
-                <th></th>
-                <th>
-                  ลำดับ
-                  <button className="icon-button" onClick={handleSortByOrder}>
-                    {sortOrder === "desc" ? "🔽" : "🔼"}
-                  </button>
-                </th>
-                <th>หมายเลข</th>
-                <th>ชื่อเอกสาร</th>
-                <th>เรื่อง</th>
-                <th>หน่วยงาน</th>
-                <th>
-                  วันที่
-                  <button className="icon-button" onClick={handleSortByDate}>
-                    {sortOrder === "desc" ? "🔽" : "🔼"}
-                  </button>
-                </th>
-                <th>เวลา</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={item.isRead ? "row-read" : "row-unread"}
-                    onClick={() => handleRowClick(item)}
-                  >
-                    <td>
-                      <FontAwesomeIcon
-                        icon={item.isFavorite ? faStar : faRegStar}
-                        style={{
-                          cursor: "pointer",
-                          color: item.isFavorite ? "#FF8539" : "#ccc",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleStarClick(index);
-                        }}
-                      />
-                    </td>
-                    <td>{index + 1}</td>
-                    <td>{item.doc_number}</td>
-                    <td>{item.doc_name}</td>
-                    <td>{item.subject}</td>
-                    <td>{item.department}</td>
-                    <td>{item.doc_date?.split("T")[0]}</td>
-                    <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
-
+                  {/* Dropdown สำหรับการกระทำ */}
+                  <div className="dropdown">
                     <Dropdown>
-                      <Dropdown.Toggle variant="success" size="sm">
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
                         <i className="bi bi-list"></i>
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
@@ -373,41 +238,173 @@ const Pagedoc = ({ userRole }) => {
                           <>
                             <Dropdown.Item
                               className="bi bi-pencil-square"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate("/editDoc", {
-                                  state: {
-                                    doc: {
-                                      ...item,
-                                      role: item.role || "",
-                                    },
-                                  },
-                                });
-                              }}
+                              onClick={() =>
+                                navigate("/addDoc", { state: { doc: item } })
+                              }
                             >
+                              {" "}
                               &nbsp;แก้ไข
                             </Dropdown.Item>
                             <Dropdown.Item
+                              href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDownload(item.doc_number);
-                              }}
+                              onClick={() =>
+                                handleDownload(item["ชื่อเอกสาร"])
+                              }
                             >
+                              {" "}
                               &nbsp;Download
                             </Dropdown.Item>
                             <Dropdown.Item
+                              href="#/action-3"
                               className="bi bi-trash"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleShowModal(item);
-                              }}
+                              onClick={() => handleShowModal(item)}
                             >
+                              {" "}
                               &nbsp;ลบ
                             </Dropdown.Item>
                           </>
                         )}
-                        {(userRole === "worker" || userRole === "guest") && (
+                        {userRole === "worker" && (
+                          <>
+                            <Dropdown.Item
+                              href="#/action-2"
+                              className="bi bi-box-arrow-down"
+                              onClick={() =>
+                                handleDownload(item["ชื่อเอกสาร"])
+                              }
+                            >
+                              {" "}
+                              &nbsp;Download
+                            </Dropdown.Item>
+                          </>
+                        )}
+                        {userRole === "guest" && (
+                          <>
+                            <Dropdown.Item
+                              href="#/action-2"
+                              className="bi bi-box-arrow-down"
+                              onClick={() =>
+                                handleDownload(item["ชื่อเอกสาร"])
+                              }
+                            >
+                              {" "}
+                              &nbsp;Download
+                            </Dropdown.Item>
+                          </>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">ไม่พบผลลัพธ์</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ปุ่มอัพโหลดเอกสารสำหรับ Admin */}
+      {userRole === "admin" && <ButtonUpload />}
+
+      {/* Modal ยืนยันการลบ */}
+      <Actiondropdown
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+        docName={selectedDoc?.["ชื่อเอกสาร"]}
+      />
+
+      {/* ค้นหา */}
+      <div className="searchbar-container">
+        <Searchbar
+          onSearch={handleSearch}
+          searchType="documents"
+          username={username}
+        />
+      </div>
+
+      {/* ตารางเอกสาร */}
+      <div className="table-wrapper">
+        <table className="table-contenner">
+          <thead className="table-th">
+            <tr>
+              <th></th>
+              <th>
+                ลำดับ
+                <button className="icon-button" onClick={handleSortByOrder}>
+                  {sortOrder === "desc" ? "🔽" : "🔼"}
+                </button>
+              </th>
+              <th>หมายเลข</th>
+              <th>ชื่อเอกสาร</th>
+              <th>เรื่อง</th>
+              <th>หน่วยงาน</th>
+              <th>
+                วันที่
+                <button className="icon-button" onClick={handleSortByDate}>
+                  {sortOrder === "desc" ? "🔽" : "🔼"}
+                </button>
+              </th>
+              <th>เวลา</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((item, index) => (
+                <tr
+                  key={index}
+                  className={item.isRead ? "row-read" : "row-unread"}
+                  onClick={() => handleRowClick(item)}
+                >
+                  <td>
+                    <FontAwesomeIcon
+                      icon={item.isFavorite ? faStar : faRegStar}
+                      style={{
+                        cursor: "pointer",
+                        color: item.isFavorite ? "#FF8539" : "#ccc",
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStarClick(index);
+                      }}
+                    />
+                  </td>
+                  <td>{index + 1}</td>
+                  <td>{item.doc_number}</td>
+                  <td>{item.doc_name}</td>
+                  <td>{item.subject}</td>
+                  <td>{item.department}</td>
+                  <td>{item.doc_date?.split("T")[0]}</td>
+                  <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
+
+                  <Dropdown>
+                    <Dropdown.Toggle variant="success" size="sm">
+                      <i className="bi bi-list"></i>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {userRole === "admin" && (
+                        <>
+                          <Dropdown.Item
+                            className="bi bi-pencil-square"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate("/editDoc", {
+                                state: {
+                                  doc: {
+                                    ...item,
+                                    role: item.role || "",
+                                  },
+                                },
+                              });
+                            }}
+                          >
+                            &nbsp;แก้ไข
+                          </Dropdown.Item>
                           <Dropdown.Item
                             className="bi bi-box-arrow-down"
                             onClick={(e) => {
@@ -417,32 +414,53 @@ const Pagedoc = ({ userRole }) => {
                           >
                             &nbsp;Download
                           </Dropdown.Item>
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9">ไม่พบผลลัพธ์</td>
+                          <Dropdown.Item
+                            className="bi bi-trash"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleShowModal(item);
+                            }}
+                          >
+                            &nbsp;ลบ
+                          </Dropdown.Item>
+                        </>
+                      )}
+                      {(userRole === "worker" || userRole === "guest") && (
+                        <Dropdown.Item
+                          className="bi bi-box-arrow-down"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(item.doc_number);
+                          }}
+                        >
+                          &nbsp;Download
+                        </Dropdown.Item>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* ปุ่มอัพโหลดสำหรับ admin */}
-        {userRole === "admin" && <ButtonUpload />}
-
-        {/* Modal ลบ */}
-        <Actiondropdown
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          onConfirm={handleDelete}
-          docName={selectedDoc?.doc_name}
-        />
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9">ไม่พบผลลัพธ์</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    );
-  };
+
+      {/* ปุ่มอัพโหลดสำหรับ admin */}
+      {userRole === "admin" && <ButtonUpload />}
+
+      {/* Modal ลบ */}
+      <Actiondropdown
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+        docName={selectedDoc?.doc_name}
+      />
+    </div>
+  );
+};
 
 export default Pagedoc;

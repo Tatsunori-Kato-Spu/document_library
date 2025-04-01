@@ -26,6 +26,7 @@ app.post("/api/documents/upload", async (req, res) => {
   try {
     const pool = await sql.connect(config);
 
+    // เพิ่มเอกสารลงตาราง documents
     const result = await pool
       .request()
       .input("doc_number", sql.NVarChar(20), docNumber)
@@ -42,7 +43,7 @@ app.post("/api/documents/upload", async (req, res) => {
 
     const docId = result.recordset[0].id;
 
-    // ดึง role_id ของ role ที่เลือก (case-insensitive)
+    // ค้นหา role_id ของ role ที่เลือก
     const roleResult = await pool
       .request()
       .input("role", sql.NVarChar, role)
@@ -50,61 +51,25 @@ app.post("/api/documents/upload", async (req, res) => {
 
     const roleId = roleResult.recordset[0]?.id;
 
-    if (roleId) {
-      // ใส่ role ที่เลือก
-      await pool
-        .request()
-        .input("document_id", sql.Int, docId)
-        .input("role_id", sql.Int, roleId)
-        .query(
-          `INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`
-        );
-
-      // ถ้าไม่ใช่ admin → เพิ่ม admin ด้วย
-      if (role.toLowerCase() !== "admin") {
-        const adminRole = await pool
-          .request()
-          .input("name", sql.NVarChar, "admin")
-          .query(`SELECT id FROM roles WHERE LOWER(name) = @name`);
-
-        const adminId = adminRole.recordset[0]?.id;
-
-        if (adminId && adminId !== roleId) {
-          await pool
-            .request()
-            .input("document_id", sql.Int, docId)
-            .input("role_id", sql.Int, adminId)
-            .query(
-              `INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`
-            );
-        }
-      }
+    if (!roleId) {
+      return res.status(400).json({ success: false, message: "ไม่พบ role ที่เลือก" });
     }
 
-    res.json({ success: true, message: "Document uploaded (no file)" });
+    // ผูก role เดียวที่เลือกกับเอกสารนี้
+    await pool
+      .request()
+      .input("document_id", sql.Int, docId)
+      .input("role_id", sql.Int, roleId)
+      .query(`
+        INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)
+      `);
+
+    res.json({ success: true, message: "Document uploaded successfully" });
   } catch (err) {
     console.error("Upload error:", err.message);
-    res
-      .status(500)
-      .json({ success: false, message: "Upload failed", error: err.message });
+    res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
-app.get("/api/documents", async (req, res) => {
-  try {
-    const pool = await sql.connect(config);
-    const result = await pool.query(`
-      SELECT doc_number, doc_name, subject, department, doc_date, doc_time
-      FROM documents
-    `);
-
-    // ส่งข้อมูลที่ได้กลับไปให้ frontend
-    res.json(result.recordset);
-  } catch (err) {
-    console.error("SQL error:", err.message);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลเอกสาร" });
-  }
-});
-
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
@@ -140,54 +105,35 @@ app.get("/api/documents", async (req, res) => {
   try {
     const pool = await sql.connect(config);
 
-    // ดึง role_id ของผู้ใช้
+    // ดึง role_id และชื่อ role ของผู้ใช้
     const userResult = await pool
       .request()
-      .input("username", sql.NVarChar, username)
-      .query(`SELECT role_id FROM users WHERE username = @username`);
+      .input("username", sql.VarChar, username)
+      .query(`
+        SELECT users.role_id, roles.name AS role_name
+        FROM users
+        JOIN roles ON users.role_id = roles.id
+        WHERE users.username = @username
+      `);
 
     if (userResult.recordset.length === 0) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
     }
 
-    const userRoleId = userResult.recordset[0].role_id;
+    const roleId = userResult.recordset[0].role_id;
+    const roleName = userResult.recordset[0].role_name.toLowerCase(); // "admin" | "worker" | "guest"
 
-    // ดึง role_id ของ guest และ admin
-    const roleResult = await pool.query(`SELECT id, name FROM roles`);
-    const rolesMap = Object.fromEntries(
-      roleResult.recordset.map((r) => [r.name.toLowerCase(), r.id])
-    );
-
-    const guestId = rolesMap["guest"];
-    const adminId = rolesMap["admin"];
-
-    let query;
-
-    if (userRoleId === adminId) {
-      // ✅ Admin เห็นทุกอย่าง
-      query = `
-        SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
-        FROM documents d
-      `;
-    } else if (userRoleId === guestId) {
-      // ✅ Guest เห็นของตัวเอง
-      query = `
+    // ✅ ดึงเฉพาะเอกสารที่ role_id ตรงกับผู้ใช้
+    const result = await pool
+      .request()
+      .input("role_id", sql.Int, roleId)
+      .query(`
         SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
         FROM documents d
         JOIN document_roles dr ON d.id = dr.document_id
-        WHERE dr.role_id = ${guestId}
-      `;
-    } else {
-      // ✅ Worker หรือ role อื่น เห็นของตัวเอง + guest
-      query = `
-        SELECT DISTINCT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
-        FROM documents d
-        JOIN document_roles dr ON d.id = dr.document_id
-        WHERE dr.role_id IN (${userRoleId}, ${guestId})
-      `;
-    }
+        WHERE dr.role_id = @role_id
+      `);
 
-    const result = await pool.query(query);
     res.json(result.recordset);
   } catch (err) {
     console.error("SQL error:", err.message);
