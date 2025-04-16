@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -8,4 +10,10 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/tmp/init.sql
+    command: >
+      bash -c "
+        /opt/mssql/bin/sqlservr & 
+        sleep 20 && 
+        /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P Sa123456! -i /tmp/init.sql
+      "
