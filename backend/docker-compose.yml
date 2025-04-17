@@ -7,6 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: userdocs
     volumes:
+<<<<<<< HEAD
       - mysql-data:/var/lib/mysql
       - ./init_clean.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
@@ -51,3 +52,6 @@ volumes:
 networks:
   app-network:
     driver: bridge
+=======
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+>>>>>>> 08a152116b602b401b653f49834f356bec910bd6
