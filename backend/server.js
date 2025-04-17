@@ -1,5 +1,5 @@
 import express from "express";
-import sql from "mssql";
+import sql from 'mysql2/promise';
 import cors from "cors";
 
 const app = express();
@@ -7,26 +7,22 @@ app.use(cors());
 app.use(express.json());
 
 const config = {
-  user: "sa",
-  password: "Sa123456!",
-  server: "localhost",
-  port: 1433,
+  host: "localhost",
+  user: "root",
+  password: "root",
   database: "userdocs",
-  options: {
-    trustServerCertificate: true,
-  },
 };
 
 
 // -------------------------- Upload Document (No PDF) --------------------------
 app.post("/api/documents/upload", async (req, res) => {
-  const { docNumber, docName, department, date, role } = req.body;
+  const { docNumber, docName, department, date, roles } = req.body; // เปลี่ยนจาก role → roles
   const now = new Date();
 
   try {
     const pool = await sql.connect(config);
 
-    // เพิ่มเอกสารลงตาราง documents
+    // เพิ่มเอกสาร
     const result = await pool
       .request()
       .input("doc_number", sql.NVarChar(20), docNumber)
@@ -43,26 +39,25 @@ app.post("/api/documents/upload", async (req, res) => {
 
     const docId = result.recordset[0].id;
 
-    // ค้นหา role_id ของ role ที่เลือก
-    const roleResult = await pool
-      .request()
-      .input("role", sql.NVarChar, role)
-      .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
+    // วนลูปตาม roles แล้วผูกกับเอกสาร
+    for (const roleName of roles) {
+      const roleResult = await pool
+        .request()
+        .input("role", sql.NVarChar, roleName)
+        .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
 
-    const roleId = roleResult.recordset[0]?.id;
+      const roleId = roleResult.recordset[0]?.id;
 
-    if (!roleId) {
-      return res.status(400).json({ success: false, message: "ไม่พบ role ที่เลือก" });
+      if (!roleId) {
+        return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
+      }
+
+      await pool
+        .request()
+        .input("document_id", sql.Int, docId)
+        .input("role_id", sql.Int, roleId)
+        .query(`INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`);
     }
-
-    // ผูก role เดียวที่เลือกกับเอกสารนี้
-    await pool
-      .request()
-      .input("document_id", sql.Int, docId)
-      .input("role_id", sql.Int, roleId)
-      .query(`
-        INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)
-      `);
 
     res.json({ success: true, message: "Document uploaded successfully" });
   } catch (err) {
@@ -70,6 +65,7 @@ app.post("/api/documents/upload", async (req, res) => {
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
@@ -126,7 +122,7 @@ app.get("/api/documents", async (req, res) => {
     // ✅ ดึงเฉพาะเอกสารที่ role_id ตรงกับผู้ใช้
     const result = await pool
       .request()
-      .input("role_id", sql.Int, roleId)
+      .input("role_id", sql.Int, roleId,roleName)
       .query(`
         SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
         FROM documents d
