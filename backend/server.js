@@ -18,6 +18,7 @@ const pool = mysql.createPool({
 app.post("/api/documents/upload", async (req, res) => {
   const { docNumber, docName, department, date, roles } = req.body;
   const now = new Date();
+
   try {
     const [insertResult] = await pool.query(
       `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -25,19 +26,54 @@ app.post("/api/documents/upload", async (req, res) => {
     );
     const docId = insertResult.insertId;
 
+    const allRoleIds = new Set();
+
     for (const roleName of roles) {
-      const [roleRows] = await pool.query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`, [roleName]);
-      const roleId = roleRows[0]?.id;
-      if (!roleId) return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
-      await pool.query(`INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`, [docId, roleId]);
+      // ดึง level ของ role ที่เลือกมา
+      const [roleRows] = await pool.query(
+        `SELECT id, level, name FROM roles WHERE LOWER(name) = LOWER(?)`,
+        [roleName]
+      );
+
+      const baseRole = roleRows[0];
+      if (!baseRole) {
+        return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
+      }
+
+      // ถ้า role เป็น guest ให้แค่ guest เห็น
+      if (baseRole.name.toLowerCase() === 'guest') {
+        allRoleIds.add(baseRole.id);
+      } else {
+        // ดึง role อื่นๆ ที่ level ต่ำกว่าหรือเท่ากับ แต่ไม่รวม guest
+        const [visibleRoles] = await pool.query(
+          `SELECT id FROM roles WHERE level <= ? AND name != 'guest'`,
+          [baseRole.level]
+        );
+
+        // เพิ่ม role id ทั้งหมดเข้า set เพื่อกันซ้ำ
+        for (const r of visibleRoles) {
+          allRoleIds.add(r.id);
+        }
+      }
     }
 
-    res.json({ success: true, message: "Document uploaded successfully" });
+    // ใส่ role ทั้งหมดที่ได้มาแล้วลง document_roles
+    for (const roleId of allRoleIds) {
+      await pool.query(
+        `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
+        [docId, roleId]
+      );
+    }
+
+    res.json({ success: true, message: "Document uploaded successfully with hierarchical access" });
   } catch (err) {
     console.error("Upload error:", err.message);
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
+
+
 
 
 // -------------------------- Login --------------------------
@@ -69,17 +105,51 @@ app.post("/api/login", async (req, res) => {
 // -------------------------- Documents by Role --------------------------
 app.get("/api/documents", async (req, res) => {
   const { username } = req.query;
+
   try {
+    // ดึงชื่อ role ของผู้ใช้
     const [userRows] = await pool.query(
-      `SELECT users.role_id, roles.name AS role_name FROM users JOIN roles ON users.role_id = roles.id WHERE users.username = ?`,
+      `SELECT roles.name AS role_name FROM users 
+       JOIN roles ON users.role_id = roles.id 
+       WHERE users.username = ?`,
       [username]
     );
-    if (userRows.length === 0) return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
-    const roleId = userRows[0].role_id;
-    const [docs] = await pool.query(
-      `SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time FROM documents d JOIN document_roles dr ON d.id = dr.document_id WHERE dr.role_id = ?`,
-      [roleId]
+
+    if (userRows.length === 0) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    }
+
+    const userRole = userRows[0].role_name.toLowerCase();
+
+    // สร้าง map ของ role ที่แต่ละคนสามารถเข้าถึงได้
+    const roleVisibilityMap = {
+      admin: ["admin", "worker", "guest"],
+      worker: ["admin", "worker"],
+      guest: ["guest"] 
+    };
+
+    const visibleRoles = roleVisibilityMap[userRole] || [];
+
+    // แปลงชื่อ role เป็น id
+    const [roleIdRows] = await pool.query(
+      `SELECT id FROM roles WHERE LOWER(name) IN (?)`,
+      [visibleRoles]
     );
+    const accessibleRoleIds = roleIdRows.map(r => r.id);
+
+    if (accessibleRoleIds.length === 0) {
+      return res.json([]); 
+    }
+
+    // ดึงเอกสารที่ตรงกับ role id ที่เข้าถึงได้
+    const [docs] = await pool.query(
+      `SELECT DISTINCT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time 
+       FROM documents d 
+       JOIN document_roles dr ON d.id = dr.document_id 
+       WHERE dr.role_id IN (?)`,
+      [accessibleRoleIds]
+    );
+
     res.json(docs);
   } catch (err) {
     console.error("SQL error:", err.message);
