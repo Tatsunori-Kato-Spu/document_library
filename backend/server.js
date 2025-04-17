@@ -1,62 +1,35 @@
 import express from "express";
-import sql from 'mysql2/promise';
+import mysql from 'mysql2/promise';
 import cors from "cors";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const config = {
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "userdocs",
-};
-
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'mysql',  // ✅ ใช้ชื่อ service ตาม Docker Compose
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'userdocs',
+  port: process.env.DB_PORT || 3306,
+});
 
 // -------------------------- Upload Document (No PDF) --------------------------
 app.post("/api/documents/upload", async (req, res) => {
-  const { docNumber, docName, department, date, roles } = req.body; // เปลี่ยนจาก role → roles
+  const { docNumber, docName, department, date, roles } = req.body;
   const now = new Date();
-
   try {
-    const pool = await sql.connect(config);
+    const [insertResult] = await pool.query(
+      `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time) VALUES (?, ?, ?, ?, ?, ?)`,
+      [docNumber, docName, docName, department, date, now]
+    );
+    const docId = insertResult.insertId;
 
-    // เพิ่มเอกสาร
-    const result = await pool
-      .request()
-      .input("doc_number", sql.NVarChar(20), docNumber)
-      .input("doc_name", sql.NVarChar(100), docName)
-      .input("subject", sql.NVarChar(255), docName)
-      .input("department", sql.NVarChar(100), department)
-      .input("doc_date", sql.Date, date)
-      .input("doc_time", sql.Time, now)
-      .query(`
-        INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time)
-        OUTPUT INSERTED.id
-        VALUES (@doc_number, @doc_name, @subject, @department, @doc_date, @doc_time)
-      `);
-
-    const docId = result.recordset[0].id;
-
-    // วนลูปตาม roles แล้วผูกกับเอกสาร
     for (const roleName of roles) {
-      const roleResult = await pool
-        .request()
-        .input("role", sql.NVarChar, roleName)
-        .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
-
-      const roleId = roleResult.recordset[0]?.id;
-
-      if (!roleId) {
-        return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
-      }
-
-      await pool
-        .request()
-        .input("document_id", sql.Int, docId)
-        .input("role_id", sql.Int, roleId)
-        .query(`INSERT INTO document_roles (document_id, role_id) VALUES (@document_id, @role_id)`);
+      const [roleRows] = await pool.query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`, [roleName]);
+      const roleId = roleRows[0]?.id;
+      if (!roleId) return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
+      await pool.query(`INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`, [docId, roleId]);
     }
 
     res.json({ success: true, message: "Document uploaded successfully" });
@@ -69,27 +42,26 @@ app.post("/api/documents/upload", async (req, res) => {
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const pool = await sql.connect(config);
-    const result = await pool
-      .request()
-      .input("username", sql.VarChar, username)
-      .input("password", sql.VarChar, password)
-      .query(`
-        SELECT users.*, roles.name AS role 
-        FROM users 
-        JOIN roles ON users.role_id = roles.id 
-        WHERE users.username = @username AND users.password = @password
-      `);
+  const { username, password } = req.body;
 
-    if (result.recordset.length === 1) {
-      res.json({ success: true, userInfo: result.recordset[0] });
+  try {
+    const conn = await pool.getConnection();
+    const [rows] = await conn.query(
+      `SELECT users.*, roles.name AS role 
+       FROM users 
+       JOIN roles ON users.role_id = roles.id 
+       WHERE users.username = ? AND users.password = ?`,
+      [username, password]
+    );
+    conn.release();
+
+    if (rows.length === 1) {
+      res.json({ success: true, userInfo: rows[0] });
     } else {
       res.status(401).json({ success: false, message: "Invalid credentials" });
     }
   } catch (err) {
-    console.error("Login error:", err);
+    console.error("Login error:", err.message);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
@@ -97,40 +69,18 @@ app.post("/api/login", async (req, res) => {
 // -------------------------- Documents by Role --------------------------
 app.get("/api/documents", async (req, res) => {
   const { username } = req.query;
-
   try {
-    const pool = await sql.connect(config);
-
-    // ดึง role_id และชื่อ role ของผู้ใช้
-    const userResult = await pool
-      .request()
-      .input("username", sql.VarChar, username)
-      .query(`
-        SELECT users.role_id, roles.name AS role_name
-        FROM users
-        JOIN roles ON users.role_id = roles.id
-        WHERE users.username = @username
-      `);
-
-    if (userResult.recordset.length === 0) {
-      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
-    }
-
-    const roleId = userResult.recordset[0].role_id;
-    const roleName = userResult.recordset[0].role_name.toLowerCase(); // "admin" | "worker" | "guest"
-
-    // ✅ ดึงเฉพาะเอกสารที่ role_id ตรงกับผู้ใช้
-    const result = await pool
-      .request()
-      .input("role_id", sql.Int, roleId,roleName)
-      .query(`
-        SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
-        FROM documents d
-        JOIN document_roles dr ON d.id = dr.document_id
-        WHERE dr.role_id = @role_id
-      `);
-
-    res.json(result.recordset);
+    const [userRows] = await pool.query(
+      `SELECT users.role_id, roles.name AS role_name FROM users JOIN roles ON users.role_id = roles.id WHERE users.username = ?`,
+      [username]
+    );
+    if (userRows.length === 0) return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    const roleId = userRows[0].role_id;
+    const [docs] = await pool.query(
+      `SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time FROM documents d JOIN document_roles dr ON d.id = dr.document_id WHERE dr.role_id = ?`,
+      [roleId]
+    );
+    res.json(docs);
   } catch (err) {
     console.error("SQL error:", err.message);
     res.status(500).json({ message: "Database error", error: err.message });
@@ -140,93 +90,40 @@ app.get("/api/documents", async (req, res) => {
 
 // ดึงข้อมูลเอกสารตามหมายเลขเอกสาร
 app.get("/api/documents/:docNumber", async (req, res) => {
-  const { docNumber } = req.params; // รับ doc_number จาก URL
-
+  const { docNumber } = req.params;
   try {
-    const pool = await sql.connect(config);
-    // ดึงข้อมูลเอกสารที่มี doc_number ตรงกับที่ผู้ใช้ระบุ
-    const result = await pool
-      .request()
-      .input('docNumber', sql.VarChar, docNumber)
-      .query(`
-        SELECT * 
-        FROM documents 
-        WHERE doc_number = @docNumber
-      `);
-      if (result.recordset.length > 0) {
-        // ส่งข้อมูลเอกสารกลับไปให้ frontend
-        res.json(result.recordset[0]);
-      } else {
-        res.status(404).json({ message: "ไม่พบเอกสารที่มีหมายเลขนี้" });
-      }
-    } catch (err) {
-      console.error("SQL error:", err.message);
-      res.status(500).json({ message: "Database error", error: err.message });
-    }
-  });
-
-// -------------------------- Document by doc_number --------------------------
-app.get("/api/documents/:id", async (req, res) => {
-  try {
-    const docId = req.params.id;
-    await sql.connect(config);
-    const result = await sql.query`
-      SELECT * FROM documents WHERE doc_number = ${docId}
-    `;
-
-    if (result.recordset.length > 0) {
-      // ส่งข้อมูลเอกสารกลับไปให้ frontend
-      res.json(result.recordset[0]);
-    } else {
-      res.status(404).json({ message: "ไม่พบเอกสารที่มีหมายเลขนี้" });
-    }
+    const [rows] = await pool.query(
+      `SELECT * FROM documents WHERE doc_number = ?`,
+      [docNumber]
+    );
+    rows.length > 0 ? res.json(rows[0]) : res.status(404).json({ message: "ไม่พบเอกสารที่มีหมายเลขนี้" });
   } catch (err) {
     console.error("SQL error:", err.message);
     res.status(500).json({ message: "Database error", error: err.message });
   }
 });
 
+
 // -------------------------- Search --------------------------
 app.post("/api/documents/search", async (req, res) => {
-  const { keyword, username } = req.body; // รับข้อมูลจาก req.body
-
+  const { keyword, username } = req.body;
   try {
-    await sql.connect(config);
+    const [userRows] = await pool.query(`SELECT role_id FROM users WHERE username = ?`, [username]);
+    if (userRows.length === 0) return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
+    const roleId = userRows[0].role_id;
+    const [docRows] = await pool.query(`
+      SELECT d.* FROM documents d JOIN document_roles dr ON d.id = dr.document_id WHERE dr.role_id = ?`, [roleId]);
 
-    const userResult = await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
-    if (userResult.recordset.length === 0) {
-      return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
-    }
-
-    const roleId = userResult.recordset[0].role_id;
-
-    const docResult = await sql.query`
-      SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
-      FROM documents d
-      JOIN document_roles dr ON d.id = dr.document_id
-      WHERE dr.role_id = ${roleId}
-    `;
-
-    const docs = docResult.recordset;
     const lowerKeyword = (keyword || "").trim().toLowerCase();
-
-    const filtered = docs.filter((doc) => {
-      return (
-        !lowerKeyword ||
-        doc.doc_name?.toLowerCase().includes(lowerKeyword) ||
-        doc.doc_number?.includes(lowerKeyword)
-      );
-    });
-
-    // ✅ Log ข้อมูลใน server ให้ชัวร์ (ไม่ crash แน่)
-    console.log("🔍 keyword (POST):", keyword);
-    console.log("👤 user:", username, "| roleId:", roleId);
-    console.log("📄 ทั้งหมด:", docs.length, "| ตรงกับ keyword:", filtered.length);
-
-    return res.json(filtered);
+    const filtered = docRows.filter(doc =>
+      !lowerKeyword ||
+      doc.doc_name?.toLowerCase().includes(lowerKeyword) ||
+      doc.doc_number?.includes(lowerKeyword)
+    );
+    res.json(filtered);
   } catch (err) {
-    console.error("❌ Server error (POST search):", err.message);
-    return res.status(500).json({ message: "เกิดข้อผิดพลาด", error: err.message });
+    console.error("Search error:", err.message);
+    res.status(500).json({ message: "เกิดข้อผิดพลาด", error: err.message });
   }
 });
 
@@ -237,26 +134,22 @@ app.post("/api/documents/search/filter", async (req, res) => {
   const { username } = req.query;
 
   try {
-    await sql.connect(config);
-
-    const userQuery =
-      await sql.query`SELECT role_id FROM users WHERE username = ${username}`;
-    if (userQuery.recordset.length === 0) {
+    const [userRows] = await pool.query(
+      `SELECT role_id FROM users WHERE username = ?`, [username]
+    );
+    if (userRows.length === 0) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้งาน" });
     }
 
-    const roleId = userQuery.recordset[0].role_id;
-
-    const documentQuery = await sql.query`
+    const roleId = userRows[0].role_id;
+    const [docs] = await pool.query(`
       SELECT d.id, d.doc_number, d.doc_name, d.subject, d.department, d.doc_date, d.doc_time
       FROM documents d
       JOIN document_roles dr ON d.id = dr.document_id
-      WHERE dr.role_id = ${roleId}
-    `;
+      WHERE dr.role_id = ?
+    `, [roleId]);
 
     const now = new Date();
-    const docs = documentQuery.recordset;
-
     const filtered = docs.filter((doc) => {
       const lowerKeyword = keyword?.toLowerCase() || "";
       const matchKeyword = keyword
@@ -276,76 +169,45 @@ app.post("/api/documents/search/filter", async (req, res) => {
     res.json(filtered);
   } catch (err) {
     console.error("SQL error:", err.message);
-    res
-      .status(500)
-      .json({ message: "เกิดข้อผิดพลาดที่ฐานข้อมูล", error: err.message });
+    res.status(500).json({ message: "Database error", error: err.message });
   }
 });
 
 // -------------------------- Users --------------------------
 app.get("/api/users", async (req, res) => {
-
   try {
-    const pool = await sql.connect(config);
-    const result = await pool.query(`
+    const [rows] = await pool.query(`
       SELECT users.id, users.name, users.id_card, users.department, users.position, users.email, users.contact, roles.name AS role
-      FROM users
-      JOIN roles ON users.role_id = roles.id
+      FROM users JOIN roles ON users.role_id = roles.id
     `);
-    res.json(result.recordset);
+    res.json(rows);
   } catch (err) {
     console.error("Error fetching users:", err.message);
     res.status(500).json({ message: "Database error", error: err.message });
   }
 });
 
-app.put("/api/users/:id/role", async (req, res) => {
-  const userId = req.params.id;
-  const { role } = req.body;
-
+app.get("/api/roles", async (req, res) => {
   try {
-    const pool = await sql.connect(config);
-    const roleResult = await pool
-      .request()
-      .input("role", sql.NVarChar, role)
-      .query("SELECT id FROM roles WHERE name = @role");
-
-    if (roleResult.recordset.length === 0) {
-      return res.status(400).json({ message: "Role not found" });
-    }
-
-    const roleId = roleResult.recordset[0].id;
-
-    await pool
-      .request()
-      .input("role_id", sql.Int, roleId)
-      .input("id", sql.Int, userId)
-      .query("UPDATE users SET role_id = @role_id WHERE id = @id");
-
-    res.json({ message: "Role updated" });
+    const [rows] = await pool.query(`SELECT id, name FROM roles`);
+    res.json(rows);
   } catch (err) {
-    console.error("Update role error:", err.message);
-    res.status(500).json({ message: "Update error", error: err.message });
+    console.error("Error fetching roles:", err.message);
+    res.status(500).json({ message: "Error fetching roles" });
   }
 });
+
 
 // -------------------------- Profile --------------------------
 app.get("/api/profile", async (req, res) => {
   const { token } = req.query;
   try {
-    const pool = await sql.connect(config);
-    const result = await pool
-      .request()
-      .input("token", sql.VarChar, token)
-      .query(`
-        SELECT users.*, roles.name AS role 
-        FROM users 
-        JOIN roles ON users.role_id = roles.id 
-        WHERE users.token = @token
-      `);
-
-    if (result.recordset.length === 1) {
-      res.json({ success: true, user: result.recordset[0] });
+    const [rows] = await pool.query(
+      `SELECT users.*, roles.name AS role FROM users JOIN roles ON users.role_id = roles.id WHERE users.token = ?`,
+      [token]
+    );
+    if (rows.length === 1) {
+      res.json({ success: true, user: rows[0] });
     } else {
       res.json({ success: false, message: "ไม่พบผู้ใช้สำหรับ token นี้" });
     }
@@ -358,29 +220,9 @@ app.get("/api/profile", async (req, res) => {
 // -------------------------- Delete Document --------------------------
 app.delete("/api/documents/:docNumber", async (req, res) => {
   const { docNumber } = req.params;
-
   try {
-    const pool = await sql.connect(config);
-
-    // ลบจาก document_roles ก่อน (เพราะมี foreign key)
-    await pool
-      .request()
-      .input("doc_number", sql.NVarChar, docNumber)
-      .query(`
-        DELETE FROM document_roles
-        WHERE document_id IN (
-          SELECT id FROM documents WHERE doc_number = @doc_number
-        )
-      `);
-
-    // ลบจาก documents
-    await pool
-      .request()
-      .input("doc_number", sql.NVarChar, docNumber)
-      .query(`
-        DELETE FROM documents WHERE doc_number = @doc_number
-      `);
-
+    await pool.query(`DELETE FROM document_roles WHERE document_id IN (SELECT id FROM documents WHERE doc_number = ?)`, [docNumber]);
+    await pool.query(`DELETE FROM documents WHERE doc_number = ?`, [docNumber]);
     res.json({ success: true, message: "ลบเอกสารเรียบร้อยแล้ว" });
   } catch (err) {
     console.error("Delete error:", err.message);
@@ -392,52 +234,18 @@ app.delete("/api/documents/:docNumber", async (req, res) => {
 app.put("/api/documents/:docNumber", async (req, res) => {
   const { docNumber } = req.params;
   const { doc_name, subject, department, date, role } = req.body;
-
   try {
-    const pool = await sql.connect(config);
+    await pool.query(
+      `UPDATE documents SET doc_name = ?, subject = ?, department = ?, doc_date = ? WHERE doc_number = ?`,
+      [doc_name, subject, department, date, docNumber]
+    );
 
-    // อัปเดตตาราง documents
-    await pool
-      .request()
-      .input("doc_number", sql.NVarChar, docNumber)
-      .input("doc_name", sql.NVarChar, doc_name)
-      .input("subject", sql.NVarChar, subject)
-      .input("department", sql.NVarChar, department)
-      .input("doc_date", sql.Date, date)
-      .query(`
-        UPDATE documents
-        SET doc_name = @doc_name,
-            subject = @subject,
-            department = @department,
-            doc_date = @doc_date
-        WHERE doc_number = @doc_number
-      `);
-
-    // อัปเดต role ใน document_roles
     if (role) {
-      const roleResult = await pool
-        .request()
-        .input("role", sql.NVarChar, role)
-        .query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(@role)`);
-
-      const roleId = roleResult.recordset[0]?.id;
-
+      const [roleRows] = await pool.query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`, [role]);
+      const roleId = roleRows[0]?.id;
       if (roleId) {
-        // ลบ role เดิมก่อน
-        await pool.request().input("doc_number", sql.NVarChar, docNumber).query(`
-          DELETE FROM document_roles
-          WHERE document_id = (SELECT id FROM documents WHERE doc_number = @doc_number)
-        `);
-
-        // ใส่ role ใหม่
-        await pool
-          .request()
-          .input("role_id", sql.Int, roleId)
-          .input("doc_number", sql.NVarChar, docNumber)
-          .query(`
-            INSERT INTO document_roles (document_id, role_id)
-            SELECT id, @role_id FROM documents WHERE doc_number = @doc_number
-          `);
+        await pool.query(`DELETE FROM document_roles WHERE document_id = (SELECT id FROM documents WHERE doc_number = ?)`, [docNumber]);
+        await pool.query(`INSERT INTO document_roles (document_id, role_id) SELECT id, ? FROM documents WHERE doc_number = ?`, [roleId, docNumber]);
       }
     }
 
@@ -448,30 +256,12 @@ app.put("/api/documents/:docNumber", async (req, res) => {
   }
 });
 
-app.get("/api/roles", async (req, res) => {
-  try {
-    const result = await sql.connect(config);
-    const roles = await result.request().query(`SELECT id, name FROM roles`);
-    res.json(roles.recordset);
-  } catch (err) {
-    console.error("Error fetching roles:", err.message);
-    res.status(500).json({ message: "Error fetching roles" });
-  }
-});
-
 
 // -------------------------- edit department --------------------------
 app.get("/api/departments", async (req, res) => {
   try {
-    const pool = await sql.connect(config);
-
-    const result = await pool.query(`
-      SELECT DISTINCT department
-      FROM documents
-      WHERE department IS NOT NULL AND department <> ''
-    `);
-
-    res.json(result.recordset); // จะได้ [{ department: "บัญชี" }, { department: "การเงิน" }]
+    const [rows] = await pool.query(`SELECT DISTINCT department FROM documents WHERE department IS NOT NULL AND department <> ''`);
+    res.json(rows);
   } catch (err) {
     console.error("Error fetching departments:", err.message);
     res.status(500).json({ message: "Error fetching departments" });
