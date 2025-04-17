@@ -50,7 +50,6 @@ const Pagedoc = ({ userRole }) => {
   }, [username]);
   // ดึงเอกสารจาก backend
   useEffect(() => {
-
     const fetchDocuments = async () => {
       try {
         const response = await fetch(
@@ -224,8 +223,12 @@ const Pagedoc = ({ userRole }) => {
                   <td>{item["doc_name"]}</td>
                   <td>{item["subject"]}</td>
                   <td>{item["department"]}</td>
-                  <td>{item["doc_date"].split("T")[0]}</td>
-                  <td>{item["doc_time"].split("T")[1].split(".")[0]}</td>
+                  <td>{item.doc_date ? item.doc_date.split("T")[0] : "-"}</td>
+                  <td>
+                    {item.doc_time
+                      ? item.doc_time.split("T")[1]?.split(".")[0]
+                      : "-"}
+                  </td>
 
                   {/* Dropdown สำหรับการกระทำ */}
                   <div className="dropdown">
@@ -248,9 +251,7 @@ const Pagedoc = ({ userRole }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() =>
-                                handleDownload(item["ชื่อเอกสาร"])
-                              }
+                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                             >
                               {" "}
                               &nbsp;Download
@@ -270,9 +271,7 @@ const Pagedoc = ({ userRole }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() =>
-                                handleDownload(item["ชื่อเอกสาร"])
-                              }
+                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                             >
                               {" "}
                               &nbsp;Download
@@ -284,9 +283,7 @@ const Pagedoc = ({ userRole }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() =>
-                                handleDownload(item["ชื่อเอกสาร"])
-                              }
+                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                             >
                               {" "}
                               &nbsp;Download
@@ -379,8 +376,12 @@ const Pagedoc = ({ userRole }) => {
                   <td>{item.doc_name}</td>
                   <td>{item.subject}</td>
                   <td>{item.department}</td>
-                  <td>{item.doc_date?.split("T")[0]}</td>
-                  <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
+                  <td>{item.doc_date ? item.doc_date.split("T")[0] : "-"}</td>
+                  <td>
+                    {item.doc_time
+                      ? item.doc_time.split("T")[1]?.split(".")[0]
+                      : "-"}
+                  </td>
 
                   <Dropdown>
                     <Dropdown.Toggle variant="success" size="sm">
