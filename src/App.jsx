@@ -13,7 +13,7 @@ import Homepage from "./pages/Home/homepage";
 import Profile from "./pages/profile/profile";
 import History from "./pages/history/history";
 import AddDoc from "./pages/AddDoc/AddDoc";
-import EditDoc from "./pages/actiondropdown/editDoc";
+import EditDoc from "./pages/actiondropdown/EditDoc";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
