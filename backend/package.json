@@ -1,6 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "homepage": "https://tatsunori-kato-spu.github.io/document_library",
   "main": "server.js",
   "type": "module",
   "scripts": {
