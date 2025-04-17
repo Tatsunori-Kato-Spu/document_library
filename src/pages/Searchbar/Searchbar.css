@@ -1,0 +1,66 @@
+/* ฟอร์ม */
+.search-form {
+  width: 1200px;
+  max-width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+}
+
+/* ช่องกรอกข้อมูล */
+.search-input {
+  flex-grow: 1;
+  margin-right: 10px;
+  border-radius: 20px;
+  background-color: #3c3c3c;
+  color: #ffffff;
+  border: 1px solid #ff6c00;
+  outline: none;
+  width: 1000px;
+  height: 40px;
+  font-size: 1rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem; 
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-family: 'Inter';
+}
+
+/* ปุ่มค้นหาภายในช่อง */
+.search-button {
+  background-color: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: -3.5rem;
+}
+
+/* ไอคอนค้นหา */
+.search-icon i {
+  color: #ff6c00;
+  font-size: 1.2rem;
+}
+
+/* ปุ่มตัวเลื่อน */
+.Slider-button {
+  background-color: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-left: 10px; 
+}
+
+/* ไอคอนตัวเลื่อน */
+.slider-icon {
+  color: #ff6c00;
+  font-size: 1.2rem;
+}

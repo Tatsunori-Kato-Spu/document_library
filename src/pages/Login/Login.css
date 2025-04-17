@@ -1,0 +1,108 @@
+/* Container */
+.Login-container {
+  position: absolute;
+  width: 800px;
+  height: 700px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -42%);
+  background: rgba(55, 58, 64, 0.4); 
+  border-radius: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  font-family: 'Inter';
+}
+
+/* โลโก้ */
+.logo-container {
+  margin-bottom: 20px;
+  
+}
+
+.login-logo {
+  width: 250px; 
+  height: auto; 
+}
+
+/* ฟอร์ม */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* ระยะห่างระหว่าง input */
+  width: 100%;
+  /* height: 450px; */
+  max-width: 500px;
+  /* background: rgba(55, 58, 64, 0.1);  */
+  padding: 30px;
+  /* border-radius: 20px; */
+  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+}
+
+/* อินพุต */
+.input-field {
+  box-sizing: border-box;
+  width: 100%;
+  height: 64px;
+  padding: 10px;
+  background: #ffffff;
+  border: 4px solid #ff8539;
+  box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  font-size: 16px;
+  color: #333;
+}
+.Login-container .input-field {
+  
+  border: 4px solid #ff8539 !important;
+  box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* ปุ่ม */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* ระยะห่างระหว่างปุ่ม */
+  align-items: center;
+}
+
+.btn-login {
+
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  background: #ff8539;
+  box-shadow: inset -5px -8px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-login:hover {
+  background-color: #3ead43;
+}
+
+.guest-button {
+ 
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  background: #6c757d;
+  border-radius: 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px; 
+}
+
+.guest-button:hover {
+  background-color: #3ead43;
+} 
+  

@@ -1,0 +1,64 @@
+/* กำหนดรูปแบบของ container */
+.notification-container {
+    padding: 20px;
+    font-family: 'Roboto';
+  }
+  
+  .notification-container h2 {
+    position: fixed;  
+    top: 0;  
+    right: 30px;  
+    width: 300px;  
+    height: 60px;
+    color: #f8f8f8;
+    background: #ff8539;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;  
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 110px; 
+    display: flex;  
+    justify-content: center;  
+    align-items: center; 
+}
+
+  
+  /* การตั้งตำแหน่งของ notifications-list ให้อยู่ขวาบนสุด */
+  .notifications-list {
+    position: fixed;  
+    top: 0;  
+    right: 0;  
+    right: 30px;
+    width: 300px;  
+    max-height: 60vh;  
+    overflow-y: auto;  
+    background-color: #f8f8f8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999; 
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 190px; 
+  }
+  
+  /* กำหนดสไตล์ของรายการแจ้งเตือน */
+  .custom-notification-item {
+    background-color: #cac8c6;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* สไตล์ของหัวข้อในรายการแจ้งเตือน */
+  .custom-notification-item h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #f60;
+  }
+  
+  /* สไตล์ของข้อความในรายการแจ้งเตือน */
+  .custom-notification-item p {
+    margin: 5px 0;
+    color: #555;
+  }
+  

@@ -1,0 +1,103 @@
+.background {
+  width: 100%;
+  min-width: 1920px;
+  max-width: 1920px;
+  height: 100%;
+  background-color: gray(0, 0, 0);
+  color: white;
+  font-family: 'Roboto';
+
+}
+
+
+
+.topic-textBox-1 {
+  width: 50px; /* ความกว้างของคอลัมน์ "รูป" */
+}
+
+.topic-textBox-2 {
+  width: 50px; /* ความกว้างของคอลัมน์ "ชื่อ" */
+}
+
+.topic-textBox-3 {
+  width: 120px; /* ความกว้างของคอลัมน์ "รหัสประจำตัว" */
+}
+
+.topic-textBox-4 {
+  width: 150px; /* ความกว้างของคอลัมน์ "หน่วยงาน" */
+}
+
+.topic-textBox-5 {
+  width: 120px; /* ความกว้างของคอลัมน์ "ตำแหน่ง" */
+}
+
+.topic-textBox-6 {
+  width: 200px; /* ความกว้างของคอลัมน์ "E-mail" */
+}
+
+.topic-textBox-7 {
+  width: 100px; /* ความกว้างของคอลัมน์ "ติดต่อ" */
+}
+
+.topic-textBox-8 {
+  width: 100px; /* ความกว้างของคอลัมน์ "ระดับสิทธิ" */
+}
+
+.profilePic {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.permissionContainer {
+  width: 100%;
+  height: 100%;
+  min-width: 1800px;
+  min-height: 750px;
+  background-color: #373A40;
+  color: white;
+  border: #E14E15 0.3125rem solid;
+  border-radius: 1rem;
+}
+
+.tablePermission {
+  color: white;
+  /* border: #E14E15 0.3125rem solid; */
+  align-items: center;
+}
+
+
+.dropdown-button {
+  margin-top: 12px;
+}
+
+.table-wrapper-permission {
+  position: absolute;  /* ให้คงตำแหน่งเดิม */
+  top: 50%;  
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;  /* ให้อยู่ข้างล่าง popup */
+  width: 100%;
+  max-width: 1800px;
+  height: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+  word-wrap: break-word;
+  display: block;
+  background-color: #373a40;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(36, 24, 24, 0.1);
+  margin-top: 70px;
+  border: 2px solid #ff6c00;
+
+
+}
+
+.searchbar {
+  align-self: center;
+  justify-content: center;
+  justify-self: center;
+  /* border: yellow 5px solid; */
+  
+}

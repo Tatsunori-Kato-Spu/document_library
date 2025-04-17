@@ -1,0 +1,133 @@
+
+.container{
+    min-width: none;
+    min-height: none;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    margin: auto;
+    font-family: 'Roboto';
+}
+
+.searchbar-box{
+  margin-top: 10px;
+}
+
+.profile-container2 {
+    width: 100%;
+    height: 100%;
+    min-width: 1700px;
+    min-height: 800px;
+    display: flex;
+    
+    justify-content: center;
+    background-color: #373A40;
+    border: 5px solid #E14E15;
+    border-radius: 50px;
+    color: white;
+    text-align: center;
+    margin-left: 50%;
+}
+
+.profile-content-1{
+    width: 50%;
+    height: 100%;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-left: 25px;
+    margin-top: 25px;
+    border: #E14E15 5px solid;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-content-2{
+    width: 100%;
+    height: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+    /* border: blue 1px solid; */
+}
+
+.photo{
+    width: 300px;
+    height: 300px;
+    border-radius: 100%;
+}
+
+.box-1{
+    width: 300px;
+    height: 60px;
+    border-radius: 20px;
+    background-color: #FF8539;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    font-size: 20px;
+    justify-content: center;
+}
+
+/* For button with box-1 style */
+.button-style {
+    width: 300px;
+    height: 60px;
+    border-radius: 20px;
+    background-color: #FF8539;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 35px;
+    font-size: 20px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: none; 
+    cursor: pointer;
+    outline: none; /* Remove the outline on focus */
+}
+
+
+
+.table-wrapper2 {
+    width: 100%; /* ความกว้างของกล่องครอบ */
+    height: 100%;
+    max-height: 600px; /* กำหนดความสูงสูงสุดของตาราง (ไม่ให้เลื่อนเกินไป) */
+    overflow-y: auto;  /* เพิ่มฟังก์ชั่นเลื่อนขึ้น-ลง */
+    word-wrap: break-word;
+    display: block;    /* ทำให้ td เป็น block element เพื่อให้ overflow ทำงาน */
+    background-color: #373a40;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* padding: 20px; */
+    margin-top: 0px;
+    border: 2px solid #ff6c00;
+  }
+  
+  /* ตกแต่ง track ของ scrollbar */
+  .table-wrapper2::-webkit-scrollbar-track {
+    background-color: #373a40; /* สีของ track */
+    border-radius: 10px;
+  }
+  
+  /* ตกแต่ง thumb (ตัวเลื่อน) ของ scrollbar */
+  .table-wrapper2::-webkit-scrollbar-thumb {
+    background-color: #373a40; /* สีของตัวเลื่อน */
+    border-radius: 10px;
+    border: 3px solid #373a40; /* ขอบของตัวเลื่อน */
+  }
+  
+  /* เปลี่ยนสีเมื่อ hover ที่ scrollbar */
+  .table-wrapper2::-webkit-scrollbar-thumb:hover {
+    background-color: #D9D9D9;
+  }
+  
+  /* สำหรับ Firefox */
+  .table-wrapper2 {
+    scrollbar-color: #D9D9D9 #373a40; 
+    scrollbar-width: auto;
+  }
+  

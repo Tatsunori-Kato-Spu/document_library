@@ -1,0 +1,111 @@
+.header-container {
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  height: 70px;
+  flex-direction: column;
+  /* background-image: url('/images/background.png'); ใช้ภาพพื้นหลังจากโฟลเดอร์ public */
+  background-size: cover; 
+  background-position: center;
+  padding: 10px 0;
+} 
+/* Rectangle 53 */
+
+
+
+/* สไตล์สำหรับ header ที่ติดกับด้านบน */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #373A40;
+  color: white;
+  display: flex;
+  align-items: center;
+  border-bottom: 4px solid #E14E15;
+  justify-content: space-between;
+  padding: 10px 30px; /* เพิ่มระยะห่าง */
+  z-index: 1000; /* ทำให้ header อยู่ข้างบนสุด */
+}  
+
+/* โลโก้ */
+.header-logo {
+  padding: 5px;
+  margin-right: 20px;
+  /* width: 267px; */
+  height: 50px;
+  object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+
+}
+/* โลโก้ */
+.header-logo {
+padding: 5px;
+margin-right: 20px;
+width: 267px;
+height: 68px;
+object-fit: contain; /* ให้โลโก้แสดงผลอย่างเหมาะสม */
+}
+
+
+
+/* สไตล์สำหรับ navigation */
+.header-nav {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+
+/* สไตล์ของ navigation */
+.header-nav {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+main {
+  margin-top: 70px; /* เพิ่มระยะห่างจาก header */
+  padding: 20px;
+}
+
+/* ปรับระยะห่างระหว่างปุ่มใน header-nav */
+.header-nav {
+  display: flex;
+  gap: 25px;  /* เพิ่มระยะห่างระหว่างปุ่ม */
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+}
+
+/* หรือ ถ้าคุณต้องการเพิ่มระยะห่างระหว่างรายการ <li> */
+.nav-item {
+  margin-right: 20px;  /* เพิ่มระยะห่างระหว่างปุ่ม */
+}
+
+/* สไตล์ของปุ่มไอคอน */
+.header-icon-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: orange;
+  transition: all 0.3s ease;
+}
+
+.header-icon-button:hover {
+  color: #ff6a00;
+  transform: scale(1.2);
+}
+
+.header-icon-button:active {
+  color: #e14e15;
+  transform: scale(0.9);
+}
+
+.header-icon-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

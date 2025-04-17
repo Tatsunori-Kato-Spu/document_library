@@ -1,0 +1,39 @@
+.filter-search-content {
+    background-color: #3c3c3c; 
+    color: white;             
+  }
+  
+  .MuiDialogTitle-root {
+    background-color: #3c3c3c;  
+    color: white;             
+  }
+  
+  .MuiDialogActions-root {
+    background-color: #3c3c3c;  
+  }
+  
+  .MuiButton-root {
+    color: white;             
+  }
+  
+  .MuiTextField-root input {
+    color: white;            
+  }
+  
+  .MuiFormControl-root label {
+    color: white;             
+  }
+  
+  .MuiSelect-root {
+    color: white;            
+  }
+  
+  .MuiMenuItem-root {
+    color: #FF8539;             
+    background-color: white;  
+  }
+  
+  .MuiMenuItem-root:hover {
+    background-color: #FF8539;   
+  }
+  

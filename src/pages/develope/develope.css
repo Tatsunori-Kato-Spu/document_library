@@ -1,0 +1,31 @@
+.develope {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.container-develope {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+.develope-name {
+    margin-top: 10px;
+    font-size: 20px;    
+}
+
+.develope-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+}
+
+.develope-main{
+    margin-top: 20px;
+}
