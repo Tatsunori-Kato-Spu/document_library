@@ -10,51 +10,22 @@ import ButtonUpload from "../AddDoc/buttonupload";
 import Header from "../../Layout/Header/Header";
 import { useNavigate } from "react-router-dom";
 
-const Pagedoc = ({ userRole }) => {
+const Pagedoc = ({ user, onLogout }) => {
+  const userRole = user?.role;
+  const username = user?.username;
   const [filteredData, setFilteredData] = useState([]);
   const [sortOrder, setSortOrder] = useState("desc");
   const [showModal, setShowModal] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState(null);
-  const [username, setUsername] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
 
   const navigate = useNavigate();
 
-  // ดึง username จาก localStorage
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setUsername(storedUsername);
-    } else {
-      console.error("Username not found in storage");
-    }
-  }, []);
-
-  //
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/api/documents?username=${username}`
-        );
-        const data = await response.json();
-
-        // ✅ ไม่ต้องกรองซ้ำ ถ้า backend กรอง role แล้ว
-        setFilteredData(data);
-      } catch (error) {
-        console.error("Error fetching documents:", error);
-      }
-    };
-
-    if (username) fetchDocuments();
-  }, [username]);
   // ดึงเอกสารจาก backend
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/api/documents?username=${username}`
-        );
+        const response = await fetch(`http://localhost:3001/api/documents?username=${username}`);
         const data = await response.json();
         setFilteredData(data);
       } catch (error) {
@@ -64,7 +35,6 @@ const Pagedoc = ({ userRole }) => {
 
     if (username) fetchDocuments();
   }, [username]);
-
   const handleSearch = (filteredDocuments) => {
     setFilteredData(filteredDocuments);
   };
@@ -171,7 +141,7 @@ const Pagedoc = ({ userRole }) => {
 
   return (
     <div className="page-container">
-      <Header />
+      <Header user={user} onLogout={onLogout} />
 
       {/* ตารางแสดงเอกสาร */}
       <div className="table-wrapper">
@@ -305,7 +275,7 @@ const Pagedoc = ({ userRole }) => {
       </div>
 
       {/* ปุ่มอัพโหลดเอกสารสำหรับ Admin */}
-      {userRole === "admin" && <ButtonUpload />}
+      {userRole?.toLowerCase() === "admin" && <ButtonUpload />}
 
       {/* Modal ยืนยันการลบ */}
       <Actiondropdown
