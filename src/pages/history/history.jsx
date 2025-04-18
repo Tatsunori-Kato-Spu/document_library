@@ -69,11 +69,6 @@ function History() {
                     กำหนดสิทธิ
                   </button>
                 </div>
-                <div>
-                  <button onClick={() => navigate("/document_library/stats")} className="button-box-1">
-                    สถิติ
-                  </button>
-                </div>
               </>
             )}
           </div>

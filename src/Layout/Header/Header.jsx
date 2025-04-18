@@ -6,6 +6,7 @@ import NotificationsA from "../Notification/NotificationsA";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
+import Swal from "sweetalert2";
 
 function Header({ user, onLogout }) {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -25,11 +26,24 @@ function Header({ user, onLogout }) {
   };
 
   const handleLogoutClick = () => {
-    localStorage.clear();
-    if (onLogout) {
-      onLogout(); // reset จาก App.jsx
-    }
-    navigate('/document_library/login');
+    Swal.fire({
+      title: "คุณต้องการออกจากระบบหรือไม่?",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: "ออกจากระบบ",
+      denyButtonText: "ยกเลิก",
+      confirmButtonColor: "#e74c3c", // สีแดง
+      denyButtonColor: "#6c63ff",    // สีม่วง
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        if (onLogout) {
+          onLogout(); // reset จาก App.jsx
+        }
+        navigate('/document_library/login');
+        Swal.fire("ออกจากระบบแล้ว", "", "success");
+      }
+    });
   };
 
   return (

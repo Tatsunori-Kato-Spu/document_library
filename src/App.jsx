@@ -7,10 +7,8 @@ import {
 } from "react-router-dom";
 
 import Permission from "./pages/Permission/Permission";
-import Stats from "./pages/Stats/Stats";
 import Login from "./pages/Login/Login";
 import Pagedoc from "./pages/Pagedoc/page";
-import Homepage from "./pages/Home/homepage";
 import Profile from "./pages/profile/profile";
 import History from "./pages/history/history";
 import AddDoc from "./pages/AddDoc/AddDoc";
@@ -58,7 +56,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/document_library/" element={<Homepage />} />
+      <Route path="/document_library/" element={<Navigate to="/document_library/login" />} />
+
         <Route path="/document_library/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         <Route
           path="/document_library/pagedoc"
@@ -83,7 +82,6 @@ function App() {
           }
         />
         <Route path="/document_library/permission" element={<Permission />} />
-        <Route path="/document_library/stats" element={<Stats />} />
         <Route path="/document_library/profile" element={<Profile user={user} token={user?.token} />} />
         <Route path="/document_library/history" element={<History user={user} />} />
         <Route path="/document_library/develope" element={<Develope />} />

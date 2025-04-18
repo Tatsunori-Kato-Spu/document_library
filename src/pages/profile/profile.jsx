@@ -46,7 +46,6 @@ function Profile() {
                         {user.role === "admin" && (
                             <>
                                 <button onClick={permissionClick} className='button-box-1'>กำหนดสิทธิ</button>
-                                <button onClick={statsClick} className='button-box-1'>สถิติ</button>
                             </>
                         )}
                     </div>
