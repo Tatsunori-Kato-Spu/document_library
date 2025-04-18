@@ -10,8 +10,10 @@ USE `userdocs`;
 -- สร้างตาราง roles
 CREATE TABLE `roles` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(50) NOT NULL UNIQUE
+  `name` VARCHAR(50) NOT NULL UNIQUE,
+  `level` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- สร้างตาราง users
 CREATE TABLE `users` (
