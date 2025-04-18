@@ -84,7 +84,7 @@ const Filtersearch = ({ open, onClose, onApply, username }) => {
             sx={{ color: "white" }}
           >
             <MenuItem value="">เลือกทั้งหมด</MenuItem>
-            {["บัญชี", "การตลาด", "ไอที", "ทรัพยากรบุคคล", "การเงิน"].map(
+            {["บัญชี", "ทรัพยากรบุคคล", "การเงิน"].map(
               (dept) => (
                 <MenuItem key={dept} value={dept}>
                   {dept}

@@ -2,6 +2,8 @@ import express from "express";
 import mysql from 'mysql2/promise';
 import cors from "cors";
 
+import { v4 as uuidv4 } from 'uuid';
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -266,6 +268,75 @@ app.get("/api/roles", async (req, res) => {
     res.status(500).json({ message: "Error fetching roles" });
   }
 });
+
+app.put("/api/users/:id/role", async (req, res) => {
+  const userId = req.params.id;
+  const { role: newRoleName } = req.body;
+
+  try {
+    // หา role_id จากชื่อ role
+    const [roleRows] = await pool.query(
+      `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
+      [newRoleName]
+    );
+    if (roleRows.length === 0) {
+      return res.status(400).json({ success: false, message: `ไม่พบ role: ${newRoleName}` });
+    }
+    const roleId = roleRows[0].id;
+
+    // อัปเดต users.role_id
+    await pool.query(
+      `UPDATE users SET role_id = ? WHERE id = ?`,
+      [roleId, userId]
+    );
+
+    res.json({ success: true, message: "เปลี่ยน role สำเร็จ" });
+  } catch (err) {
+    console.error("Error updating user role:", err);
+    res.status(500).json({ success: false, message: "อัปเดต role ล้มเหลว", error: err.message });
+  }
+});
+
+app.post("/api/users", async (req, res) => {
+  const {
+    username,
+    password,
+    name,
+    id_card,
+    department,
+    position,
+    email,
+    contact,
+    role // ค่าที่ส่งมาเป็น string: "admin"/"worker"/"guest"
+  } = req.body;
+
+  try {
+    // หา role_id จากชื่อ role
+    const [roleRows] = await pool.query(
+      `SELECT id FROM roles WHERE LOWER(name)=LOWER(?)`,
+      [role]
+    );
+    if (roleRows.length === 0) {
+      return res.status(400).json({ success: false, message: `ไม่พบ role: ${role}` });
+    }
+    const roleId = roleRows[0].id;
+    const token = uuidv4(); // สุ่ม token ให้ user
+
+    // ใส่ข้อมูลลงตาราง users
+    const [result] = await pool.query(
+      `INSERT INTO users
+        (username, password, name, id_card, department, position, email, contact, role_id, token)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [username, password, name, id_card, department, position, email, contact, roleId, token]
+    );
+
+    res.json({ success: true, message: "สร้างผู้ใช้ใหม่สำเร็จ", userId: result.insertId });
+  } catch (err) {
+    console.error("Error creating user:", err);
+    res.status(500).json({ success: false, message: "สร้างผู้ใช้ล้มเหลว", error: err.message });
+  }
+});
+
 
 
 // -------------------------- Profile --------------------------
