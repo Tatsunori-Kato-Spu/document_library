@@ -48,77 +48,12 @@ function App() {
     localStorage.setItem("role", userInfo.role);
   };
 
-<<<<<<< HEAD
-  const router = createBrowserRouter([
-    {
-      path: "/document_library/",
-      element: <Homepage />,
-    },
-    {
-      path: "/document_library/login",
-      element: <Login onLoginSuccess={handleLoginSuccess} />,
-    },
-    {
-      path: "/document_library/pagedoc",
-      element: isLoggedIn ? (
-        <Pagedoc userRole={userRole} />
-      ) : (
-        <Navigate to="/document_library/login" />
-      ),
-    },
-    {
-      path: "/document_library/editDoc",
-      element: isLoggedIn ? (
-        <EditDoc userRole={userRole} />
-      ) : (
-        <Navigate to="/document_library/login" />
-      ),
-    },
-    {
-      path: "/document_library/addDoc",
-      element: isLoggedIn ? <AddDoc /> : <Navigate to="/document_library/login" />,
-    },
-    {
-      path: "/document_library/permission",
-      element: <Permission />,
-    },
-    {
-      path: "/document_library/stats",
-      element: <Stats />,
-    },
-    {
-      path: "/document_library/profile",
-      element: <Profile user={user} token={user?.token} />,
-    },
-    {
-      path: "/document_library/history",
-      element: <History user={user} />,
-    },
-    {
-      path: "/document_library/develope",
-      element: <Develope />,
-    },
-    {
-      path: "/document_library/editmember",
-      element: <EditMember />,
-    },
-    {
-      path: "/document_library/editmember/:id",
-      element: <EditMemberForm />,
-    },        
-    {
-      path: "*",
-      element: <div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>,
-    },
-  ]);
-=======
   const handleLogout = () => {
     localStorage.clear();
     setUser(null);
     setUserRole(null);
     setIsLoggedIn(false);
   };
->>>>>>> 25628c87bae61ee0404ae8fb45434aed5ccc9830
 
   return (
     <BrowserRouter>
@@ -152,6 +87,8 @@ function App() {
         <Route path="/document_library/profile" element={<Profile user={user} token={user?.token} />} />
         <Route path="/document_library/history" element={<History user={user} />} />
         <Route path="/document_library/develope" element={<Develope />} />
+        <Route path="/document_library/editmember" element={<EditMember />} />
+        <Route path="/document_library/editmember/:id" element={<EditMemberForm />} />
         <Route path="*" element={<div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>} />
       </Routes>
     </BrowserRouter>
