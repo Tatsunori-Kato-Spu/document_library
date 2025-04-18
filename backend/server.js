@@ -32,35 +32,34 @@ app.post("/api/documents/upload", async (req, res) => {
     const allRoleIds = new Set();
 
     for (const roleName of roles) {
-      // ดึง level ของ role ที่เลือกมา
       const [roleRows] = await pool.query(
         `SELECT id, level, name FROM roles WHERE LOWER(name) = LOWER(?)`,
         [roleName]
       );
-
+    
       const baseRole = roleRows[0];
       if (!baseRole) {
         return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
       }
-
-      // ถ้า role เป็น guest ให้แค่ guest เห็น
-      if (baseRole.name.toLowerCase() === 'guest') {
+    
+      const roleNameLower = baseRole.name.toLowerCase();
+    
+      if (roleNameLower === 'guest') {
+        // guest เห็นคนเดียว
         allRoleIds.add(baseRole.id);
-      } else {
-        // ดึง role อื่นๆ ที่ level ต่ำกว่าหรือเท่ากับ แต่ไม่รวม guest
-        const [visibleRoles] = await pool.query(
-          `SELECT id FROM roles WHERE level <= ? AND name != 'guest'`,
-          [baseRole.level]
+      } else if (roleNameLower === 'worker') {
+        // worker + guest เห็น
+        const [targetRoles] = await pool.query(
+          `SELECT id FROM roles WHERE LOWER(name) IN ('worker', 'guest')`
         );
-
-        // เพิ่ม role id ทั้งหมดเข้า set เพื่อกันซ้ำ
-        for (const r of visibleRoles) {
-          allRoleIds.add(r.id);
-        }
+        targetRoles.forEach(r => allRoleIds.add(r.id));
+      } else if (roleNameLower === 'admin') {
+        // admin เห็นคนเดียวเท่านั้น ❗
+        allRoleIds.add(baseRole.id);
       }
     }
+    
 
-    // ใส่ role ทั้งหมดที่ได้มาแล้วลง document_roles
     for (const roleId of allRoleIds) {
       await pool.query(
         `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
@@ -68,12 +67,13 @@ app.post("/api/documents/upload", async (req, res) => {
       );
     }
 
-    res.json({ success: true, message: "Document uploaded successfully with hierarchical access" });
+    res.json({ success: true, message: "Document uploaded successfully with correct access" });
   } catch (err) {
     console.error("Upload error:", err.message);
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
 
 
 
@@ -127,7 +127,7 @@ app.get("/api/documents", async (req, res) => {
     // สร้าง map ของ role ที่แต่ละคนสามารถเข้าถึงได้
     const roleVisibilityMap = {
       admin: ["admin", "worker", "guest"],
-      worker: ["admin", "worker"],
+      worker: ["worker", "guest"],
       guest: ["guest"] 
     };
 
