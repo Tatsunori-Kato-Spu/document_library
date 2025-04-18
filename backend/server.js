@@ -338,6 +338,45 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
+// แก้ไข้ข้อมูล member
+app.get("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await pool.query(
+      `SELECT users.id, users.name, users.id_card, users.department, users.position, users.email, users.contact, roles.name AS role
+       FROM users
+       JOIN roles ON users.role_id = roles.id
+       WHERE users.id = ?`, [id]
+    );
+
+    if (rows.length === 0) {
+      console.log("ไม่พบผู้ใช้ id =", id);
+      return res.status(404).json({ message: "ไม่พบผู้ใช้" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดที่เซิร์ฟเวอร์" });
+  }
+});
+// อัปเดตข้อมูล user
+app.put("/api/users/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, id_card, department, position, email, contact } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE users SET name = ?, id_card = ?, department = ?, position = ?, email = ?, contact = ? WHERE id = ?`,
+      [name, id_card, department, position, email, contact, id]
+    );
+
+    res.json({ success: true, message: "อัปเดตข้อมูลผู้ใช้สำเร็จ" });
+  } catch (err) {
+    console.error("Error updating user:", err.message);
+    res.status(500).json({ success: false, message: "อัปเดตล้มเหลว", error: err.message });
+  }
+});
 
 
 // -------------------------- Profile --------------------------

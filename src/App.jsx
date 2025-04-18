@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import {
-  createBrowserRouter,
-  RouterProvider,
+  BrowserRouter,
+  Routes,
+  Route,
   Navigate,
 } from "react-router-dom";
 
+import EditMember from "./pages/Editmember/Editmember";
+import EditMemberForm from "./pages/Editmember/Editmemberform";
 import Permission from "./pages/Permission/Permission";
-import Stats from "./pages/Stats/Stats";
 import Login from "./pages/Login/Login";
 import Pagedoc from "./pages/Pagedoc/page";
-import Homepage from "./pages/Home/homepage";
 import Profile from "./pages/profile/profile";
 import History from "./pages/history/history";
 import AddDoc from "./pages/AddDoc/AddDoc";
@@ -47,65 +48,50 @@ function App() {
     localStorage.setItem("role", userInfo.role);
   };
 
-  const router = createBrowserRouter([
-    {
-      path: "/document_library/",
-      element: <Homepage />,
-    },
-    {
-      path: "/document_library/login",
-      element: <Login onLoginSuccess={handleLoginSuccess} />,
-    },
-    {
-      path: "/document_library/pagedoc",
-      element: isLoggedIn ? (
-        <Pagedoc userRole={userRole} />
-      ) : (
-        <Navigate to="/document_library/login" />
-      ),
-    },
-    {
-      path: "/document_library/editDoc",
-      element: isLoggedIn ? (
-        <EditDoc userRole={userRole} />
-      ) : (
-        <Navigate to="/document_library/login" />
-      ),
-    },
-    {
-      path: "/document_library/addDoc",
-      element: isLoggedIn ? <AddDoc /> : <Navigate to="/document_library/login" />,
-    },
-    {
-      path: "/document_library/permission",
-      element: <Permission />,
-    },
-    {
-      path: "/document_library/stats",
-      element: <Stats />,
-    },
-    {
-      path: "/document_library/profile",
-      element: <Profile user={user} token={user?.token} />,
-    },
-    {
-      path: "/document_library/history",
-      element: <History user={user} />,
-    },
-    {
-      path: "/document_library/develope",
-      element: <Develope />,
-    },
-    {
-      path: "*",
-      element: <div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>,
-    },
-  ]);
+  const handleLogout = () => {
+    localStorage.clear();
+    setUser(null);
+    setUserRole(null);
+    setIsLoggedIn(false);
+  };
 
   return (
-    <div>
-      <RouterProvider router={router} />
-    </div>
+    <BrowserRouter>
+      <Routes>
+      <Route path="/document_library/" element={<Navigate to="/document_library/login" />} />
+
+        <Route path="/document_library/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+        <Route
+          path="/document_library/pagedoc"
+          element={
+            isLoggedIn ? (
+              <Pagedoc user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/document_library/login" />
+            )
+          }
+        />
+        <Route
+          path="/document_library/editDoc"
+          element={
+            isLoggedIn ? <EditDoc userRole={userRole} /> : <Navigate to="/document_library/login" />
+          }
+        />
+        <Route
+          path="/document_library/addDoc"
+          element={
+            isLoggedIn ? <AddDoc /> : <Navigate to="/document_library/login" />
+          }
+        />
+        <Route path="/document_library/permission" element={<Permission />} />
+        <Route path="/document_library/profile" element={<Profile user={user} token={user?.token} />} />
+        <Route path="/document_library/history" element={<History user={user} />} />
+        <Route path="/document_library/develope" element={<Develope />} />
+        <Route path="/document_library/editmember" element={<EditMember />} />
+        <Route path="/document_library/editmember/:id" element={<EditMemberForm />} />
+        <Route path="*" element={<div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

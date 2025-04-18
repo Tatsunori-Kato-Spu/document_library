@@ -6,35 +6,12 @@ import NotificationsA from "../Notification/NotificationsA";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Header.css';
+import Swal from "sweetalert2";
 
-function Header() {
+function Header({ user, onLogout }) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [token, setToken] = useState(null);
-
-  // ดึง token จาก localStorage
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
-  }, []);
-
-  // เมื่อมี token ให้เรียก API /api/profile
-  useEffect(() => {
-    if (!token) return;
-
-    axios.get('http://localhost:3001/api/profile', {
-      params: { token }
-    })
-      .then(res => {
-        if (res.data.success) {
-          setUser(res.data.user);
-        } else {
-          console.log('ไม่พบผู้ใช้สำหรับ token นี้');
-        }
-      })
-      .catch(err => console.error('Profile fetch error:', err));
-  }, [token]);
 
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
@@ -49,9 +26,24 @@ function Header() {
   };
 
   const handleLogoutClick = () => {
-    localStorage.clear();
-    setUser(null);
-    navigate('/document_library/login');
+    Swal.fire({
+      title: "คุณต้องการออกจากระบบหรือไม่?",
+      icon: "question",
+      showDenyButton: true,
+      confirmButtonText: "ออกจากระบบ",
+      denyButtonText: "ยกเลิก",
+      confirmButtonColor: "#e74c3c", // สีแดง
+      denyButtonColor: "#6c63ff",    // สีม่วง
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        if (onLogout) {
+          onLogout(); // reset จาก App.jsx
+        }
+        navigate('/document_library/login');
+        Swal.fire("ออกจากระบบแล้ว", "", "success");
+      }
+    });
   };
 
   return (

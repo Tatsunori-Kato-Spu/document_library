@@ -1,108 +1,99 @@
 /* Container */
 .Login-container {
   position: absolute;
-  width: 800px;
-  height: 700px;
+  width: 600px;
+  padding: 40px 50px;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -42%);
-  background: rgba(55, 58, 64, 0.4); 
-  border-radius: 50px;
+  transform: translate(-50%, -50%);
+  background: rgba(55, 58, 64, 0.7);
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 
-/* โลโก้ */
+/* Logo */
 .logo-container {
-  margin-bottom: 20px;
-  
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .login-logo {
-  width: 250px; 
-  height: auto; 
+  width: 220px;
+  height: auto;
 }
 
-/* ฟอร์ม */
+/* Form Styling */
 form {
+  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* ระยะห่างระหว่าง input */
-  width: 100%;
-  /* height: 450px; */
-  max-width: 500px;
-  /* background: rgba(55, 58, 64, 0.1);  */
-  padding: 30px;
-  /* border-radius: 20px; */
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  gap: 20px;
 }
 
-/* อินพุต */
+/* Input Fields */
 .input-field {
-  box-sizing: border-box;
-  width: 100%;
-  height: 64px;
-  padding: 10px;
-  background: #ffffff;
-  border: 4px solid #ff8539;
-  box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
+  height: 55px;
+  padding: 0 15px;
   font-size: 16px;
-  color: #333;
-}
-.Login-container .input-field {
-  
-  border: 4px solid #ff8539 !important;
-  box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  font-size: 16px;
-  color: #333;
+  background-color: #fff;
+  border: 3px solid #ff8539;
+  border-radius: 15px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
 }
 
-/* ปุ่ม */
+.input-field:focus {
+  border-color: #ffa74f;
+  outline: none;
+}
+
+/* Button Container */
 .button-container {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* ระยะห่างระหว่างปุ่ม */
+  gap: 15px;
   align-items: center;
+  margin-top: 10px;
 }
 
+/* Login Button */
 .btn-login {
-
   width: 100%;
-  max-width: 300px;
-  height: 60px;
+  height: 50px;
   background: #ff8539;
-  box-shadow: inset -5px -8px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  color: white;
   border: none;
+  color: white;
+  font-size: 17px;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.3s ease;
 }
 
 .btn-login:hover {
-  background-color: #3ead43;
+  background-color: #f26522;
 }
 
+/* Guest Button */
 .guest-button {
- 
   width: 100%;
-  max-width: 300px;
-  height: 60px;
+  height: 50px;
   background: #6c757d;
-  border-radius: 20px;
-  color: white;
   border: none;
+  color: white;
+  font-size: 17px;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 16px; 
+  font-weight: 600;
+  transition: background 0.3s ease;
 }
 
 .guest-button:hover {
-  background-color: #3ead43;
-} 
-  
+  background-color: #5a6268;
+}
