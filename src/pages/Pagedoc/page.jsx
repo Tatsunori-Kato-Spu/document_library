@@ -242,7 +242,7 @@ const Pagedoc = ({ userRole }) => {
                             <Dropdown.Item
                               className="bi bi-pencil-square"
                               onClick={() =>
-                                navigate("/addDoc", { state: { doc: item } })
+                                navigate("/document_library/addDoc", { state: { doc: item } })
                               }
                             >
                               {" "}
@@ -394,7 +394,7 @@ const Pagedoc = ({ userRole }) => {
                             className="bi bi-pencil-square"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate("/editDoc", {
+                              navigate("/document_library/editDoc", {
                                 state: {
                                   doc: {
                                     ...item,

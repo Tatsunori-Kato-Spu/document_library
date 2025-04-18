@@ -39,7 +39,7 @@ function Login({ onLoginSuccess }) {
           confirmButtonText: "Proceed",
         }).then(() => {
           onLoginSuccess(data.userInfo);
-          navigate("/pagedoc");
+          navigate("/document_library/pagedoc");
         });
       } else {
         Swal.fire({
@@ -79,7 +79,7 @@ function Login({ onLoginSuccess }) {
       confirmButtonText: "OK",
     }).then(() => {
       onLoginSuccess(guestInfo);
-      navigate("/pagedoc");
+      navigate("/document_library/pagedoc");
     });
   };
 

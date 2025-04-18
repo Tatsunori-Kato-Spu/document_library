@@ -29,9 +29,9 @@ function Profile() {
         return <div>กำลังโหลดข้อมูล...</div>;
     }
 
-    const historyClick = () => navigate('/history');
-    const permissionClick = () => navigate('/permission');
-    const statsClick = () => navigate('/stats');
+    const historyClick = () => navigate('/document_library/history');
+    const permissionClick = () => navigate('/document_library/permission');
+    const statsClick = () => navigate('/document_library/stats');
 
     return (
         <div>

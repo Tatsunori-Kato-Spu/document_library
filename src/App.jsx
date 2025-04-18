@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -14,22 +14,37 @@ import Profile from "./pages/profile/profile";
 import History from "./pages/history/history";
 import AddDoc from "./pages/AddDoc/AddDoc";
 import EditDoc from "./pages/actiondropdown/EditDoc";
+import Develope from "./pages/develope/develope";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import "./App.css";
-import Develope from "./pages/develope/develope";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    const username = localStorage.getItem("username");
+
+    if (token && role && username) {
+      setIsLoggedIn(true);
+      setUserRole(role);
+      setUser({ username, role, token });
+    }
+  }, []);
+
   const handleLoginSuccess = (userInfo) => {
     setIsLoggedIn(true);
     setUserRole(userInfo.role);
     setUser(userInfo);
+
     localStorage.setItem("token", userInfo.token);
+    localStorage.setItem("username", userInfo.username);
+    localStorage.setItem("role", userInfo.role);
   };
 
   const router = createBrowserRouter([
@@ -38,51 +53,51 @@ function App() {
       element: <Homepage />,
     },
     {
-      path: "/login",
+      path: "/document_library/login",
       element: <Login onLoginSuccess={handleLoginSuccess} />,
     },
     {
-      path: "/pagedoc",
+      path: "/document_library/pagedoc",
       element: isLoggedIn ? (
         <Pagedoc userRole={userRole} />
       ) : (
-        <Navigate to="/login" />
+        <Navigate to="/document_library/login" />
       ),
     },
     {
-      path: "/editDoc",
+      path: "/document_library/editDoc",
       element: isLoggedIn ? (
         <EditDoc userRole={userRole} />
       ) : (
-        <Navigate to="/login" />
+        <Navigate to="/document_library/login" />
       ),
     },
     {
-      path: "/addDoc",
-      element: isLoggedIn ? <AddDoc /> : <Navigate to="/login" />,
+      path: "/document_library/addDoc",
+      element: isLoggedIn ? <AddDoc /> : <Navigate to="/document_library/login" />,
     },
     {
-      path: "/permission",
+      path: "/document_library/permission",
       element: <Permission />,
     },
     {
-      path: "/stats",
+      path: "/document_library/stats",
       element: <Stats />,
     },
     {
-      path: "/profile",
+      path: "/document_library/profile",
       element: <Profile user={user} token={user?.token} />,
     },
     {
-      path: "/history",
+      path: "/document_library/history",
       element: <History user={user} />,
     },
     {
-      path: "/develope",
+      path: "/document_library/develope",
       element: <Develope />,
     },
     {
-      path: "*", // 🔥 fallback route
+      path: "*",
       element: <div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>,
     },
   ]);

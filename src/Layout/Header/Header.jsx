@@ -16,7 +16,6 @@ function Header() {
   // ดึง token จาก localStorage
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    console.log('Retrieved token from localStorage:', storedToken);
     setToken(storedToken);
   }, []);
 
@@ -27,14 +26,14 @@ function Header() {
     axios.get('http://localhost:3001/api/profile', {
       params: { token }
     })
-    .then(res => {
-      if (res.data.success) {
-        setUser(res.data.user);
-      } else {
-        console.log('ไม่พบผู้ใช้สำหรับ token นี้');
-      }
-    })
-    .catch(err => console.error('Profile fetch error:', err));
+      .then(res => {
+        if (res.data.success) {
+          setUser(res.data.user);
+        } else {
+          console.log('ไม่พบผู้ใช้สำหรับ token นี้');
+        }
+      })
+      .catch(err => console.error('Profile fetch error:', err));
   }, [token]);
 
   const toggleNotifications = () => {
@@ -42,16 +41,17 @@ function Header() {
   };
 
   const handleLogoClick = () => {
-    navigate('/pagedoc');
+    navigate('/document_library/pagedoc');
   };
 
   const handleProfileClick = () => {
-    navigate('/profile');
+    navigate('/document_library/profile');
   };
 
   const handleLogoutClick = () => {
-    localStorage.removeItem('token');
-    navigate('/document_library/');
+    localStorage.clear();
+    setUser(null);
+    navigate('/document_library/login');
   };
 
   return (

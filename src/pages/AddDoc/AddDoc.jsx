@@ -31,7 +31,7 @@ function AddDoc() {
   };
 
   const handleCancel = () => {
-    navigate("/pagedoc");
+    navigate("/document_library/pagedoc");
   };
 
   const handleSubmit = async () => {
@@ -55,7 +55,7 @@ function AddDoc() {
       const data = await res.json();
       if (data.success) {
         alert("อัปโหลดสำเร็จ");
-        navigate("/pagedoc");
+        navigate("/document_library/pagedoc");
       } else {
         alert("อัปโหลดไม่สำเร็จ: " + data.message);
       }

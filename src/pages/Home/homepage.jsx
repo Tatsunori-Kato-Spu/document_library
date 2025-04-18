@@ -25,7 +25,7 @@ function Homepage() {
         <p>
           ส่วนของการแสดงเอกสารที่เกี่ยวข้องขององค์กรสำหรับหาข้อมูลรายละเอียดของกรมเชื้อเพลิงธรรมชาติ กระทรวงพลังงาน
         </p>
-        <button onClick={() => navigate('/login')} className="btn btn-primary">
+        <button onClick={() => navigate('/document_library/login')} className="btn btn-primary">
           Go to Login
         </button>
       </div>

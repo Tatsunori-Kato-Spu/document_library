@@ -68,7 +68,7 @@ const EditDoc = () => {
 
       if (response.ok) {
         alert("บันทึกสำเร็จ");
-        navigate("/pagedoc");
+        navigate("/document_library/pagedoc");
       } else {
         alert("บันทึกไม่สำเร็จ");
       }

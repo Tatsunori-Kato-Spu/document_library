@@ -6,7 +6,7 @@ const ButtonUpload = () => {
   const navigate = useNavigate();  
 
   const handleUploadClick = () => {
-    navigate('/adddoc');  
+    navigate('/document_library/adddoc');  
   };
 
   return (

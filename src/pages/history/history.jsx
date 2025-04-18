@@ -55,7 +55,7 @@ function History() {
                 className="photo"
               />
             </div>
-            <button className="button-style" onClick={() => navigate("/profile")}>
+            <button className="button-style" onClick={() => navigate("/document_library/profile")}>
               ข้อมูลพื้นฐาน
             </button>
             {/* แสดงปุ่ม "ประวัติ" เฉพาะถ้าผู้ใช้ไม่ใช่ worker */}
@@ -65,12 +65,12 @@ function History() {
             {user.role === "admin" && (
               <>
                 <div>
-                  <button onClick={() => navigate("/permission")} className="button-box-1">
+                  <button onClick={() => navigate("/document_library/permission")} className="button-box-1">
                     กำหนดสิทธิ
                   </button>
                 </div>
                 <div>
-                  <button onClick={() => navigate("/stats")} className="button-box-1">
+                  <button onClick={() => navigate("/document_library/stats")} className="button-box-1">
                     สถิติ
                   </button>
                 </div>
