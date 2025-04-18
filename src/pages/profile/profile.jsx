@@ -32,6 +32,7 @@ function Profile() {
     const historyClick = () => navigate('/document_library/history');
     const permissionClick = () => navigate('/document_library/permission');
     const statsClick = () => navigate('/document_library/stats');
+    const editmemberClick = () => navigate('/document_library/editmember');
 
     return (
         <div>
@@ -46,6 +47,7 @@ function Profile() {
                         {user.role === "admin" && (
                             <>
                                 <button onClick={permissionClick} className='button-box-1'>กำหนดสิทธิ</button>
+                                <button onClick={editmemberClick} className='button-box-1'>จัดการสมาชิก</button>
                                 <button onClick={statsClick} className='button-box-1'>สถิติ</button>
                             </>
                         )}

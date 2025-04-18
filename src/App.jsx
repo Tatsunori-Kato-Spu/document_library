@@ -5,6 +5,8 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import EditMember from "./pages/Editmember/Editmember";
+import EditMemberForm from "./pages/Editmember/Editmemberform";
 import Permission from "./pages/Permission/Permission";
 import Stats from "./pages/Stats/Stats";
 import Login from "./pages/Login/Login";
@@ -96,6 +98,14 @@ function App() {
       path: "/document_library/develope",
       element: <Develope />,
     },
+    {
+      path: "/document_library/editmember",
+      element: <EditMember />,
+    },
+    {
+      path: "/document_library/editmember/:id",
+      element: <EditMemberForm />,
+    },        
     {
       path: "*",
       element: <div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>,
