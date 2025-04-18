@@ -17,7 +17,17 @@
 
   .form-group {
       margin-bottom: 15px;
+      /* color: aliceblue; */
   }
+  .form-group2 {
+    /* display: flex; */
+    margin-left: 70px;
+    margin-right: 70px;
+    border: 5px;
+    flex-direction: column;
+    /* align-items: flex-end; */
+  }
+  
 
   label {
       display: block;

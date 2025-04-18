@@ -76,9 +76,6 @@ app.post("/api/documents/upload", async (req, res) => {
 
 
 
-
-
-
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
@@ -467,8 +464,25 @@ app.get("/api/departments", async (req, res) => {
     res.status(500).json({ message: "Error fetching departments" });
   }
 });
+////////////////////////////No
+app.post('/api/documents', async (req, res) => {
+  try {
+    const [rows] = await pool.query(`
+      SELECT d.id, d.doc_name, d.subject, d.doc_date, d.doc_time, d.department
+      FROM documents d
+      ORDER BY d.doc_date DESC, d.doc_time DESC
+      LIMIT 5;
+    `);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching documents:', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 // -------------------------- Start server --------------------------
 app.listen(3001, () => {
   console.log("✅ Backend running on http://localhost:3001");
 });
+

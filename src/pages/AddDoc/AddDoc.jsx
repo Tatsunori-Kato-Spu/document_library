@@ -95,7 +95,7 @@ function AddDoc() {
         <div className="form-container">
           <div className="colum-1">
             <div className="form-group">
-              <label htmlFor="docNumber" className="doc-Number-label">
+              <label htmlFor="docNumber" className="doc-Number-label"style={{ color: 'orange' }}>
                 ใส่เลขเอกสาร
               </label>
               <input
@@ -108,7 +108,7 @@ function AddDoc() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="docName" className="doc-Text-label">
+              <label htmlFor="docName" className="doc-Text-label" style={{ color: 'orange' }}>
                 ใส่ชื่อเอกสาร
               </label>
               <input
@@ -121,10 +121,11 @@ function AddDoc() {
             </div>
           </div>
               {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
-              <div className="form-group">
-              <label htmlFor="subject" className="doc-Topic-label">
-                หัวข้อเรื่อง
-              </label>
+              <div className="form-group2">
+              <label htmlFor="subject" className="doc-Topic-label" style={{ color: 'orange' }} >
+  หัวข้อเรื่อง
+</label>
+
               <input
                 id="subject"
                 type="text"
@@ -135,8 +136,8 @@ function AddDoc() {
             </div>
           <div className="colum-2">
             <div className="form-group">
-              <label htmlFor="budgetYear" className="doc-budget-label">
-                ปีงบประมาณ
+              <label htmlFor="budgetYear" className="doc-budget-label " style={{ color: 'orange' }}>
+                ปีงบประมาณ 
               </label>
               <input
                 list="budgetYears" // เชื่อมโยงกับ datalist
@@ -152,7 +153,7 @@ function AddDoc() {
               </datalist>
             </div>
             <div className="form-group">
-              <label htmlFor="date" className="doc-data-label">
+              <label htmlFor="date" className="doc-data-label" style={{ color: 'orange' }}>
                 วันที่รับ
               </label>
               <input
@@ -164,7 +165,7 @@ function AddDoc() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="department" className="doc-department-label">
+              <label htmlFor="department" className="doc-department-label" style={{ color: 'orange' }}>
                 หน่วยงาน
               </label>
               <input
@@ -182,7 +183,7 @@ function AddDoc() {
               </datalist>
             </div>
             <div className="form-group">
-              <label className="doc-role">ระดับ</label>
+              <label className="doc-role" style={{ color: 'orange' }} >ระดับ</label>
               <div className="checkbox-group">
                 <label>
                   <input
