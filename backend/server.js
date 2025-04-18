@@ -19,13 +19,13 @@ const pool = mysql.createPool({
 
 // -------------------------- Upload Document (No PDF) --------------------------
 app.post("/api/documents/upload", async (req, res) => {
-  const { docNumber, docName, department, date, roles } = req.body;
+  const { docNumber, docName, subject, department, date, roles } = req.body;
   const now = new Date();
 
   try {
     const [insertResult] = await pool.query(
       `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time) VALUES (?, ?, ?, ?, ?, ?)`,
-      [docNumber, docName, docName, department, date, now]
+      [docNumber, docName, subject, department, date, now]
     );
     const docId = insertResult.insertId;
 
@@ -376,18 +376,36 @@ app.delete("/api/documents/:docNumber", async (req, res) => {
 app.put("/api/documents/:docNumber", async (req, res) => {
   const { docNumber } = req.params;
   const { doc_name, subject, department, date, role } = req.body;
+
   try {
+    // อัปเดตข้อมูลเอกสารหลัก
     await pool.query(
       `UPDATE documents SET doc_name = ?, subject = ?, department = ?, doc_date = ? WHERE doc_number = ?`,
       [doc_name, subject, department, date, docNumber]
     );
 
+    // ถ้ามีข้อมูล role ให้จัดการกับตาราง document_roles
     if (role) {
-      const [roleRows] = await pool.query(`SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`, [role]);
+      const [roleRows] = await pool.query(
+        `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
+        [role]
+      );
+
       const roleId = roleRows[0]?.id;
+
       if (roleId) {
-        await pool.query(`DELETE FROM document_roles WHERE document_id = (SELECT id FROM documents WHERE doc_number = ?)`, [docNumber]);
-        await pool.query(`INSERT INTO document_roles (document_id, role_id) SELECT id, ? FROM documents WHERE doc_number = ?`, [roleId, docNumber]);
+        // ลบ role เดิมของเอกสารก่อน
+        await pool.query(
+          `DELETE FROM document_roles WHERE document_id = (SELECT id FROM documents WHERE doc_number = ?)`,
+          [docNumber]
+        );
+
+        // เพิ่ม role ใหม่
+        await pool.query(
+          `INSERT INTO document_roles (document_id, role_id) 
+           SELECT id, ? FROM documents WHERE doc_number = ?`,
+          [roleId, docNumber]
+        );
       }
     }
 
@@ -397,6 +415,7 @@ app.put("/api/documents/:docNumber", async (req, res) => {
     res.status(500).json({ success: false, message: "อัปเดตล้มเหลว" });
   }
 });
+
 
 
 // -------------------------- edit department --------------------------

@@ -1,18 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Layout/Header/Header";
 import "./AddDoc.css";
 
+// ฟังก์ชันสุ่มเลขเอกสาร 7 หลัก
+const generateDocNumber = () => {
+  let docNumber = "";
+  while (docNumber.length < 7) {
+    // สุ่มตัวเลข 0-9
+    const randomDigit = Math.floor(Math.random() * 10);
+    // ตรวจสอบว่าเลขซ้ำหรือไม่
+    if (!docNumber.includes(randomDigit)) {
+      docNumber += randomDigit;
+    }
+  }
+  return docNumber;
+};
+
 function AddDoc() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    docNumber: "",
+    docNumber: generateDocNumber(), // สร้างเลขเอกสารสุ่มตอนเริ่ม
     docName: "",
     budgetYear: "",
     date: "",
     department: "",
     roles: [],
   });
+
+  // Set current date for the minimum date
+  const [currentDate, setCurrentDate] = useState("");
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+    setCurrentDate(today);
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -37,10 +59,11 @@ function AddDoc() {
   const handleSubmit = async () => {
     const payload = {
       docNumber: formData.docNumber,
-      docName: formData.docName,
-      department: formData.department,
-      date: formData.date,
-      roles: formData.roles,
+  docName: formData.docName,
+  subject: formData.subject, // ✅ เพิ่มบรรทัดนี้
+  department: formData.department,
+  date: formData.date,
+  roles: formData.roles,
     };
 
     try {
@@ -81,6 +104,7 @@ function AddDoc() {
                 placeholder="กรอกเลขเอกสาร"
                 value={formData.docNumber}
                 onChange={handleChange}
+                readOnly // ไม่ให้ผู้ใช้แก้ไขเลขเอกสาร
               />
             </div>
             <div className="form-group">
@@ -96,22 +120,36 @@ function AddDoc() {
               />
             </div>
           </div>
+              {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
+              <div className="form-group">
+              <label htmlFor="subject" className="doc-Topic-label">
+                หัวข้อเรื่อง
+              </label>
+              <input
+                id="subject"
+                type="text"
+                placeholder="กรอกหัวข้อเรื่อง"
+                value={formData.subject}
+                onChange={handleChange}
+              />
+            </div>
           <div className="colum-2">
             <div className="form-group">
               <label htmlFor="budgetYear" className="doc-budget-label">
                 ปีงบประมาณ
               </label>
-              <select
+              <input
+                list="budgetYears" // เชื่อมโยงกับ datalist
                 id="budgetYear"
+                type="text"
                 value={formData.budgetYear}
                 onChange={handleChange}
-              >
-                <option value="" disabled>
-                  โปรดเลือก...
-                </option>
-                <option value="2566">2566</option>
-                <option value="2567">2567</option>
-              </select>
+                placeholder="พิมพ์หรือเลือกปีงบประมาณ"
+              />
+              <datalist id="budgetYears">
+                <option value="2566" />
+                <option value="2567" />
+              </datalist>
             </div>
             <div className="form-group">
               <label htmlFor="date" className="doc-data-label">
@@ -122,23 +160,26 @@ function AddDoc() {
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
+                min={currentDate} // Set the minimum date to the current date
               />
             </div>
             <div className="form-group">
               <label htmlFor="department" className="doc-department-label">
                 หน่วยงาน
               </label>
-              <select
+              <input
+                list="departments" // ใช้ list เพื่อเชื่อมโยงกับ datalist
                 id="department"
+                type="text"
                 value={formData.department}
                 onChange={handleChange}
-              >
-                <option value="" disabled>
-                  โปรดเลือก...
-                </option>
-                <option value="บัญชี">บัญชี</option>
-                <option value="การเงิน">การเงิน</option>
-              </select>
+                placeholder="พิมพ์หรือเลือกหน่วยงาน"
+              />
+              <datalist id="departments">
+                <option value="บัญชี" />
+                <option value="การเงิน" />
+                <option value="การคลัง" />
+              </datalist>
             </div>
             <div className="form-group">
               <label className="doc-role">ระดับ</label>
@@ -174,7 +215,7 @@ function AddDoc() {
             </div>
           </div>
 
-          {/* ไม่แสดงส่วนอัปโหลดไฟล์ */}
+          {/* ไม่แสดงส่วนอัปโหลดไฟล์ */} 
           {/* <div className="file-upload-container"> ... </div> */}
 
           <div className="button-group">
