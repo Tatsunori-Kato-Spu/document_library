@@ -12,7 +12,7 @@ function Login({ onLoginSuccess }) {
   const handleLogin = async () => {
     const username = userRef.current.value;
     const password = passRef.current.value;
-
+  
     try {
       const res = await fetch("http://localhost:3001/api/login", {
         method: "POST",
@@ -21,26 +21,30 @@ function Login({ onLoginSuccess }) {
         },
         body: JSON.stringify({ username, password }),
       });
-
+  
       const data = await res.json();
-
+  
       if (res.ok && data.success) {
         console.log("✅ userInfo:", data.userInfo);
-
+  
         // ✅ บันทึกข้อมูลลง LocalStorage
         localStorage.setItem("username", data.userInfo.username);
         localStorage.setItem("role", data.userInfo.role);
-        localStorage.setItem("token", data.token);
-
-        Swal.fire({
+        localStorage.setItem("token", data.userInfo.token);
+  
+        await Swal.fire({
           title: "Welcome!",
           text: `ยินดีต้อนรับ, ${data.userInfo.name || data.userInfo.username}`,
           icon: "success",
           confirmButtonText: "Proceed",
-        }).then(() => {
-          onLoginSuccess(data.userInfo);
-          navigate("/document_library/pagedoc");
         });
+  
+        onLoginSuccess({
+          ...data.userInfo,
+          token: data.userInfo.token,
+        });
+  
+        navigate("/document_library/pagedoc"); // ✅ เปลี่ยนหน้าได้แน่นอน
       } else {
         Swal.fire({
           title: "Error!",
