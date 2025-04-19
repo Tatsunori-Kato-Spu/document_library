@@ -24,42 +24,28 @@ app.post("/api/documents/upload", async (req, res) => {
 
   try {
     const [insertResult] = await pool.query(
-      `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time) VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time)
+       VALUES (?, ?, ?, ?, ?, ?)`,
       [docNumber, docName, subject, department, date, now]
     );
     const docId = insertResult.insertId;
 
     const allRoleIds = new Set();
 
+    // ✅ วนเก็บ role_id ที่เกี่ยวข้อง
     for (const roleName of roles) {
       const [roleRows] = await pool.query(
-        `SELECT id, level, name FROM roles WHERE LOWER(name) = LOWER(?)`,
+        `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
         [roleName]
       );
-    
       const baseRole = roleRows[0];
       if (!baseRole) {
         return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
       }
-    
-      const roleNameLower = baseRole.name.toLowerCase();
-    
-      if (roleNameLower === 'guest') {
-        // guest เห็นคนเดียว
-        allRoleIds.add(baseRole.id);
-      } else if (roleNameLower === 'worker') {
-        // worker + guest เห็น
-        const [targetRoles] = await pool.query(
-          `SELECT id FROM roles WHERE LOWER(name) IN ('worker', 'guest')`
-        );
-        targetRoles.forEach(r => allRoleIds.add(r.id));
-      } else if (roleNameLower === 'admin') {
-        // admin เห็นคนเดียวเท่านั้น ❗
-        allRoleIds.add(baseRole.id);
-      }
+      allRoleIds.add(baseRole.id); // ✅ เก็บ role_id
     }
-    
 
+    // ✅ ค่อยมา insert document_roles ทีหลัง
     for (const roleId of allRoleIds) {
       await pool.query(
         `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
@@ -73,8 +59,6 @@ app.post("/api/documents/upload", async (req, res) => {
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
-
-
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {
@@ -125,7 +109,7 @@ app.get("/api/documents", async (req, res) => {
     const roleVisibilityMap = {
       admin: ["admin", "worker", "guest"],
       worker: ["worker", "guest"],
-      guest: ["guest"] 
+      guest: ["guest"]
     };
 
     const visibleRoles = roleVisibilityMap[userRole] || [];
@@ -138,7 +122,7 @@ app.get("/api/documents", async (req, res) => {
     const accessibleRoleIds = roleIdRows.map(r => r.id);
 
     if (accessibleRoleIds.length === 0) {
-      return res.json([]); 
+      return res.json([]);
     }
 
     // ดึงเอกสารที่ตรงกับ role id ที่เข้าถึงได้
@@ -224,7 +208,7 @@ app.post("/api/documents/search/filter", async (req, res) => {
       const lowerKeyword = keyword?.toLowerCase() || "";
       const matchKeyword = keyword
         ? doc.doc_name.toLowerCase().includes(lowerKeyword) ||
-          doc.doc_number.includes(lowerKeyword)
+        doc.doc_number.includes(lowerKeyword)
         : true;
 
       const matchDept = department ? doc.department === department : true;
