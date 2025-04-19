@@ -115,17 +115,6 @@ const EditDoc = () => {
             ))}
           </select>
         </div>
-
-        <div className="col">
-          <label>วันที่</label>
-          <input
-            className="form-control"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-
         <div className="col">
           <label>บทบาทผู้เข้าถึงเอกสาร</label>
           <select
