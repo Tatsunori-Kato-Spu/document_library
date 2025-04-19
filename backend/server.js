@@ -101,6 +101,23 @@ app.post("/api/login", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+// Backend: Endpoint เพื่อดึงเลขเอกสารล่าสุด
+
+app.get("/api/documents/lastDocNumber", async (req, res) => {
+  try {
+    const [result] = await pool.query("SELECT doc_number FROM documents ORDER BY doc_number DESC LIMIT 1");
+    if (result.length > 0) {
+      const lastDocNumber = result[0].doc_number; // เลขเอกสารล่าสุด
+      return res.json({ lastNumber: lastDocNumber });
+    } else {
+      return res.json({ lastNumber: "0000000" }); // ถ้าไม่มีเอกสารเลยให้เริ่มจาก 0000000
+    }
+  } catch (err) {
+    console.error("Error fetching last document number:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 // -------------------------- Documents by Role --------------------------
 app.get("/api/documents", async (req, res) => {

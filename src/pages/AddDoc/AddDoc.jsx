@@ -3,35 +3,49 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../Layout/Header/Header";
 import "./AddDoc.css";
 
-// ฟังก์ชันสุ่มเลขเอกสาร 7 หลัก
-const generateDocNumber = () => {
-  let docNumber = "";
-  while (docNumber.length < 7) {
-    // สุ่มตัวเลข 0-9
-    const randomDigit = Math.floor(Math.random() * 10);
-    // ตรวจสอบว่าเลขซ้ำหรือไม่
-    if (!docNumber.includes(randomDigit)) {
-      docNumber += randomDigit;
+// ฟังก์ชันดึงเลขเอกสารล่าสุด
+// ฟังก์ชันดึงเลขเอกสารล่าสุดจากฐานข้อมูล
+const generateDocNumber = async () => {
+  try {
+    const res = await fetch("http://localhost:3001/api/documents/lastDocNumber");
+    const data = await res.json();
+
+    if (data && data.lastNumber !== undefined) {
+      // เปลี่ยนเลขเอกสารล่าสุดที่ได้มาเป็นตัวเลข
+      const nextNumber = parseInt(data.lastNumber, 10) + 1;
+      return String(nextNumber).padStart(7, "0"); // ทำให้เป็นเลข 7 หลัก เช่น 0000012
+    } else {
+      return "0000001"; // เริ่มต้นถ้ายังไม่มีเอกสารในระบบ
     }
+  } catch (err) {
+    console.error("ไม่สามารถดึงเลขเอกสารล่าสุดได้:", err);
+    return "0000001"; // กรณีเกิดข้อผิดพลาดจะใช้ค่าเริ่มต้น
   }
-  return docNumber;
 };
 
 function AddDoc() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    docNumber: generateDocNumber(), // สร้างเลขเอกสารสุ่มตอนเริ่ม
+    docNumber: "", // เริ่มต้นเป็นค่าว่าง
     docName: "",
     budgetYear: "",
     date: "",
     department: "",
-    roles: [],
+    roles: [], 
+    subject: "", // เพิ่มฟิลด์หัวข้อเรื่อง
   });
 
   // Set current date for the minimum date
   const [currentDate, setCurrentDate] = useState("");
 
+  // ดึงเลขเอกสารล่าสุดเมื่อเริ่มต้น
   useEffect(() => {
+    const fetchDocNumber = async () => {
+      const docNumber = await generateDocNumber(); // เรียกใช้ฟังก์ชันเพื่อดึงเลขเอกสาร
+      setFormData((prev) => ({ ...prev, docNumber })); // กำหนดค่า docNumber ใหม่
+    };
+    fetchDocNumber();
+
     const today = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
     setCurrentDate(today);
   }, []);
@@ -59,11 +73,11 @@ function AddDoc() {
   const handleSubmit = async () => {
     const payload = {
       docNumber: formData.docNumber,
-  docName: formData.docName,
-  subject: formData.subject, // ✅ เพิ่มบรรทัดนี้
-  department: formData.department,
-  date: formData.date,
-  roles: formData.roles,
+      docName: formData.docName,
+      subject: formData.subject, // ✅ เพิ่มบรรทัดนี้
+      department: formData.department,
+      date: formData.date,
+      roles: formData.roles,
     };
 
     try {
@@ -95,7 +109,7 @@ function AddDoc() {
         <div className="form-container">
           <div className="colum-1">
             <div className="form-group">
-              <label htmlFor="docNumber" className="doc-Number-label"style={{ color: 'orange' }}>
+              <label htmlFor="docNumber" className="doc-Number-label" style={{ color: 'orange' }}>
                 ใส่เลขเอกสาร
               </label>
               <input
@@ -120,24 +134,23 @@ function AddDoc() {
               />
             </div>
           </div>
-              {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
-              <div className="form-group2">
-              <label htmlFor="subject" className="doc-Topic-label" style={{ color: 'orange' }} >
-  หัวข้อเรื่อง
-</label>
-
-              <input
-                id="subject"
-                type="text"
-                placeholder="กรอกหัวข้อเรื่อง"
-                value={formData.subject}
-                onChange={handleChange}
-              />
-            </div>
+          {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
+          <div className="form-group2">
+            <label htmlFor="subject" className="doc-Topic-label" style={{ color: 'orange' }} >
+              หัวข้อเรื่อง
+            </label>
+            <input
+              id="subject"
+              type="text"
+              placeholder="กรอกหัวข้อเรื่อง"
+              value={formData.subject}
+              onChange={handleChange}
+            />
+          </div>
           <div className="colum-2">
             <div className="form-group">
               <label htmlFor="budgetYear" className="doc-budget-label " style={{ color: 'orange' }}>
-                ปีงบประมาณ 
+                ปีงบประมาณ
               </label>
               <input
                 list="budgetYears" // เชื่อมโยงกับ datalist
@@ -215,9 +228,6 @@ function AddDoc() {
               </div>
             </div>
           </div>
-
-          {/* ไม่แสดงส่วนอัปโหลดไฟล์ */} 
-          {/* <div className="file-upload-container"> ... </div> */}
 
           <div className="button-group">
             <button onClick={handleCancel} className="cancel-button">
