@@ -1,8 +1,10 @@
 import express from "express";
 import mysql from 'mysql2/promise';
 import cors from "cors";
-
 import { v4 as uuidv4 } from 'uuid';
+import multer from "multer";
+import path from "path";
+
 
 const app = express();
 app.use(cors());
@@ -16,24 +18,43 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME || 'userdocs',
   port: process.env.DB_PORT || 3306,
 });
+//----------------------
+
+
+// ตั้งค่าที่เก็บไฟล์
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // ต้องสร้างโฟลเดอร์นี้ไว้ในโปรเจกต์
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+  }
+});
+
+const upload = multer({ storage });
 
 // -------------------------- Upload Document (No PDF) --------------------------
-app.post("/api/documents/upload", async (req, res) => {
+app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
+  console.log("File uploaded:", req.file); // ตรวจสอบว่าไฟล์ถูกส่งมาหรือไม่
   const { docNumber, docName, subject, department, date, roles } = req.body;
   const now = new Date();
 
+  const filePath = req.file ? req.file.path : null; // ✅ ได้ path ไฟล์ถ้ามีการอัปโหลด
+
   try {
     const [insertResult] = await pool.query(
-      `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [docNumber, docName, subject, department, date, now]
+      `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time, pdf_file)
+   VALUES (?, ?, ?, ?, ?, ?, ?)`, // เปลี่ยนเป็น pdf_file แทน file_path
+
+      [docNumber, docName, subject, department, date, now, filePath]
     );
     const docId = insertResult.insertId;
 
     const allRoleIds = new Set();
 
-    // ✅ วนเก็บ role_id ที่เกี่ยวข้อง
-    for (const roleName of roles) {
+    for (const roleName of JSON.parse(roles)) {
       const [roleRows] = await pool.query(
         `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
         [roleName]
@@ -42,10 +63,9 @@ app.post("/api/documents/upload", async (req, res) => {
       if (!baseRole) {
         return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
       }
-      allRoleIds.add(baseRole.id); // ✅ เก็บ role_id
+      allRoleIds.add(baseRole.id);
     }
 
-    // ✅ ค่อยมา insert document_roles ทีหลัง
     for (const roleId of allRoleIds) {
       await pool.query(
         `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
@@ -53,12 +73,13 @@ app.post("/api/documents/upload", async (req, res) => {
       );
     }
 
-    res.json({ success: true, message: "Document uploaded successfully with correct access" });
+    res.json({ success: true, message: "Document uploaded successfully with PDF (if provided)" });
   } catch (err) {
     console.error("Upload error:", err.message);
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
 
 // -------------------------- Login --------------------------
 app.post("/api/login", async (req, res) => {

@@ -70,26 +70,31 @@ function AddDoc() {
     navigate("/document_library/pagedoc");
   };
 
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const handleSubmit = async () => {
-    const payload = {
-      docNumber: formData.docNumber,
-      docName: formData.docName,
-      subject: formData.subject, // ✅ เพิ่มบรรทัดนี้
-      department: formData.department,
-      date: formData.date,
-      roles: formData.roles,
-    };
+    const formDataToSend = new FormData();
+    formDataToSend.append("docNumber", formData.docNumber);
+    formDataToSend.append("docName", formData.docName);
+    formDataToSend.append("subject", formData.subject);
+    formDataToSend.append("department", formData.department);
+    formDataToSend.append("date", formData.date);
+    formDataToSend.append("roles", JSON.stringify(formData.roles));
+    
+    if (selectedFile) {
+      formDataToSend.append("file", selectedFile);
+      console.log("Selected file:", selectedFile); // ดูว่าไฟล์ถูกเลือกหรือไม่
+    }
 
     try {
       const res = await fetch("http://localhost:3001/api/documents/upload", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: formDataToSend,
       });
 
       const data = await res.json();
+      console.log("Response from server:", data); // ตรวจสอบข้อมูลที่ตอบกลับจาก API
+
       if (data.success) {
         alert("อัปโหลดสำเร็จ");
         navigate("/document_library/pagedoc");
@@ -195,6 +200,18 @@ function AddDoc() {
                 <option value="การคลัง" />
               </datalist>
             </div>
+            <div className="form-group">
+              <label htmlFor="pdfFile" style={{ color: 'orange' }}>
+                แนบไฟล์ PDF
+              </label>
+              <input
+                id="pdfFile"
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+              />
+            </div>
+
             <div className="form-group">
               <label className="doc-role" style={{ color: 'orange' }} >ระดับ</label>
               <div className="checkbox-group">
