@@ -395,8 +395,8 @@ app.delete("/api/documents/:docNumber", async (req, res) => {
 // -------------------------- Update edit Document --------------------------
 app.put("/api/documents/:docNumber", async (req, res) => {
   const { docNumber } = req.params;
-  const { doc_name, subject, department, date, role } = req.body;
-
+  const { doc_name, subject, department, role } = req.body;
+  const date = new Date(); // ✅ ใช้เวลาปัจจุบันแทน
   try {
     // อัปเดตข้อมูลเอกสารหลัก
     await pool.query(
