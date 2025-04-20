@@ -4,11 +4,14 @@ import cors from "cors";
 import { v4 as uuidv4 } from 'uuid';
 import multer from "multer";
 import path from "path";
-
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import fs from "fs";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 
 const pool = mysql.createPool({
@@ -19,12 +22,17 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT || 3306,
 });
 //----------------------
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 
 // ตั้งค่าที่เก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // ต้องสร้างโฟลเดอร์นี้ไว้ในโปรเจกต์
+    cb(null, path.join(__dirname, "uploads"));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
@@ -36,18 +44,33 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // -------------------------- Upload Document (No PDF) --------------------------
+
+
+// จัดการ storage
+
+
+// ตัวกรองเฉพาะ PDF
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF files are allowed"), false);
+  }
+};
+
 app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
-  console.log("File uploaded:", req.file); // ตรวจสอบว่าไฟล์ถูกส่งมาหรือไม่
   const { docNumber, docName, subject, department, date, roles } = req.body;
   const now = new Date();
+  const filePath = req.file ? req.file.path : null;
 
-  const filePath = req.file ? req.file.path : null; // ✅ ได้ path ไฟล์ถ้ามีการอัปโหลด
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: "No PDF file uploaded." });
+  }
 
   try {
     const [insertResult] = await pool.query(
       `INSERT INTO documents (doc_number, doc_name, subject, department, doc_date, doc_time, pdf_file)
-   VALUES (?, ?, ?, ?, ?, ?, ?)`, // เปลี่ยนเป็น pdf_file แทน file_path
-
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [docNumber, docName, subject, department, date, now, filePath]
     );
     const docId = insertResult.insertId;
@@ -73,12 +96,17 @@ app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
       );
     }
 
-    res.json({ success: true, message: "Document uploaded successfully with PDF (if provided)" });
+    res.json({
+      success: true,
+      message: "Document uploaded successfully with PDF",
+      documentId: docId,
+    });
   } catch (err) {
     console.error("Upload error:", err.message);
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
 
 
 // -------------------------- Login --------------------------
