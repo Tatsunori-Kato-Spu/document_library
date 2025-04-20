@@ -13,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
-
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'mysql',  // ✅ ใช้ชื่อ service ตาม Docker Compose
   user: process.env.DB_USER || 'root',
@@ -25,28 +24,32 @@ const pool = mysql.createPool({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const uploadDir = path.join(__dirname, "uploads");
+console.log("Upload directory:", uploadDir);
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
+  console.log("Directory created:", uploadDir);
+} else {
+  console.log("Directory already exists:", uploadDir);
 }
 
 // ตั้งค่าที่เก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("Saving to uploads dir..."); // ✅ debug
     cb(null, path.join(__dirname, "uploads"));
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
+    const filename = file.fieldname + "-" + uniqueSuffix + ext;
+    console.log("Saved filename:", filename); // ✅ debug
+    cb(null, filename);
   }
 });
 
 const upload = multer({ storage });
 
-// -------------------------- Upload Document (No PDF) --------------------------
-
-
-// จัดการ storage
 
 
 // ตัวกรองเฉพาะ PDF
@@ -58,14 +61,18 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// -------------------------- Upload Document (PDF) --------------------------
+
 app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
   const { docNumber, docName, subject, department, date, roles } = req.body;
   const now = new Date();
-  const filePath = req.file ? req.file.path : null;
-
+  
+  // ตรวจสอบว่าไม่มีไฟล์อัปโหลด
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No PDF file uploaded." });
   }
+
+  const filePath = req.file.path;
 
   try {
     const [insertResult] = await pool.query(
@@ -76,7 +83,6 @@ app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
     const docId = insertResult.insertId;
 
     const allRoleIds = new Set();
-
     for (const roleName of JSON.parse(roles)) {
       const [roleRows] = await pool.query(
         `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
@@ -89,6 +95,7 @@ app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
       allRoleIds.add(baseRole.id);
     }
 
+    // เก็บข้อมูล mapping ระหว่างเอกสารและ roles
     for (const roleId of allRoleIds) {
       await pool.query(
         `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
@@ -106,7 +113,6 @@ app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
-
 
 
 // -------------------------- Login --------------------------

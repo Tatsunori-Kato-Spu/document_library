@@ -11,7 +11,7 @@ services:
       - ./init_clean.sql:/docker-entrypoint-initdb.d/init.sql
       - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
-      - app-network
+      - app-network  # เชื่อมโยงกับ app-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
@@ -26,7 +26,7 @@ services:
       PMA_USER: root
       PMA_PASSWORD: root
     networks:
-      - app-network
+      - app-network  # เชื่อมโยงกับ app-network
 
   api:
     build:
@@ -44,13 +44,15 @@ services:
       DB_PASSWORD: root
       DB_NAME: userdocs
     networks:
-      - app-network
+      - app-network  # เชื่อมโยงกับ app-network
+    volumes:
+      - .uploads:/app/uploads
     command: >
       sh -c "npm run start"
 
 volumes:
-  mysql-data:
+  mysql-data:  # Volume สำหรับข้อมูลของ MySQL
 
 networks:
-  app-network:
-    driver: bridge
+  app-network:  # ประกาศเครือข่าย app-network
+    driver: bridge  # ใช้ driver แบบ bridge
