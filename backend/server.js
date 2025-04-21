@@ -46,13 +46,30 @@ if (!fs.existsSync(uploadDir)) {
 // ตั้งค่าที่เก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // โฟลเดอร์เก็บไฟล์
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    const docNumber = req.body.docNumber || "document"; // ดึง docNumber จาก form
-    const ext = path.extname(file.originalname); // ดึงนามสกุลไฟล์ เช่น .pdf
-    const safeName = `${docNumber}${ext}`;
-    cb(null, safeName);
+    const originalName = file.originalname;
+    const uploadPath = path.join("uploads", originalName);
+
+    // เช็กว่ามีไฟล์นี้อยู่แล้วหรือยัง
+    if (!fs.existsSync(uploadPath)) {
+      return cb(null, originalName); // ถ้ายังไม่มี ใช้ชื่อเดิมได้เลย
+    }
+
+    // ถ้ามีแล้ว ให้เพิ่ม (1), (2), ...
+    const ext = path.extname(originalName);
+    const baseName = path.basename(originalName, ext);
+
+    let counter = 1;
+    let newName;
+
+    do {
+      newName = `${baseName}(${counter})${ext}`;
+      counter++;
+    } while (fs.existsSync(path.join("uploads", newName)));
+
+    cb(null, newName); // ตั้งชื่อใหม่แบบไม่ซ้ำ
   },
 });
 
