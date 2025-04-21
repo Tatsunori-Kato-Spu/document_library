@@ -59,11 +59,6 @@ const Pagedoc = ({ user, onLogout }) => {
     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
   };
 
-  const handleStarClick = (index) => {
-    const updated = [...filteredData];
-    updated[index].isFavorite = !updated[index].isFavorite;
-    setFilteredData(updated);
-  };
 
   // ฟังก์ชันเมื่อคลิกอ่าน
   const handleReadClick = async (docNumber) => {
@@ -177,17 +172,6 @@ const Pagedoc = ({ user, onLogout }) => {
                   className={item.isRead ? "row-read" : "row-unread"}
                   onClick={() => handleReadClick(item.doc_number)}
                 >
-                  {/* คอลัมน์ Favorite */}
-                  <td>
-                    <FontAwesomeIcon
-                      icon={item.isFavorite ? faStar : faRegStar}
-                      style={{
-                        cursor: "pointer",
-                        color: item.isFavorite ? "#FF8539" : "#ccc",
-                      }}
-                      onClick={() => handleStarClick(index)}
-                    />
-                  </td>
                   <td>{index + 1}</td>
                   <td>{item["doc_number"]}</td>
                   <td>{item["doc_name"]}</td>
