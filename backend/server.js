@@ -240,12 +240,47 @@ app.get("/api/documents/:docNumber", async (req, res) => {
       `SELECT * FROM documents WHERE doc_number = ?`,
       [docNumber]
     );
-    rows.length > 0 ? res.json(rows[0]) : res.status(404).json({ message: "ไม่พบเอกสารที่มีหมายเลขนี้" });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "ไม่พบเอกสารนี้" });
+    }
+
+    res.json(rows[0]);
   } catch (err) {
     console.error("SQL error:", err.message);
     res.status(500).json({ message: "Database error", error: err.message });
   }
 });
+
+app.get("/api/documents/:docNumber/file", async (req, res) => {
+  const { docNumber } = req.params;
+  try {
+    const [rows] = await pool.query(
+      `SELECT * FROM documents WHERE doc_number = ?`,
+      [docNumber]
+    );
+
+    // ตรวจสอบว่าไฟล์ PDF มีในฐานข้อมูล
+    if (rows.length === 0 || !rows[0].pdf_file) {
+      return res.status(404).json({ message: "ไฟล์ PDF ไม่พบในฐานข้อมูล" });
+    }
+
+    // แปลงข้อมูล pdf_file เป็น Buffer
+    const pdfBuffer = rows[0].pdf_file.data;
+
+    // ตั้งค่าหัวข้อ Content-Type สำหรับการส่งไฟล์ PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `inline; filename=${docNumber}.pdf`);
+    res.end(pdfBuffer);
+      
+
+  } catch (err) {
+    console.error("SQL error:", err.message);
+    res.status(500).json({ message: "Database error", error: err.message });
+  }
+});
+
+
 
 
 // -------------------------- Search --------------------------
