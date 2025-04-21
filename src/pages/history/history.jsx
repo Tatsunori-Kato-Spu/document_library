@@ -1,52 +1,38 @@
 import React, { useState, useEffect } from "react";
 import "./history.css";
-import { userdata } from "../../data/userdata";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Layout/Header/Header";
-import Searchbar from "../Searchbar/Searchbar";
 
 function History() {
   const [user, setUser] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
-  const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, []);
+    const username = localStorage.getItem("username");
+    const role = localStorage.getItem("role");
 
-  useEffect(() => {
-    if (token) {
-      const currentUser = userdata.find((u) => u.token === token);
-      if (currentUser) {
-        setUser(currentUser);
-      }
+    if (username && role) {
+      setUser({ username, role });
+
+      fetch(`http://localhost:3001/api/documents?username=${username}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setFilteredData(data);
+          } else {
+            console.error("Unexpected response format:", data);
+            setFilteredData([]); // fallback
+          }
+        })
+        .catch((error) => console.error("Error fetching documents:", error));
     }
-  }, [token]);
-
-  useEffect(() => {
-    fetch("http://localhost:3001/api/documents")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setFilteredData(data);
-        } else {
-          console.error("Unexpected response format:", data);
-          setFilteredData([]); // fallback
-        }
-      })
-      .catch((error) => console.error("Error fetching documents:", error));
   }, []);
-
-  const handleSearch = (filtered) => {
-    setFilteredData(filtered);
-  };
 
   return (
     <div>
@@ -67,24 +53,21 @@ function History() {
             >
               ข้อมูลพื้นฐาน
             </button>
-            {/* แสดงปุ่ม "ประวัติ" เฉพาะถ้าผู้ใช้ไม่ใช่ worker */}
+
+            {/* ปุ่มกำหนดสิทธิ์เฉพาะ admin */}
             {user && user.role === "admin" && (
-              <>
-                <div>
-                  <button
-                    onClick={() => navigate("/document_library/permission")}
-                    className="button-box-1"
-                  >
-                    กำหนดสิทธิ
-                  </button>
-                </div>
-              </>
+              <div>
+                <button
+                  onClick={() => navigate("/document_library/permission")}
+                  className="button-box-1"
+                >
+                  กำหนดสิทธิ
+                </button>
+              </div>
             )}
           </div>
+
           <div className="profile-content-2">
-            {/* <div className="searchbar-box">
-              <Searchbar onSearch={handleSearch} searchType="documents" />
-            </div> */}
             <div className="table-wrapper2">
               <table className="table-contenner">
                 <thead className="table-th">
@@ -94,7 +77,7 @@ function History() {
                     <th>เรื่อง</th>
                     <th>หน่วยงาน</th>
                     <th>วันที่</th>
-                    <th>เวลา</th>
+                    {/* <th>เวลา</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -106,7 +89,7 @@ function History() {
                         <td>{item.subject}</td>
                         <td>{item.department}</td>
                         <td>{item.doc_date?.split("T")[0]}</td>
-                        <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
+                        {/* <td>{item.doc_date?.split("T")[1]?.split(".")[0]}</td> */}
                       </tr>
                     )
                   )}
