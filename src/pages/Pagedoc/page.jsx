@@ -62,38 +62,19 @@ const Pagedoc = ({ user, onLogout }) => {
 
   // ฟังก์ชันเมื่อคลิกอ่าน
   const handleReadClick = async (docNumber) => {
-    console.log("Clicked document number:", docNumber);
-    if (!docNumber) {
-      console.error("Document number is undefined");
-      return;
-    }
-
     try {
-      const response = await fetch(
-        `http://localhost:3001/api/documents/${docNumber}`
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("API Response:", data);
-        setSelectedDocument(data);
-        handleRowClick(docNumber);
-      } else {
-        console.error("Error: ", response.statusText);
-      }
+      const res = await fetch(`http://localhost:3001/api/documents/${docNumber}/file`);
+      if (!res.ok) throw new Error("Network error");
+  
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank"); // เปิดไฟล์ในแท็บใหม่
     } catch (error) {
-      console.error("Error fetching document:", error);
+      console.error("Error opening document:", error);
     }
   };
+  
 
-  const handleRowClick = (item) => {
-    const index = filteredData.findIndex(
-      (doc) => doc.doc_number === item.doc_number
-    );
-    const updated = [...filteredData];
-    updated[index].isRead = true;
-    setFilteredData(updated);
-  };
 
   const handleShowModal = (doc) => {
     setSelectedDoc(doc);
@@ -124,15 +105,23 @@ const Pagedoc = ({ user, onLogout }) => {
     setSelectedDoc(null);
   };
 
-  const handleDownload = (docId) => {
-    const fileUrl = `/files/${docId}.pdf`;
-    const link = document.createElement("a");
-    link.href = fileUrl;
-    link.download = `${docId}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (docNumber) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/documents/${docNumber}/file`);
+      if (!res.ok) throw new Error("Network error");
+  
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Error downloading document:", error);
+    }
   };
+  
+  
+  
+  
+  
 
   return (
     <div className="page-container">
@@ -195,7 +184,7 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               className="bi bi-pencil-square"
                               onClick={() =>
-                                navigate("/document_library/addDoc", { state: { doc: item } })
+                                navigate("/document_library/editDoc", { state: { doc: item } })
                               }
                             >
                               {" "}
@@ -204,7 +193,7 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              onClick={() => handleDownload(item.doc_number)}
                             >
                               {" "}
                               &nbsp;Download
@@ -224,7 +213,7 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              onClick={() => handleDownload(item.doc_number)}
                             >
                               {" "}
                               &nbsp;Download
@@ -236,7 +225,7 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
+                              onClick={() =>handleDownload(item.doc_number)}
                             >
                               {" "}
                               &nbsp;Download
