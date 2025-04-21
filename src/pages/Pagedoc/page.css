@@ -9,8 +9,11 @@
   align-items: center;
   align-self: center;
   position: absolute;
-  top: 12%; 
-  left: 20%; 
+  top: 0;
+  margin-top: 7%;
+  left: 5%;
+  transform: translateX(-50%, -50%);
+ 
 }
 
 /* ตาราง */
@@ -20,9 +23,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;  
-  width: 100%;
+  width: 90%;
   max-width: 1800px;
-  height: 100%;
+  height: 70%;
   max-height: 600px;
   overflow-y: auto;
   word-wrap: break-word;
@@ -79,6 +82,8 @@ table {
   table-layout: auto;
 }
 
+
+
 .icon-button {
   background: none; 
   border: none; 
@@ -90,10 +95,6 @@ table {
 .icon-button:hover {
   color: #555; 
 }
-
-
-
-
 
 table tbody tr {
   cursor: pointer;
