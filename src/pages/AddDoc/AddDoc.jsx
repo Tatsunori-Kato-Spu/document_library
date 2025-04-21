@@ -168,43 +168,6 @@ function AddDoc() {
           <div className="colum-2">
             <div className="form-group">
               <label
-                htmlFor="budgetYear"
-                className="doc-budget-label "
-                style={{ color: "orange" }}
-              >
-                ปีงบประมาณ
-              </label>
-              <input
-                list="budgetYears" // เชื่อมโยงกับ datalist
-                id="budgetYear"
-                type="text"
-                value={formData.budgetYear}
-                onChange={handleChange}
-                placeholder="พิมพ์หรือเลือกปีงบประมาณ"
-              />
-              <datalist id="budgetYears">
-                <option value="2566" />
-                <option value="2567" />
-              </datalist>
-            </div>
-            <div className="form-group">
-              <label
-                htmlFor="date"
-                className="doc-data-label"
-                style={{ color: "orange" }}
-              >
-                วันที่รับ
-              </label>
-              <input
-                id="date"
-                type="date"
-                value={formData.date}
-                onChange={handleChange}
-                min={currentDate} // Set the minimum date to the current date
-              />
-            </div>
-            <div className="form-group">
-              <label
                 htmlFor="department"
                 className="doc-department-label"
                 style={{ color: "orange" }}
@@ -220,16 +183,14 @@ function AddDoc() {
                 placeholder="พิมพ์หรือเลือกหน่วยงาน"
               />
               <datalist id="departments">
-                <option value="บัญชี" />
-                <option value="การเงิน" />
-                <option value="การคลัง" />
               </datalist>
             </div>
-            <div className="form-group">
+            <div className="form-group2">
               <label htmlFor="pdfFile" style={{ color: "orange" }}>
                 แนบไฟล์ PDF
               </label>
               <input
+                className="uploadPdf"
                 id="pdfFile"
                 type="file"
                 accept="application/pdf"
@@ -237,7 +198,7 @@ function AddDoc() {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group2">
               <label className="doc-role" style={{ color: "orange" }}>
                 ระดับ
               </label>
