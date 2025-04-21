@@ -7,7 +7,9 @@ import "./AddDoc.css";
 // ฟังก์ชันดึงเลขเอกสารล่าสุดจากฐานข้อมูล
 const generateDocNumber = async () => {
   try {
-    const res = await fetch("http://localhost:3001/api/documents/lastDocNumber");
+    const res = await fetch(
+      "http://localhost:3001/api/documents/lastDocNumber"
+    );
     const data = await res.json();
 
     if (data && data.lastNumber !== undefined) {
@@ -22,7 +24,6 @@ const generateDocNumber = async () => {
   }
 };
 
-
 function AddDoc() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ function AddDoc() {
     budgetYear: "",
     date: "",
     department: "",
-    roles: [], 
+    roles: [],
     subject: "", // เพิ่มฟิลด์หัวข้อเรื่อง
   });
 
@@ -80,7 +81,7 @@ function AddDoc() {
     formDataToSend.append("department", formData.department);
     formDataToSend.append("date", formData.date);
     formDataToSend.append("roles", JSON.stringify(formData.roles));
-    
+
     if (selectedFile) {
       formDataToSend.append("file", selectedFile);
       console.log("Selected file:", selectedFile); // ดูว่าไฟล์ถูกเลือกหรือไม่
@@ -114,7 +115,11 @@ function AddDoc() {
         <div className="form-container">
           <div className="colum-1">
             <div className="form-group">
-              <label htmlFor="docNumber" className="doc-Number-label" style={{ color: 'orange' }}>
+              <label
+                htmlFor="docNumber"
+                className="doc-Number-label"
+                style={{ color: "orange" }}
+              >
                 ใส่เลขเอกสาร
               </label>
               <input
@@ -127,7 +132,11 @@ function AddDoc() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="docName" className="doc-Text-label" style={{ color: 'orange' }}>
+              <label
+                htmlFor="docName"
+                className="doc-Text-label"
+                style={{ color: "orange" }}
+              >
                 ใส่ชื่อเอกสาร
               </label>
               <input
@@ -141,7 +150,11 @@ function AddDoc() {
           </div>
           {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
           <div className="form-group2">
-            <label htmlFor="subject" className="doc-Topic-label" style={{ color: 'orange' }} >
+            <label
+              htmlFor="subject"
+              className="doc-Topic-label"
+              style={{ color: "orange" }}
+            >
               หัวข้อเรื่อง
             </label>
             <input
@@ -154,7 +167,11 @@ function AddDoc() {
           </div>
           <div className="colum-2">
             <div className="form-group">
-              <label htmlFor="budgetYear" className="doc-budget-label " style={{ color: 'orange' }}>
+              <label
+                htmlFor="budgetYear"
+                className="doc-budget-label "
+                style={{ color: "orange" }}
+              >
                 ปีงบประมาณ
               </label>
               <input
@@ -171,7 +188,11 @@ function AddDoc() {
               </datalist>
             </div>
             <div className="form-group">
-              <label htmlFor="date" className="doc-data-label" style={{ color: 'orange' }}>
+              <label
+                htmlFor="date"
+                className="doc-data-label"
+                style={{ color: "orange" }}
+              >
                 วันที่รับ
               </label>
               <input
@@ -183,7 +204,11 @@ function AddDoc() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="department" className="doc-department-label" style={{ color: 'orange' }}>
+              <label
+                htmlFor="department"
+                className="doc-department-label"
+                style={{ color: "orange" }}
+              >
                 หน่วยงาน
               </label>
               <input
@@ -201,7 +226,7 @@ function AddDoc() {
               </datalist>
             </div>
             <div className="form-group">
-              <label htmlFor="pdfFile" style={{ color: 'orange' }}>
+              <label htmlFor="pdfFile" style={{ color: "orange" }}>
                 แนบไฟล์ PDF
               </label>
               <input
@@ -213,7 +238,9 @@ function AddDoc() {
             </div>
 
             <div className="form-group">
-              <label className="doc-role" style={{ color: 'orange' }} >ระดับ</label>
+              <label className="doc-role" style={{ color: "orange" }}>
+                ระดับ
+              </label>
               <div className="checkbox-group">
                 <label>
                   <input
@@ -245,6 +272,21 @@ function AddDoc() {
               </div>
             </div>
           </div>
+
+          {selectedFile && (
+            <div className="pdf-preview-container">
+              <h3 style={{ color: "orange", marginTop: "20px" }}>
+                ดูตัวอย่างไฟล์ PDF
+              </h3>
+              <iframe
+                src={URL.createObjectURL(selectedFile)}
+                width="100%"
+                height="500px"
+                title="PDF Preview"
+                style={{ border: "1px solid #ccc", borderRadius: "10px" }}
+              />
+            </div>
+          )}
 
           <div className="button-group">
             <button onClick={handleCancel} className="cancel-button">

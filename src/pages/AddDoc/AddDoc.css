@@ -202,3 +202,10 @@
     transform: scale(1.1);
   }
   
+  .pdf-preview-container {
+    margin-top: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+  }
