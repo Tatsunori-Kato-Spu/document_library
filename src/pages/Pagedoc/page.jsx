@@ -148,7 +148,6 @@ const Pagedoc = ({ user, onLogout }) => {
                   {sortOrder === "desc" ? "🔽" : "🔼"}
                 </button>
               </th>
-              <th>เวลา</th>
               <th></th>
             </tr>
           </thead>
@@ -166,12 +165,7 @@ const Pagedoc = ({ user, onLogout }) => {
                   <td>{item["subject"]}</td>
                   <td>{item["department"]}</td>
                   <td>{item.doc_date ? item.doc_date.split("T")[0] : "-"}</td>
-                  <td>
-                    {item.doc_time
-                      ? item.doc_time.split("T")[1]?.split(".")[0]
-                      : "-"}
-                  </td>
-
+                 
                   {/* Dropdown สำหรับการกระทำ */}
                   <div className="dropdown">
                     <Dropdown>
