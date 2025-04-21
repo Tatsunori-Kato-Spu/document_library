@@ -46,7 +46,7 @@ services:
     networks:
       - app-network  # เชื่อมโยงกับ app-network
     volumes:
-      - .uploads:/app/uploads
+      - ./uploads:/app/uploads
     command: >
       sh -c "npm run start"
 
