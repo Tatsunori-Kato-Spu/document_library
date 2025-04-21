@@ -12,6 +12,7 @@ const EditDoc = () => {
   const [department, setDepartment] = useState(doc.department || "");
   const [date, setDate] = useState(doc.doc_date?.split("T")[0] || "");
   const [role, setRole] = useState(""); // default ยังไม่รู้ role
+  const [pdfFile, setPdfFile] = useState(null);
 
   // States สำหรับ dropdown
   const [departments, setDepartments] = useState([]);
@@ -52,18 +53,19 @@ const EditDoc = () => {
     }
 
     try {
+      const formData = new FormData();
+      formData.append("doc_name", docName);
+      formData.append("subject", subject);
+      formData.append("department", department);
+      formData.append("date", date);
+      formData.append("role", role);
+      if (pdfFile) {
+        formData.append("pdf", pdfFile);
+      }
+
       const response = await fetch(`http://localhost:3001/api/documents/${doc.doc_number}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          doc_name: docName,
-          subject,
-          department,
-          date,
-          role,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
@@ -116,6 +118,15 @@ const EditDoc = () => {
           </select>
         </div>
         <div className="col">
+          <label>แนบ PDF ใหม่ (ถ้ามี)</label>
+          <input
+            type="file"
+            accept="application/pdf"
+            className="form-control"
+            onChange={(e) => setPdfFile(e.target.files[0])}
+          />
+        </div>
+        <div className="col">
           <label>บทบาทผู้เข้าถึงเอกสาร</label>
           <select
             className="form-select"
@@ -130,7 +141,28 @@ const EditDoc = () => {
             ))}
           </select>
         </div>
-
+        {doc.pdf_file && (
+          <div className="col-12 mt-3">
+            <label>ไฟล์ PDF เดิม:</label>
+            <div className="mb-2">
+              <a
+                className="btn btn-outline-secondary"
+                href={`http://localhost:3001/${doc.pdf_file}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                📄 เปิดไฟล์ PDF เดิม
+              </a>
+            </div>
+            <iframe
+              src={`http://localhost:3001/${doc.pdf_file}`}
+              width="100%"
+              height="500px"
+              title="PDF Preview"
+              style={{ border: "1px solid #ccc" }}
+            />
+          </div>
+        )}
         <div className="col-auto">
           <button className="btn btn-primary" onClick={handleSave}>
             บันทึก

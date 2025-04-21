@@ -489,18 +489,44 @@ app.delete("/api/documents/:docNumber", async (req, res) => {
 });
 
 // -------------------------- Update edit Document --------------------------
-app.put("/api/documents/:docNumber", async (req, res) => {
+app.put("/api/documents/:docNumber", upload.single("pdf"), async (req, res) => {
   const { docNumber } = req.params;
-  const { doc_name, subject, department, role } = req.body;
-  const date = new Date(); // ✅ ใช้เวลาปัจจุบันแทน
+  const { doc_name, subject, department, role, date } = req.body;
+  const newPdf = req.file;
+
   try {
-    // อัปเดตข้อมูลเอกสารหลัก
-    await pool.query(
-      `UPDATE documents SET doc_name = ?, subject = ?, department = ?, doc_date = ? WHERE doc_number = ?`,
-      [doc_name, subject, department, date, docNumber]
+    // หาไฟล์เดิมก่อน (ถ้ามี)
+    const [existingDocs] = await pool.query(
+      `SELECT id, pdf_file FROM documents WHERE doc_number = ?`,
+      [docNumber]
     );
 
-    // ถ้ามีข้อมูล role ให้จัดการกับตาราง document_roles
+    if (existingDocs.length === 0) {
+      return res.status(404).json({ success: false, message: "ไม่พบเอกสาร" });
+    }
+
+    const docId = existingDocs[0].id;
+    const oldFilePath = existingDocs[0].pdf_file;
+
+    // ถ้ามีไฟล์ใหม่ → ลบไฟล์เก่า
+    let newPath = oldFilePath;
+    if (newPdf) {
+      newPath = "uploads/" + newPdf.filename;
+
+      if (oldFilePath && fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+
+    // อัปเดตตาราง documents
+    await pool.query(
+      `UPDATE documents 
+       SET doc_name = ?, subject = ?, department = ?, doc_date = ?, pdf_file = ? 
+       WHERE doc_number = ?`,
+      [doc_name, subject, department, date || new Date(), newPath, docNumber]
+    );
+
+    // อัปเดต role ใหม่ (ลบเก่า → ใส่ใหม่)
     if (role) {
       const [roleRows] = await pool.query(
         `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
@@ -508,31 +534,21 @@ app.put("/api/documents/:docNumber", async (req, res) => {
       );
 
       const roleId = roleRows[0]?.id;
-
       if (roleId) {
-        // ลบ role เดิมของเอกสารก่อน
+        await pool.query(`DELETE FROM document_roles WHERE document_id = ?`, [docId]);
         await pool.query(
-          `DELETE FROM document_roles WHERE document_id = (SELECT id FROM documents WHERE doc_number = ?)`,
-          [docNumber]
-        );
-
-        // เพิ่ม role ใหม่
-        await pool.query(
-          `INSERT INTO document_roles (document_id, role_id) 
-           SELECT id, ? FROM documents WHERE doc_number = ?`,
-          [roleId, docNumber]
+          `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
+          [docId, roleId]
         );
       }
     }
 
-    res.json({ success: true, message: "อัปเดตสำเร็จ" });
+    res.json({ success: true, message: "อัปเดตเอกสารเรียบร้อย" });
   } catch (err) {
     console.error("Error updating document:", err.message);
     res.status(500).json({ success: false, message: "อัปเดตล้มเหลว" });
   }
 });
-
-
 
 // -------------------------- edit department --------------------------
 app.get("/api/departments", async (req, res) => {
