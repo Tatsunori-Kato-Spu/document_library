@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
-import './Editmember.css';
+import './Editmemberform.css';
 
 function EditMemberForm() {
   const { id } = useParams();
@@ -41,37 +40,37 @@ function EditMemberForm() {
   };
 
   return (
-    <div className="form-wrapper">
+    <div className="form">
       <form onSubmit={handleSubmit}>
         <h2>แก้ไขข้อมูลผู้ใช้งาน</h2>
         <div className="form-grid">
-          <div className="form-group">
+          <div >
             <label>ชื่อ-สกุล</label>
             <input name="name" value={user.name} onChange={handleChange} placeholder="ชื่อ-สกุล" />
           </div>
   
-          <div className="form-group">
+          <div>
             <label>หน่วยงาน</label>
             <input name="department" value={user.department} onChange={handleChange} placeholder="หน่วยงาน" />
           </div>
   
-          <div className="form-group">
+          <div>
             <label>ตำแหน่ง</label>
             <input name="position" value={user.position} onChange={handleChange} placeholder="ตำแหน่ง" />
           </div>
   
-          <div className="form-group">
+          <div>
             <label>เบอร์โทร</label>
             <input name="contact" value={user.contact} onChange={handleChange} placeholder="เบอร์โทร" />
           </div>
   
-          <div className="form-group">
+          <div >
             <label>Email</label>
             <input name="email" value={user.email} onChange={handleChange} placeholder="อีเมล" />
           </div>
         </div>
   
-        <div className="form-buttons">
+        <div>
           <button type="submit" className="btn-primary">บันทึก</button>
         </div>
       </form>
