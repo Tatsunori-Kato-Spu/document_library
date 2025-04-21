@@ -46,11 +46,12 @@ const NotificationsA = () => {
         ) : (
           notifications.map((notification) => (
             <div key={notification.id} className="custom-notification-item">
-              <h4>{notification.department}</h4>
-              <p>ชื่อเอกสาร: {notification["doc_name"]}</p>
-<p>{notification["subject"]}</p>
+              <h4>{notification.doc_name}</h4>
+              {/* <p>ชื่อเอกสาร: {notification["doc_name"]}</p> */}
+<p>เรื่อง: {notification["subject"]}</p>
 <p>วันที่: {notification.doc_date ? notification.doc_date.split("T")[0] : "-"} 
-เวลา: {notification.doc_time ? notification.doc_time.split("T")[1]?.split(".")[0] : "-"}</p>
+
+</p>
 
             </div>
           ))
