@@ -185,6 +185,22 @@ function AddDoc() {
               <datalist id="departments">
               </datalist>
             </div>
+            <div className="form-group">
+              <label
+                htmlFor="date"
+                className="doc-data-label"
+                style={{ color: "orange" }}
+              >
+                วันที่รับ
+              </label>
+              <input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={handleChange}
+                min={currentDate} // Set the minimum date to the current date
+              />
+            </div>
             <div className="form-group2">
               <label htmlFor="pdfFile" style={{ color: "orange" }}>
                 แนบไฟล์ PDF
