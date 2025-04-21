@@ -27,16 +27,22 @@ function History() {
 
   useEffect(() => {
     fetch("http://localhost:3001/api/documents")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
-        setFilteredData(data);
+        if (Array.isArray(data)) {
+          setFilteredData(data);
+        } else {
+          console.error("Unexpected response format:", data);
+          setFilteredData([]); // fallback
+        }
       })
       .catch((error) => console.error("Error fetching documents:", error));
   }, []);
-
-  if (!user) {
-    return <div>กำลังโหลดข้อมูล...</div>;
-  }
 
   const handleSearch = (filtered) => {
     setFilteredData(filtered);
@@ -55,17 +61,20 @@ function History() {
                 className="photo"
               />
             </div>
-            <button className="button-style" onClick={() => navigate("/document_library/profile")}>
+            <button
+              className="button-style"
+              onClick={() => navigate("/document_library/profile")}
+            >
               ข้อมูลพื้นฐาน
             </button>
             {/* แสดงปุ่ม "ประวัติ" เฉพาะถ้าผู้ใช้ไม่ใช่ worker */}
-            {user.role !== "worker" && (
-              <button className="button-style">ประวัติ</button>
-            )}
-            {user.role === "admin" && (
+            {user && user.role === "admin" && (
               <>
                 <div>
-                  <button onClick={() => navigate("/document_library/permission")} className="button-box-1">
+                  <button
+                    onClick={() => navigate("/document_library/permission")}
+                    className="button-box-1"
+                  >
                     กำหนดสิทธิ
                   </button>
                 </div>
@@ -89,16 +98,18 @@ function History() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.doc_number}</td>
-                      <td>{item.doc_name}</td>
-                      <td>{item.subject}</td>
-                      <td>{item.department}</td>
-                      <td>{item.doc_date?.split("T")[0]}</td>
-                      <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
-                    </tr>
-                  ))}
+                  {(Array.isArray(filteredData) ? filteredData : []).map(
+                    (item, index) => (
+                      <tr key={index}>
+                        <td>{item.doc_number}</td>
+                        <td>{item.doc_name}</td>
+                        <td>{item.subject}</td>
+                        <td>{item.department}</td>
+                        <td>{item.doc_date?.split("T")[0]}</td>
+                        <td>{item.doc_time?.split("T")[1]?.split(".")[0]}</td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
