@@ -25,6 +25,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const uploadDir = path.join(__dirname, "uploads");
 console.log("Upload directory:", uploadDir);
+// ตัวกรองเฉพาะ PDF
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype === "application/pdf") {
+    cb(null, true);
+  } else {
+    cb(new Error("Only PDF files are allowed"), false);
+  }
+};
+
 
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -36,30 +46,21 @@ if (!fs.existsSync(uploadDir)) {
 // ตั้งค่าที่เก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log("Saving to uploads dir..."); // ✅ debug
-    cb(null, path.join(__dirname, "uploads"));
+    cb(null, "uploads/"); // โฟลเดอร์เก็บไฟล์
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    const filename = file.fieldname + "-" + uniqueSuffix + ext;
-    console.log("Saved filename:", filename); // ✅ debug
-    cb(null, filename);
-  }
+    const docNumber = req.body.docNumber || "document"; // ดึง docNumber จาก form
+    const ext = path.extname(file.originalname); // ดึงนามสกุลไฟล์ เช่น .pdf
+    const safeName = `${docNumber}${ext}`;
+    cb(null, safeName);
+  },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter });
 
 
 
-// ตัวกรองเฉพาะ PDF
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === "application/pdf") {
-    cb(null, true);
-  } else {
-    cb(new Error("Only PDF files are allowed"), false);
-  }
-};
+
 
 // -------------------------- Upload Document (PDF) --------------------------
 
