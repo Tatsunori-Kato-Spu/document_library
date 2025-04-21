@@ -455,9 +455,33 @@ app.get("/api/profile", async (req, res) => {
 app.delete("/api/documents/:docNumber", async (req, res) => {
   const { docNumber } = req.params;
   try {
-    await pool.query(`DELETE FROM document_roles WHERE document_id IN (SELECT id FROM documents WHERE doc_number = ?)`, [docNumber]);
+    // ดึง path ของไฟล์ก่อนลบเอกสาร
+    const [docRows] = await pool.query(
+      `SELECT pdf_file FROM documents WHERE doc_number = ?`,
+      [docNumber]
+    );
+
+    if (docRows.length === 0) {
+      return res.status(404).json({ success: false, message: "ไม่พบเอกสารนี้" });
+    }
+
+    const filePath = docRows[0].pdf_file;
+
+    // ลบจาก document_roles ก่อน
+    await pool.query(
+      `DELETE FROM document_roles WHERE document_id IN (SELECT id FROM documents WHERE doc_number = ?)`,
+      [docNumber]
+    );
+
+    // ลบจาก documents
     await pool.query(`DELETE FROM documents WHERE doc_number = ?`, [docNumber]);
-    res.json({ success: true, message: "ลบเอกสารเรียบร้อยแล้ว" });
+
+    // ลบไฟล์ PDF ออกจากระบบไฟล์
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath); // ใช้แบบ synchronous หรือใช้ await fs.promises.unlink(filePath) ก็ได้
+    }
+
+    res.json({ success: true, message: "ลบเอกสารและไฟล์เรียบร้อยแล้ว" });
   } catch (err) {
     console.error("Delete error:", err.message);
     res.status(500).json({ success: false, message: "ลบเอกสารล้มเหลว", error: err.message });
