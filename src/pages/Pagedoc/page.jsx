@@ -143,7 +143,6 @@ const Pagedoc = ({ user, onLogout }) => {
         <table className="table-contenner">
           <thead className="table-th">
             <tr>
-              <th></th>
               <th>
                 ลำดับ
                 <button className="icon-button" onClick={handleSortByOrder}>
@@ -171,7 +170,7 @@ const Pagedoc = ({ user, onLogout }) => {
                   key={item.id}
                   className={item.isRead ? "row-read" : "row-unread"}
                   onClick={() => handleReadClick(item.doc_number)}
-                >
+                >                
                   <td>{index + 1}</td>
                   <td>{item["doc_number"]}</td>
                   <td>{item["doc_name"]}</td>
