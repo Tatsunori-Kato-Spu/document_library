@@ -61,7 +61,7 @@
   }
 
   .doc-role{
-    text-align: left;
+    text-align: center;
       color: white;
       width: 100%;
   }
@@ -185,7 +185,7 @@
     display: flex;
     flex-direction: column; /* เรียงแนวตั้ง */
     background-color: white; /* สีพื้นหลัง */
-    padding: 15px;
+    padding: 12px;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* เงาเบา ๆ เพิ่มความลอย */
     gap: 8px; /* ระยะห่างแต่ละบรรทัด */
@@ -193,15 +193,20 @@
   
   .checkbox-group label {
     color: #333;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
   }
   
   .checkbox-group input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(1.1);
+       transform: scale(1.1);
   }
   
+  .uploadPdf{
+    background-color: #f9f9f9;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
   .pdf-preview-container {
     margin-top: 30px;
     padding: 15px;
