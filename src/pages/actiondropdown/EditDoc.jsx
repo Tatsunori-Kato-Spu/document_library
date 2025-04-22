@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import "./EditDoc.css";
 
 const EditDoc = () => {
@@ -44,7 +45,11 @@ const EditDoc = () => {
 
   const handleSave = async () => {
     if (!docName || !subject || !department || !date || !role) {
-      alert("กรุณากรอกข้อมูลให้ครบ");
+      Swal.fire({
+        icon: "warning",
+        title: "กรอกข้อมูลไม่ครบ",
+        text: "กรุณากรอกข้อมูลให้ครบทุกช่อง",
+      });
       return;
     }
 
@@ -64,14 +69,28 @@ const EditDoc = () => {
       });
 
       if (response.ok) {
-        alert("บันทึกสำเร็จ");
-        navigate("/document_library/pagedoc");
+        Swal.fire({
+          icon: "success",
+          title: "บันทึกสำเร็จ",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          navigate("/document_library/pagedoc");
+        });
       } else {
-        alert("บันทึกไม่สำเร็จ");
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถบันทึกเอกสารได้",
+        });
       }
     } catch (err) {
       console.error("Error updating document:", err);
-      alert("เกิดข้อผิดพลาด");
+      Swal.fire({
+        icon: "error",
+        title: "ข้อผิดพลาด",
+        text: "เกิดปัญหาในการเชื่อมต่อกับเซิร์ฟเวอร์",
+      });
     }
   };
 
