@@ -782,8 +782,13 @@ app.post("/api/documents/search/filter", async (req, res) => {
 app.get("/api/users", async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT users.id, users.name, users.id_card, users.department, users.position, users.email, users.contact, roles.name AS role
-      FROM users JOIN roles ON users.role_id = roles.id
+      SELECT 
+        users.id, users.username, users.name, users.id_card, 
+        users.department, users.position, users.email, users.contact, 
+        roles.name AS role
+      FROM users
+      JOIN roles ON users.role_id = roles.id
+      ORDER BY users.id ASC
     `);
     res.json(rows);
   } catch (err) {
@@ -791,6 +796,7 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({ message: "Database error", error: err.message });
   }
 });
+
 
 app.get("/api/roles", async (req, res) => {
   try {

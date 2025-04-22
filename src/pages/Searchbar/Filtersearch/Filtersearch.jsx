@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Dialog, DialogTitle, DialogContent, DialogActions,
-  Button, TextField, Select, MenuItem, FormControl, InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import axios from "axios";
 import "./Filtersearch.css";
@@ -13,6 +21,22 @@ const Filtersearch = ({ open, onClose, onApply, username }) => {
     department: "",
     timeRange: "ทั้งหมด",
   });
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    // ดึง departments ตอนที่ modal เปิด
+    if (open) {
+      axios
+        .get("http://localhost:3001/api/departments")
+        .then((res) => {
+          const deptList = res.data.map((item) => item.department);
+          setDepartments(deptList);
+        })
+        .catch((err) => {
+          console.error("โหลด department ล้มเหลว:", err);
+        });
+    }
+  }, [open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +71,7 @@ const Filtersearch = ({ open, onClose, onApply, username }) => {
           department: formData.department,
           days: days,
         }
-      );      
+      );
       onApply(res.data);
       onClose();
     } catch (err) {
@@ -84,13 +108,11 @@ const Filtersearch = ({ open, onClose, onApply, username }) => {
             sx={{ color: "white" }}
           >
             <MenuItem value="">เลือกทั้งหมด</MenuItem>
-            {["บัญชี", "ทรัพยากรบุคคล", "การเงิน"].map(
-              (dept) => (
-                <MenuItem key={dept} value={dept}>
-                  {dept}
-                </MenuItem>
-              )
-            )}
+            {departments.map((dept) => (
+              <MenuItem key={dept} value={dept}>
+                {dept}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl fullWidth margin="normal">
