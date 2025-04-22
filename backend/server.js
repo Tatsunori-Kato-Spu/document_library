@@ -8,9 +8,32 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
 
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Document Management API",
+      version: "1.0.0",
+      description: "API documentation for the document management system"
+    },
+    servers: [
+      {
+        url: "http://localhost:3001",
+        description: "Local server"
+      }
+    ]
+  },
+  apis: ["./server.js"], // <== แก้เป็นชื่อไฟล์จริงหากใช้ชื่ออื่น
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/uploads", express.static("uploads"));
 
 
@@ -78,8 +101,409 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, fileFilter });
 
 
+/**
+ * @swagger
+ * /api/documents/upload:
+ *   post:
+ *     summary: Upload a document
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         required: true
+ *         description: The document file to upload
+ *     responses:
+ *       200:
+ *         description: Document uploaded successfully
+ *       400:
+ *         description: Invalid file type
+ */
 
+/**
+ * @swagger
+ * /api/login:
+ *   post:
+ *     summary: Login a user
+ *     parameters:
+ *       - in: body
+ *         name: loginDetails
+ *         description: User login details
+ *         schema:
+ *           type: object
+ *           required:
+ *             - username
+ *             - password
+ *           properties:
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Successfully logged in
+ *       400:
+ *         description: Invalid login credentials
+ */
 
+/**
+ * @swagger
+ * /api/documents/lastDocNumber:
+ *   get:
+ *     summary: Get the last document number
+ *     responses:
+ *       200:
+ *         description: The last document number retrieved
+ *       404:
+ *         description: No documents found
+ */
+
+/**
+ * @swagger
+ * /api/documents:
+ *   get:
+ *     summary: Retrieve a list of documents
+ *     responses:
+ *       200:
+ *         description: A list of documents
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               docNumber:
+ *                 type: string
+ *               title:
+ *                 type: string
+ *               createdAt:
+ *                 type: string
+ *               file:
+ *                 type: string
+ */
+
+/**
+ * @swagger
+ * /api/documents/{docNumber}:
+ *   get:
+ *     summary: Retrieve a document by its number
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         type: string
+ *         description: The document number
+ *     responses:
+ *       200:
+ *         description: Document found
+ *       404:
+ *         description: Document not found
+ */
+
+/**
+ * @swagger
+ * /api/documents/{docNumber}/file:
+ *   get:
+ *     summary: Retrieve the file of a specific document
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         type: string
+ *         description: The document number
+ *     responses:
+ *       200:
+ *         description: Document file found
+ *       404:
+ *         description: Document file not found
+ */
+
+/**
+ * @swagger
+ * /api/documents/search:
+ *   post:
+ *     summary: Search for documents
+ *     parameters:
+ *       - in: body
+ *         name: searchCriteria
+ *         description: Criteria for searching documents
+ *         schema:
+ *           type: object
+ *           properties:
+ *             title:
+ *               type: string
+ *               description: Document title to search for
+ *     responses:
+ *       200:
+ *         description: List of documents matching the search criteria
+ *       400:
+ *         description: Invalid search criteria
+ */
+
+/**
+ * @swagger
+ * /api/documents/search/filter:
+ *   post:
+ *     summary: Filter documents based on specific criteria
+ *     parameters:
+ *       - in: body
+ *         name: filterCriteria
+ *         description: Criteria to filter documents
+ *         schema:
+ *           type: object
+ *           properties:
+ *             department:
+ *               type: string
+ *               description: Filter by department
+ *             dateRange:
+ *               type: object
+ *               properties:
+ *                 start:
+ *                   type: string
+ *                   format: date
+ *                 end:
+ *                   type: string
+ *                   format: date
+ *     responses:
+ *       200:
+ *         description: List of documents after filtering
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Retrieve a list of all users
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               username:
+ *                 type: string
+ *               role:
+ *                 type: string
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get user details by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         type: integer
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: User details
+ *       404:
+ *         description: User not found
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update a user's details
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         type: integer
+ *         description: The user ID
+ *       - in: body
+ *         name: userDetails
+ *         description: Updated user details
+ *         schema:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *             password:
+ *               type: string
+ *             role:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User details updated successfully
+ *       400:
+ *         description: Invalid user data
+ */
+
+/**
+ * @swagger
+ * /api/profile:
+ *   get:
+ *     summary: Retrieve the logged-in user's profile
+ *     responses:
+ *       200:
+ *         description: User profile data
+ *       404:
+ *         description: Profile not found
+ */
+
+/**
+ * @swagger
+ * /api/documents/{docNumber}:
+ *   delete:
+ *     summary: Delete a document by its number
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         type: string
+ *         description: The document number
+ *     responses:
+ *       200:
+ *         description: Document deleted successfully
+ *       404:
+ *         description: Document not found
+ */
+
+/**
+ * @swagger
+ * /api/documents/{docNumber}:
+ *   put:
+ *     summary: Update a document (including file upload)
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         type: string
+ *         description: The document number
+ *       - in: formData
+ *         name: file
+ *         type: file
+ *         description: The updated document file
+ *     responses:
+ *       200:
+ *         description: Document updated successfully
+ *       400:
+ *         description: Invalid file or document number
+ */
+
+/**
+ * @swagger
+ * /api/departments:
+ *   get:
+ *     summary: Retrieve a list of departments
+ *     responses:
+ *       200:
+ *         description: A list of departments
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ */
+
+/**
+ * @swagger
+ * /api/documents:
+ *   post:
+ *     summary: Create a new document
+ *     parameters:
+ *       - in: body
+ *         name: documentDetails
+ *         description: Document details to be created
+ *         schema:
+ *           type: object
+ *           required:
+ *             - title
+ *             - department
+ *             - content
+ *           properties:
+ *             title:
+ *               type: string
+ *             department:
+ *               type: string
+ *             content:
+ *               type: string
+ *     responses:
+ *       201:
+ *         description: Document created successfully
+ *       400:
+ *         description: Invalid document data
+ */
+
+/**
+ * @swagger
+ * /api/roles:
+ *   get:
+ *     summary: Retrieve a list of all roles
+ *     responses:
+ *       200:
+ *         description: A list of roles
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ */
+
+/**
+ * @swagger
+ * /api/users/{id}/role:
+ *   put:
+ *     summary: Update the role of a user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         type: integer
+ *         description: The user ID
+ *       - in: body
+ *         name: role
+ *         description: New role to assign to the user
+ *         schema:
+ *           type: object
+ *           properties:
+ *             role:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: User role updated successfully
+ *       400:
+ *         description: Invalid role or user ID
+ */
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create a new user
+ *     parameters:
+ *       - in: body
+ *         name: userDetails
+ *         description: New user details to be created
+ *         schema:
+ *           type: object
+ *           required:
+ *             - username
+ *             - password
+ *             - role
+ *           properties:
+ *             username:
+ *               type: string
+ *               description: The username for the new user
+ *             password:
+ *               type: string
+ *               description: The password for the new user
+ *             role:
+ *               type: string
+ *               description: The role assigned to the new user (e.g., 'admin', 'user')
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid user data
+ */
 
 // -------------------------- Upload Document (PDF) --------------------------
 
