@@ -1,3 +1,4 @@
+/* === Global & Layout === */
 .background {
   width: 100%;
   min-width: 1920px;
@@ -6,70 +7,89 @@
   color: white;
   font-family: 'Roboto', sans-serif;
   overflow-x: auto;
+  position: relative;
 }
 
-/* กล่อง Searchbar และปุ่ม */
+/* Searchbar + add-button */
 .searchbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* ชิดซ้ายสุด */
   align-items: center;
   width: 90%;
-  margin: 30px auto 0;
+  margin: 0 auto;
 }
 
-/* ปุ่มเพิ่มผู้ใช้ */
-.searchbar button {
+.add-user-button {
   background-color: #ff6c00;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 30px;
+  margin-left: 0 auto; /* ชิดขวา */
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.searchbar button:hover {
+.add-user-button:hover {
   background-color: #e65c00;
 }
 
-/* กล่องตาราง */
+/* Table wrapper */
 .table-wrapper-permission {
+  position: relative;
+  margin: 40px auto 0;
   width: 90%;
-  margin: 50px auto;
+  max-width: 1800px;
+  height: 900px; /* ✅ fix ความสูง */
   background-color: #373a40;
   border-radius: 20px;
-  padding: 20px;
+  box-shadow: 0 4px 8px rgba(36, 24, 24, 0.1);
   border: 2px solid #ff6c00;
-  overflow-x: auto;
+  overflow: hidden; /* ✅ ซ่อนส่วนที่เกิน */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ตารางหลัก */
+.table-container-wrapper {
+  flex: 1;
+  overflow-y: auto; 
+  overflow-x: auto; 
+}
+
+
+
+/* Main table */
 .table-container {
+  height: 890px; 
   width: 100%;
   border-collapse: collapse;
 }
-
 .table-container th,
 .table-container td {
   padding: 12px 8px;
   text-align: center;
 }
-
 .table-th {
   background-color: #ff6c00;
   color: white;
 }
-
 .table-container tbody tr:nth-child(even) {
   background-color: #40444c;
 }
-
 .table-container tbody tr:nth-child(odd) {
   background-color: #373a40;
 }
+th {
+  position: sticky;
+  top: 0;
+  background-color: #ff6c00;
+  z-index: 2;
+}
 
-/* รูปโปรไฟล์ */
+
+/* Profile pic */
 .profilePic {
   width: 50px;
   height: 50px;
@@ -77,17 +97,10 @@
   border-radius: 50%;
 }
 
-/* ความกว้างของหัวคอลัมน์ */
-.topic-textBox-1 { width: 60px; }
-.topic-textBox-2 { width: 120px; }
-.topic-textBox-3 { width: 100px; }
-.topic-textBox-4 { width: 150px; }
-.topic-textBox-5 { width: 130px; }
-.topic-textBox-6 { width: 200px; }
-.topic-textBox-7 { width: 100px; }
-.topic-textBox-8 { width: 100px; }
-
-/* ปุ่ม Dropdown */
+/* Role dropdown in table */
+.dropdown-wrapper {
+  position: relative;
+}
 .dropdown-button {
   background-color: #28a745;
   color: white;
@@ -99,184 +112,255 @@
   width: 100%;
   text-transform: capitalize;
 }
-
-/* เมนู Dropdown */
 .dropdown-menu-permission {
   background-color: white;
   color: black;
   border-radius: 8px;
   margin-top: 5px;
   padding: 5px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   position: absolute;
   z-index: 1000;
-  width: 120px;
+  width: 100%;   /* <<< สำคัญ!! ให้ dropdown กว้างเท่าปุ่ม */
+  min-width: 100%; /* <<< สำคัญ!! กันบางจอแคบ */
 }
 
-/* ตัวเลือก Dropdown */
 .dropdown-menu-permission .dropdown-item {
   padding: 8px 16px;
   font-size: 0.9rem;
   cursor: pointer;
   text-align: left;
 }
-
 .dropdown-menu-permission .dropdown-item:hover {
   background-color: #f1f1f1;
 }
 
-/* Modal (ทำเองถ้าอยากแทน Bootstrap) */
-.modal {
-  position: fixed;
-  top: 0;
+/* Department + Role dropdown in form */
+.dept-dropdown-wrapper,
+.role-dropdown-wrapper {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  max-width: none;
+}
+.dept-dropdown-wrapper input,
+.role-dropdown-wrapper input {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px 0 0 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+.dept-dropdown-wrapper input:focus,
+.role-dropdown-wrapper input:focus {
+  outline: none;
+  border-color: #ff6c00;
+  box-shadow: 0 0 4px rgba(255,108,0,0.4);
+}
+.dept-dropdown-toggle,
+.role-dropdown-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+.dept-dropdown-toggle:hover,
+.role-dropdown-toggle:hover {
+  background: #f7f7f7;
+}
+.dept-dropdown-menu,
+.role-dropdown-menu {
+  list-style: none;
+  position: absolute;
+  top: calc(100% + 4px);
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  width: 400px;
-  max-width: 90%;
-}
-
-.modal-header, .modal-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-body input, .modal-body select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
+  background: #fff;
   border: 1px solid #ccc;
-}
-
-.modal-footer button {
-  padding: 8px 16px;
-  border: none;
   border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 200;
+  padding: 4px 0;
+}
+.dept-dropdown-item,
+.role-dropdown-item {
+  padding: 10px 12px;
   cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+}
+.dept-dropdown-item:hover,
+.role-dropdown-item:hover {
+  background-color: #f1f1f1;
 }
 
-.modal-footer .btn-primary {
-  background-color: #ff6c00;
-  color: white;
-}
-
-.modal-footer .btn-secondary {
-  background-color: #ccc;
-  color: black;
-}
-
+/* === Form layout === */
 .add-user-form {
-  display: flex; /* เปลี่ยนเป็น flex container */
-  flex-direction: row; /* จัดเรียง item ในแนวนอน */
-  flex-wrap: wrap; /* อนุญาตให้ item ขึ้นบรรทัดใหม่เมื่อไม่พอ */
-  width: 80%; /* ปรับความกว้างให้กว้างขึ้น */
-  max-width: 960px; /* กำหนดความกว้างสูงสุด */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 80%;
+  max-width: 960px;
   margin: 30px auto;
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   border: 1px solid #ddd;
-  justify-content: space-between; /* จัดช่องว่างระหว่าง item */
+  position: relative;   /* ✅ เพิ่ม */
+  overflow: visible;    /* ✅ เพิ่ม */
 }
 
 .form-title {
+  grid-column: 1 / span 2;
   font-size: 2rem;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
   color: #333;
-  width: 100%; /* ให้หัวข้อกินเต็มความกว้าง */
 }
-
 .form-group {
-  margin-bottom: 25px;
-  width: calc(50% - 15px); /* ให้แต่ละ form-group กินครึ่งความกว้าง (มี margin คั่น) */
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: visible; /* ✅ เพิ่มบรรทัดนี้เข้าไป */
 }
 
-/* ปรับขนาดสำหรับบาง field ที่อาจต้องการความกว้างเต็ม */
-.form-group.full-width {
-  width: 100%;
+.form-group.full-width,
+.form-buttons {
+  grid-column: 1 / span 2;
 }
-
 .form-group label {
-  display: block;
   margin-bottom: 8px;
   font-weight: bold;
   color: #555;
 }
-
 .form-group input,
 .form-group select {
-  width: calc(100% - 22px);
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  color: #333;
   box-sizing: border-box;
 }
-
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: #ff6c00;
-  box-shadow: 0 0 5px rgba(255, 108, 0, 0.5);
+  box-shadow: 0 0 5px rgba(255,108,0,0.5);
 }
-
 .form-buttons {
   display: flex;
   gap: 15px;
-  margin-top: 30px;
-  width: 100%; /* ให้ปุ่มกินเต็มความกว้าง */
+  margin-top: 20px;
 }
-
 .form-buttons button {
+  flex: 1;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 1rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
-  flex-grow: 1; /* ให้ปุ่มขยายเพื่อเติมพื้นที่ */
 }
-
 .form-buttons .btn-secondary {
-  background-color: #ddd;
+  background: #ddd;
   color: #333;
 }
-
 .form-buttons .btn-secondary:hover {
-  background-color: #ccc;
+  background: #ccc;
+}
+.form-buttons .btn-primary {
+  background: #ff6c00;
+  color: white;
+}
+.form-buttons .btn-primary:hover {
+  background: #e65c00;
 }
 
-.form-buttons .btn-primary {
-  background-color: #ff6c00;
+/* errors */
+.input-error {
+  border: 1px solid #e74c3c;
+}
+.error-text {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+}
+
+.toggle-password-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.toggle-password-button:hover {
+  color: #ff6c00;
+}
+
+/* ให้ตารางไม่บีบดรอปดาวน์ */
+.table-container {
+  width: 100%;
+  border-collapse: separate; 
+  border-spacing: 0; 
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
 
-.form-buttons .btn-primary:hover {
-  background-color: #e65c00;
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: #ff6c00;
+  color: white;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 1rem;
+  z-index: 2;
+  border: none; /* ✅ ไม่มีเส้นขอบ */
+}
+
+.table-container tbody td {
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 1rem;
+  border: none; /* ✅ ไม่มีเส้นขอบ */
+}
+
+
+
+.form-group-department {
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  overflow: visible;   
+}
+
+
+/* เพิ่มใน Permission.css */
+.background .search-form {
+  display: none;
 }

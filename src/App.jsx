@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import EditMember from "./pages/Editmember/Editmember";
 import EditMemberForm from "./pages/Editmember/Editmemberform";
@@ -58,9 +53,15 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/document_library/" element={<Navigate to="/document_library/login" />} />
+        <Route
+          path="/document_library/"
+          element={<Navigate to="/document_library/login" />}
+        />
 
-        <Route path="/document_library/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+        <Route
+          path="/document_library/login"
+          element={<Login onLoginSuccess={handleLoginSuccess} />}
+        />
         <Route
           path="/document_library/pagedoc"
           element={
@@ -74,7 +75,11 @@ function App() {
         <Route
           path="/document_library/editDoc"
           element={
-            isLoggedIn ? <EditDoc userRole={userRole} /> : <Navigate to="/document_library/login" />
+            isLoggedIn ? (
+              <EditDoc userRole={userRole} />
+            ) : (
+              <Navigate to="/document_library/login" />
+            )
           }
         />
         <Route
@@ -83,13 +88,60 @@ function App() {
             isLoggedIn ? <AddDoc /> : <Navigate to="/document_library/login" />
           }
         />
-        <Route path="/document_library/permission" element={<Permission />} />
-        <Route path="/document_library/profile" element={<Profile user={user} token={user?.token} />} />
-        <Route path="/document_library/history" element={<History user={user} />} />
+        <Route
+          path="/document_library/permission"
+          element={
+            isLoggedIn ? (
+              <Permission user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/document_library/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/document_library/profile"
+          element={
+            isLoggedIn ? (
+              <Profile user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/document_library/login" />
+            )
+          }
+        />
+
+        <Route
+          path="/document_library/history"
+          element={<History user={user} />}
+        />
         <Route path="/document_library/develope" element={<Develope />} />
-        <Route path="/document_library/editmember" element={<EditMember />} />
-        <Route path="/document_library/editmember/:id" element={<EditMemberForm />} />
-        <Route path="*" element={<div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>} />
+        <Route
+          path="/document_library/editmember"
+          element={
+            isLoggedIn ? (
+              <EditMember user={user} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/document_library/login" />
+            )
+          }
+        />
+
+<Route
+  path="/document_library/editmember/:id"
+  element={
+    isLoggedIn ? (
+      <EditMemberForm user={user} onLogout={handleLogout} />
+    ) : (
+      <Navigate to="/document_library/login" />
+    )
+  }
+/>
+        <Route
+          path="*"
+          element={
+            <div style={{ padding: "2rem" }}>ไม่พบหน้าที่คุณต้องการ 🧭</div>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
