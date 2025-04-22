@@ -13,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
+
+// -----------------------------------------------------
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'mysql',  // ✅ ใช้ชื่อ service ตาม Docker Compose
   user: process.env.DB_USER || 'root',
