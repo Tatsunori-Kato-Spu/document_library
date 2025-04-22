@@ -57,12 +57,14 @@ function History() {
             {/* ปุ่มกำหนดสิทธิ์เฉพาะ admin */}
             {user && user.role === "admin" && (
               <div>
+                <button onClick={() => navigate("/document_library/history")} className='button-box-1'>ประวัติ</button>
                 <button
                   onClick={() => navigate("/document_library/permission")}
                   className="button-box-1"
                 >
                   กำหนดสิทธิ
                 </button>
+                <button onClick={() => navigate("/document_library/editmember")} className='button-box-1'>จัดการสมาชิก</button>
               </div>
             )}
           </div>
