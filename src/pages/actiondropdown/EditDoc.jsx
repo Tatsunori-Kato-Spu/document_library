@@ -1,24 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import "./EditDoc.css";
 
 const EditDoc = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { doc } = location.state;
 
-  // States สำหรับข้อมูล
   const [docName, setDocName] = useState(doc.doc_name || "");
   const [subject, setSubject] = useState(doc.subject || "");
   const [department, setDepartment] = useState(doc.department || "");
   const [date, setDate] = useState(doc.doc_date?.split("T")[0] || "");
-  const [role, setRole] = useState(""); // default ยังไม่รู้ role
+  const [role, setRole] = useState("");
   const [pdfFile, setPdfFile] = useState(null);
 
-  // States สำหรับ dropdown
   const [departments, setDepartments] = useState([]);
   const [roles, setRoles] = useState([]);
 
-  // โหลด roles และ departments
   useEffect(() => {
     const fetchRolesAndDepartments = async () => {
       try {
@@ -33,7 +31,6 @@ const EditDoc = () => {
         setRoles(rolesData);
         setDepartments(deptData.map((d) => d.department));
 
-        // ถ้ามี role ใน doc → set ค่าไว้เลย
         if (doc.role) {
           setRole(doc.role);
         }
@@ -45,7 +42,6 @@ const EditDoc = () => {
     fetchRolesAndDepartments();
   }, [doc.role]);
 
-  // บันทึกข้อมูล
   const handleSave = async () => {
     if (!docName || !subject || !department || !date || !role) {
       alert("กรุณากรอกข้อมูลให้ครบ");
@@ -57,7 +53,6 @@ const EditDoc = () => {
       formData.append("doc_name", docName);
       formData.append("subject", subject);
       formData.append("department", department);
-      formData.append("date", date);
       formData.append("role", role);
       if (pdfFile) {
         formData.append("pdf", pdfFile);
@@ -81,31 +76,31 @@ const EditDoc = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">แก้ไขเอกสาร</h2>
-      <div className="row g-3 align-items-end">
-        <div className="col">
-          <label>ชื่อเอกสาร</label>
+    <div className="EditDoc-container">
+      <h2>แก้ไขเอกสาร</h2>
+      <div className="form-grid">
+        <div>
+          <label className="edit-label">ชื่อเอกสาร</label>
           <input
-            className="form-control"
+            className="edit-input"
             value={docName}
             onChange={(e) => setDocName(e.target.value)}
           />
         </div>
 
-        <div className="col">
-          <label>เรื่อง</label>
+        <div>
+          <label className="edit-label">เรื่อง</label>
           <input
-            className="form-control"
+            className="edit-input"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
           />
         </div>
 
-        <div className="col">
-          <label>หน่วยงาน</label>
+        <div>
+          <label className="edit-label">หน่วยงาน</label>
           <select
-            className="form-select"
+            className="edit-select"
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
           >
@@ -117,19 +112,21 @@ const EditDoc = () => {
             ))}
           </select>
         </div>
-        <div className="col">
-          <label>แนบ PDF ใหม่ (ถ้ามี)</label>
+
+        <div>
+          <label className="edit-label">แนบ PDF ใหม่ (ถ้ามี)</label>
           <input
             type="file"
             accept="application/pdf"
-            className="form-control"
+            className="edit-file"
             onChange={(e) => setPdfFile(e.target.files[0])}
           />
         </div>
-        <div className="col">
-          <label>บทบาทผู้เข้าถึงเอกสาร</label>
+
+        <div>
+          <label className="edit-label">บทบาทผู้เข้าถึงเอกสาร</label>
           <select
-            className="form-select"
+            className="edit-select"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
@@ -141,33 +138,44 @@ const EditDoc = () => {
             ))}
           </select>
         </div>
-        {doc.pdf_file && (
-          <div className="col-12 mt-3">
-            <label>ไฟล์ PDF เดิม:</label>
-            <div className="mb-2">
-              <a
-                className="btn btn-outline-secondary"
-                href={`http://localhost:3001/${doc.pdf_file}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                📄 เปิดไฟล์ PDF เดิม
-              </a>
-            </div>
-            <iframe
-              src={`http://localhost:3001/${doc.pdf_file}`}
-              width="100%"
-              height="500px"
-              title="PDF Preview"
-              style={{ border: "1px solid #ccc" }}
-            />
+      </div>
+      {doc.pdf_file && (
+        <div className="pdf-link">
+          <label className="edit-label">ไฟล์ PDF เดิม:</label>
+          <div className="mb-2">
+            <a
+              href={`http://localhost:3001/${doc.pdf_file}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              📄 เปิดไฟล์ PDF เดิม
+            </a>
           </div>
-        )}
-        <div className="col-auto">
-          <button className="btn btn-primary" onClick={handleSave}>
+          <iframe
+            className="pdf-preview"
+            src={`http://localhost:3001/${doc.pdf_file}`}
+            title="PDF Preview"
+          />
+        </div>
+      )}
+
+      <div className="button-container">
+        <span>
+
+          <button
+            className="btn-cancel"
+            onClick={() => navigate("/document_library/pagedoc")}
+            style={{ marginLeft: "10px" }}
+          >
+            ยกเลิก
+          </button>
+        </span>
+        <span>
+
+          <button className="btn-save" onClick={handleSave}>
             บันทึก
           </button>
-        </div>
+        </span>
       </div>
     </div>
   );
