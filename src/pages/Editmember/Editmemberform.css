@@ -1,29 +1,111 @@
-.form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* จัดให้ฟอร์มอยู่กลางจอ */
+.editmemberform-background {
+    width: 100%;
+    min-width: 1920px;
+    max-width: 1920px;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    overflow-x: auto;
+    position: relative;
+  }
+  
+  /* ฟอร์มกลางจอ */
+  .editmemberform-form {
+    margin: 80px auto; /* ✅ เปลี่ยนเป็น margin กลางจอ */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+  
     width: 90%;
     max-width: 800px;
-    height: auto;
-    max-height: 90vh;
-
-    overflow-y: auto;
-    word-wrap: break-word;
-
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border: 2px solid #ff6c00;
-    padding: 20px;
-}
-
-.label{
+    padding: 40px 30px;
+    color: #333;
+  }
+  
+  /* หัวข้อ */
+  .editmemberform-form-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ff6c00;
+    text-align: center;
+  }
+  
+  /* ช่องกรอกฟอร์ม */
+  .editmemberform-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .editmemberform-form-grid div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Label */
+  .editmemberform-form-grid label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
     text-align: left;
-}
-
+  }
+  
+  /* Input */
+  .editmemberform-form-grid input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+  .editmemberform-form-grid input:focus {
+    outline: none;
+    border-color: #ff6c00;
+    box-shadow: 0 0 5px rgba(255, 108, 0, 0.5);
+  }
+  
+  /* ปุ่ม */
+  .editmemberform-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    justify-content: center;
+  }
+  
+  .editmemberform-btn-primary,
+  .editmemberform-btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* ปุ่ม บันทึก */
+  .editmemberform-btn-primary {
+    background-color: #ff6c00;
+    color: white;
+  }
+  
+  .editmemberform-btn-primary:hover {
+    background-color: #e65c00;
+  }
+  
+  /* ปุ่ม ยกเลิก */
+  .editmemberform-btn-secondary {
+    background-color: #ddd;
+    color: #333;
+  }
+  
+  .editmemberform-btn-secondary:hover {
+    background-color: #ccc;
+  }
+  

@@ -1,5 +1,3 @@
-// EditMember.jsx (Final Version)
-
 import React, { useEffect, useState } from 'react';
 import './Editmember.css';
 import Header from '../../Layout/Header/Header';
@@ -33,11 +31,11 @@ function EditMember({ user, onLogout }) {
   };
 
   return (
-    <div className="background">
+    <div className="editmember-background">
       <Header user={user} onLogout={onLogout} />
-      <div className="table-wrapper">
-        <div className="table-container-wrapper">
-          <table className="table-container">
+      <div className="editmember-table-wrapper">
+        <div className="editmember-table-container-wrapper">
+          <table className="editmember-table-container">
             <thead>
               <tr>
                 <th>ชื่อ</th>
@@ -60,7 +58,7 @@ function EditMember({ user, onLogout }) {
                     <td>{u.email || '-'}</td>
                     <td>{u.contact || '-'}</td>
                     <td>
-                      <button className="btn-primary" onClick={() => goToEdit(u.id)}>
+                      <button className="editmember-btn-primary" onClick={() => goToEdit(u.id)}>
                         แก้ไข
                       </button>
                     </td>
@@ -69,7 +67,7 @@ function EditMember({ user, onLogout }) {
               ) : (
                 <tr>
                   <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
-                    ไม่พบข้อมู้ใช้
+                    ไม่พบข้อมูลผู้ใช้
                   </td>
                 </tr>
               )}

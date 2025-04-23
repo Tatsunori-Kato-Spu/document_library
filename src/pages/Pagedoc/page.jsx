@@ -108,15 +108,25 @@ const Pagedoc = ({ user, onLogout }) => {
   const handleDownload = async (docNumber) => {
     try {
       const res = await fetch(`http://localhost:3001/api/documents/${docNumber}/file`);
-      if (!res.ok) throw new Error("Network error");
-  
+      if (!res.ok) {
+        throw new Error("ไม่พบไฟล์หรือไฟล์เสียหาย");
+      }
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
+  
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${docNumber}.pdf`; // ตั้งชื่อไฟล์
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url); // cleanup memory
     } catch (error) {
       console.error("Error downloading document:", error);
+      alert("ไม่สามารถดาวน์โหลดเอกสารได้: " + error.message);
     }
   };
+  
   
   
   
@@ -158,14 +168,14 @@ const Pagedoc = ({ user, onLogout }) => {
                   key={item.id}
                   className={item.isRead ? "row-read" : "row-unread"}
                   // onClick={() => handleReadClick(item.doc_number)}
-                >                
+                >
                   <td>{index + 1}</td>
                   <td>{item["doc_number"]}</td>
                   <td>{item["doc_name"]}</td>
                   <td>{item["subject"]}</td>
                   <td>{item["department"]}</td>
                   <td>{item.doc_date ? item.doc_date.split("T")[0] : "-"}</td>
-                 
+
                   {/* Dropdown สำหรับการกระทำ */}
                   <div className="dropdown">
                     <Dropdown>
@@ -187,11 +197,11 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() => handleDownload(item.doc_number)}
+                              onClick={() => handleDownload(item.doc_number)}   // << ต้องใช้ doc_number เท่านั้น
                             >
-                              {" "}
                               &nbsp;Download
                             </Dropdown.Item>
+
                             <Dropdown.Item
                               href="#/action-3"
                               className="bi bi-trash"
@@ -219,7 +229,7 @@ const Pagedoc = ({ user, onLogout }) => {
                             <Dropdown.Item
                               href="#/action-2"
                               className="bi bi-box-arrow-down"
-                              onClick={() =>handleDownload(item.doc_number)}
+                              onClick={() => handleDownload(item["ชื่อเอกสาร"])}
                             >
                               {" "}
                               &nbsp;Download
@@ -257,7 +267,7 @@ const Pagedoc = ({ user, onLogout }) => {
           onSearch={handleSearch}
           searchType="documents"
           username={username}
-        />
+        />  
       </div>
     </div>
   );

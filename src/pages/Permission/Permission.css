@@ -6,14 +6,14 @@
   height: 100%;
   color: white;
   font-family: 'Roboto', sans-serif;
-  overflow-x: auto;
+  overflow: visible !important;
   position: relative;
 }
 
 /* Searchbar + add-button */
 .searchbar {
   display: flex;
-  justify-content: flex-start; /* ชิดซ้ายสุด */
+  justify-content: flex-start;
   align-items: center;
   width: 90%;
   margin: 0 auto;
@@ -24,13 +24,12 @@
   color: white;
   border: none;
   padding: 10px 30px;
-  margin-left: 0 auto; /* ชิดขวา */
+  margin-left: auto;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
 }
-
 .add-user-button:hover {
   background-color: #e65c00;
 }
@@ -41,30 +40,22 @@
   margin: 40px auto 0;
   width: 90%;
   max-width: 1800px;
-  height: 900px; /* ✅ fix ความสูง */
+  height: 900px;
   background-color: #373a40;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(36, 24, 24, 0.1);
   border: 2px solid #ff6c00;
-  overflow: hidden; /* ✅ ซ่อนส่วนที่เกิน */
+  overflow: visible !important;
   padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
-.table-container-wrapper {
-  flex: 1;
-  overflow-y: auto; 
-  overflow-x: auto; 
-}
-
-
-
 /* Main table */
 .table-container {
-  height: 890px; 
   width: 100%;
   border-collapse: collapse;
+  overflow: visible !important;
 }
 .table-container th,
 .table-container td {
@@ -88,7 +79,6 @@ th {
   z-index: 2;
 }
 
-
 /* Profile pic */
 .profilePic {
   width: 50px;
@@ -100,6 +90,7 @@ th {
 /* Role dropdown in table */
 .dropdown-wrapper {
   position: relative;
+  overflow: visible !important;
 }
 .dropdown-button {
   background-color: #28a745;
@@ -113,18 +104,16 @@ th {
   text-transform: capitalize;
 }
 .dropdown-menu-permission {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
   background-color: white;
   color: black;
   border-radius: 8px;
-  margin-top: 5px;
-  padding: 5px 0;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  position: absolute;
-  z-index: 1000;
-  width: 100%;   /* <<< สำคัญ!! ให้ dropdown กว้างเท่าปุ่ม */
-  min-width: 100%; /* <<< สำคัญ!! กันบางจอแคบ */
+  z-index: 10000;
 }
-
 .dropdown-menu-permission .dropdown-item {
   padding: 8px 16px;
   font-size: 0.9rem;
@@ -141,7 +130,6 @@ th {
   position: relative;
   display: inline-flex;
   width: 100%;
-  max-width: none;
 }
 .dept-dropdown-wrapper input,
 .role-dropdown-wrapper input {
@@ -218,10 +206,9 @@ th {
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
   border: 1px solid #ddd;
-  position: relative;   /* ✅ เพิ่ม */
-  overflow: visible;    /* ✅ เพิ่ม */
+  position: relative;
+  overflow: visible;
 }
-
 .form-title {
   grid-column: 1 / span 2;
   font-size: 2rem;
@@ -233,9 +220,8 @@ th {
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: visible; /* ✅ เพิ่มบรรทัดนี้เข้าไป */
+  overflow: visible;
 }
-
 .form-group.full-width,
 .form-buttons {
   grid-column: 1 / span 2;
@@ -298,16 +284,15 @@ th {
   margin-top: 0.25rem;
 }
 
+/* password wrapper */
 .password-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
-
 .password-wrapper input {
   flex: 1;
 }
-
 .toggle-password-button {
   position: absolute;
   right: 10px;
@@ -317,20 +302,18 @@ th {
   font-size: 0.9rem;
   cursor: pointer;
 }
-
 .toggle-password-button:hover {
   color: #ff6c00;
 }
 
-/* ให้ตารางไม่บีบดรอปดาวน์ */
+/* Table spacing and no borders */
 .table-container {
   width: 100%;
-  border-collapse: separate; 
-  border-spacing: 0; 
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
 }
-
 .table-container thead th {
   position: sticky;
   top: 0;
@@ -340,27 +323,34 @@ th {
   padding: 12px 8px;
   font-size: 1rem;
   z-index: 2;
-  border: none; /* ✅ ไม่มีเส้นขอบ */
+  border: none;
 }
-
 .table-container tbody td {
   padding: 12px 8px;
   text-align: center;
   font-size: 1rem;
-  border: none; /* ✅ ไม่มีเส้นขอบ */
+  border: none;
 }
 
-
-
+/* Department form group */
 .form-group-department {
   display: flex;
   flex-direction: column;
-  position: relative; 
-  overflow: visible;   
+  position: relative;
+  overflow: visible;
 }
 
-
-/* เพิ่มใน Permission.css */
-.background .search-form {
-  display: none;
+/* เท !important ให้กับทุก overflow บนตัวนี้และลูกหลาน */
+.table-wrapper-permission,
+.table-wrapper-permission * {
+  overflow: visible !important;
 }
+
+/* ดันเมนู dropdown ขึ้นมาบนสุดสุด */
+.dropdown-menu-permission,
+.dept-dropdown-menu,
+.role-dropdown-menu {
+  position: absolute !important;
+  z-index: 100000 !important;
+}
+

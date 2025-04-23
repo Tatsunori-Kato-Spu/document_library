@@ -71,34 +71,19 @@ if (!fs.existsSync(uploadDir)) {
 // ตั้งค่าที่เก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // เก็บไฟล์ในโฟลเดอร์ uploads
   },
   filename: (req, file, cb) => {
-    const originalName = file.originalname;
-    const uploadPath = path.join("uploads", originalName);
-
-    // เช็กว่ามีไฟล์นี้อยู่แล้วหรือยัง
-    if (!fs.existsSync(uploadPath)) {
-      return cb(null, originalName); // ถ้ายังไม่มี ใช้ชื่อเดิมได้เลย
+    const docNumber = req.body.docNumber; // ดึง docNumber ที่ส่งมากับ form
+    if (!docNumber) {
+      return cb(new Error("Missing docNumber")); // ถ้าไม่มี docNumber ให้ Error เลย
     }
-
-    // ถ้ามีแล้ว ให้เพิ่ม (1), (2), ...
-    const ext = path.extname(originalName);
-    const baseName = path.basename(originalName, ext);
-
-    let counter = 1;
-    let newName;
-
-    do {
-      newName = `${baseName}(${counter})${ext}`;
-      counter++;
-    } while (fs.existsSync(path.join("uploads", newName)));
-
-    cb(null, newName); // ตั้งชื่อใหม่แบบไม่ซ้ำ
-  },
+    cb(null, `${docNumber}.pdf`); // ตั้งชื่อไฟล์เป็น docNumber + .pdf
+  }
 });
 
 const upload = multer({ storage, fileFilter });
+
 
 
 /**
@@ -510,10 +495,24 @@ const upload = multer({ storage, fileFilter });
 app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
   const { docNumber, docName, subject, department, date, roles } = req.body;
   const now = new Date();
-  
-  // ตรวจสอบว่าไม่มีไฟล์อัปโหลด
+
   if (!req.file) {
-    return res.status(400).json({ success: false, message: "No PDF file uploaded." });
+    return res.status(400).json({ success: false, message: "ไม่พบไฟล์ PDF ที่อัปโหลด" });
+  }
+
+  if (!docNumber || !docName || !subject || !department || !date || !roles) {
+    return res.status(400).json({ success: false, message: "กรุณากรอกข้อมูลให้ครบทุกช่อง" });
+  }
+
+  // เช็ค roles อย่างน้อย 1 ค่า
+  let parsedRoles;
+  try {
+    parsedRoles = JSON.parse(roles);
+    if (!Array.isArray(parsedRoles) || parsedRoles.length === 0) {
+      return res.status(400).json({ success: false, message: "กรุณาเลือกระดับอย่างน้อย 1 ตัว" });
+    }
+  } catch (err) {
+    return res.status(400).json({ success: false, message: "รูปแบบ Role ไม่ถูกต้อง" });
   }
 
   const filePath = req.file.path;
@@ -526,37 +525,28 @@ app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
     );
     const docId = insertResult.insertId;
 
-    const allRoleIds = new Set();
-    for (const roleName of JSON.parse(roles)) {
+    for (const roleName of parsedRoles) {
       const [roleRows] = await pool.query(
         `SELECT id FROM roles WHERE LOWER(name) = LOWER(?)`,
         [roleName]
       );
       const baseRole = roleRows[0];
-      if (!baseRole) {
-        return res.status(400).json({ success: false, message: `ไม่พบ role: ${roleName}` });
+      if (baseRole) {
+        await pool.query(
+          `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
+          [docId, baseRole.id]
+        );
       }
-      allRoleIds.add(baseRole.id);
     }
 
-    // เก็บข้อมูล mapping ระหว่างเอกสารและ roles
-    for (const roleId of allRoleIds) {
-      await pool.query(
-        `INSERT INTO document_roles (document_id, role_id) VALUES (?, ?)`,
-        [docId, roleId]
-      );
-    }
-
-    res.json({
-      success: true,
-      message: "Document uploaded successfully with PDF",
-      documentId: docId,
-    });
+    res.json({ success: true, message: "อัปโหลดสำเร็จ", documentId: docId });
   } catch (err) {
     console.error("Upload error:", err.message);
     res.status(500).json({ success: false, message: "Upload failed", error: err.message });
   }
 });
+
+
 
 
 // -------------------------- Login --------------------------
@@ -682,29 +672,30 @@ app.get("/api/documents/:docNumber/file", async (req, res) => {
   const { docNumber } = req.params;
   try {
     const [rows] = await pool.query(
-      `SELECT * FROM documents WHERE doc_number = ?`,
+      `SELECT pdf_file FROM documents WHERE doc_number = ?`,
       [docNumber]
     );
 
-    // ตรวจสอบว่าไฟล์ PDF มีในฐานข้อมูล
     if (rows.length === 0 || !rows[0].pdf_file) {
-      return res.status(404).json({ message: "ไฟล์ PDF ไม่พบในฐานข้อมูล" });
+      return res.status(404).json({ message: "ไม่พบไฟล์" });
     }
 
-    // แปลงข้อมูล pdf_file เป็น Buffer
-    const pdfBuffer = rows[0].pdf_file.data;
+    const absolutePath = path.join(__dirname, rows[0].pdf_file); // <<== แก้ตรงนี้
+    if (!fs.existsSync(absolutePath)) {
+      return res.status(404).json({ message: "ไฟล์ไม่อยู่ในระบบ" });
+    }
 
-    // ตั้งค่าหัวข้อ Content-Type สำหรับการส่งไฟล์ PDF
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `inline; filename=${docNumber}.pdf`);
-    res.end(pdfBuffer);
-      
-
+    res.setHeader("Content-Disposition", `inline; filename="${docNumber}.pdf"`);
+    const fileStream = fs.createReadStream(absolutePath);
+    fileStream.pipe(res);
   } catch (err) {
-    console.error("SQL error:", err.message);
-    res.status(500).json({ message: "Database error", error: err.message });
+    console.error("โหลดไฟล์ผิดพลาด:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+
+
 
 
 

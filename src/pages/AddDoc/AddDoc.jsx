@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Layout/Header/Header";
+import Swal from "sweetalert2";
 import "./AddDoc.css";
 
-// ฟังก์ชันดึงเลขเอกสารล่าสุด
-// ฟังก์ชันดึงเลขเอกสารล่าสุดจากฐานข้อมูล
 const generateDocNumber = async () => {
   try {
     const res = await fetch(
@@ -14,40 +13,39 @@ const generateDocNumber = async () => {
 
     if (data && data.lastNumber !== undefined) {
       const nextNumber = parseInt(data.lastNumber, 10) + 1;
-      return String(nextNumber); // 👉 ไม่ต้อง pad ด้วย 0 แล้ว
+      return String(nextNumber);
     } else {
-      return "1"; // 👉 เริ่มต้นที่ 1 ถ้ายังไม่มีเอกสาร
+      return "1";
     }
   } catch (err) {
     console.error("ไม่สามารถดึงเลขเอกสารล่าสุดได้:", err);
-    return "1"; // 👉 fallback เป็น 1 กรณีเกิด error
+    return "1";
   }
 };
 
 function AddDoc() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    docNumber: "", // เริ่มต้นเป็นค่าว่าง
+    docNumber: "",
     docName: "",
     budgetYear: "",
     date: "",
     department: "",
     roles: [],
-    subject: "", // เพิ่มฟิลด์หัวข้อเรื่อง
+    subject: "",
   });
 
-  // Set current date for the minimum date
   const [currentDate, setCurrentDate] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  // ดึงเลขเอกสารล่าสุดเมื่อเริ่มต้น
   useEffect(() => {
     const fetchDocNumber = async () => {
-      const docNumber = await generateDocNumber(); // เรียกใช้ฟังก์ชันเพื่อดึงเลขเอกสาร
-      setFormData((prev) => ({ ...prev, docNumber })); // กำหนดค่า docNumber ใหม่
+      const docNumber = await generateDocNumber();
+      setFormData((prev) => ({ ...prev, docNumber }));
     };
     fetchDocNumber();
 
-    const today = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
     setCurrentDate(today);
   }, []);
 
@@ -71,9 +69,12 @@ function AddDoc() {
     navigate("/document_library/pagedoc");
   };
 
-  const [selectedFile, setSelectedFile] = useState(null);
-
   const handleSubmit = async () => {
+    if (!selectedFile) {
+      Swal.fire("กรุณาเลือกไฟล์ PDF ก่อน!", "", "warning");
+      return;
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append("docNumber", formData.docNumber);
     formDataToSend.append("docName", formData.docName);
@@ -81,11 +82,7 @@ function AddDoc() {
     formDataToSend.append("department", formData.department);
     formDataToSend.append("date", formData.date);
     formDataToSend.append("roles", JSON.stringify(formData.roles));
-
-    if (selectedFile) {
-      formDataToSend.append("file", selectedFile);
-      console.log("Selected file:", selectedFile); // ดูว่าไฟล์ถูกเลือกหรือไม่
-    }
+    formDataToSend.append("file", selectedFile);
 
     try {
       const res = await fetch("http://localhost:3001/api/documents/upload", {
@@ -94,17 +91,24 @@ function AddDoc() {
       });
 
       const data = await res.json();
-      console.log("Response from server:", data); // ตรวจสอบข้อมูลที่ตอบกลับจาก API
+      console.log("Response from server:", data);
 
       if (data.success) {
-        alert("อัปโหลดสำเร็จ");
-        navigate("/document_library/pagedoc");
+        Swal.fire("สำเร็จ!", "เอกสารถูกบันทึกเรียบร้อยแล้ว", "success").then(
+          () => {
+            navigate("/document_library/pagedoc");
+          }
+        );
       } else {
-        alert("อัปโหลดไม่สำเร็จ: " + data.message);
+        Swal.fire(
+          "ผิดพลาด",
+          data.message || "ไม่สามารถบันทึกเอกสารได้",
+          "error"
+        );
       }
     } catch (err) {
       console.error("Upload failed:", err);
-      alert("เกิดข้อผิดพลาดในการอัปโหลด");
+      Swal.fire("ผิดพลาด", "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์", "error");
     }
   };
 
@@ -113,6 +117,7 @@ function AddDoc() {
       <Header />
       <div className="add-doc">
         <div className="form-container">
+          {/* ฟอร์มเลขเอกสาร + ชื่อเอกสาร */}
           <div className="colum-1">
             <div className="form-group">
               <label
@@ -120,15 +125,14 @@ function AddDoc() {
                 className="doc-Number-label"
                 style={{ color: "orange" }}
               >
-                ใส่เลขเอกสาร
+                เลขเอกสาร
               </label>
               <input
                 id="docNumber"
                 type="text"
-                placeholder="กรอกเลขเอกสาร"
                 value={formData.docNumber}
                 onChange={handleChange}
-                readOnly // ไม่ให้ผู้ใช้แก้ไขเลขเอกสาร
+                readOnly
               />
             </div>
             <div className="form-group">
@@ -137,7 +141,7 @@ function AddDoc() {
                 className="doc-Text-label"
                 style={{ color: "orange" }}
               >
-                ใส่ชื่อเอกสาร
+                ชื่อเอกสาร
               </label>
               <input
                 id="docName"
@@ -148,7 +152,8 @@ function AddDoc() {
               />
             </div>
           </div>
-          {/* เพิ่มส่วนกรอกหัวข้อเรื่อง */}
+
+          {/* ฟอร์มหัวข้อ */}
           <div className="form-group2">
             <label
               htmlFor="subject"
@@ -165,6 +170,8 @@ function AddDoc() {
               onChange={handleChange}
             />
           </div>
+
+          {/* ฟอร์มหน่วยงาน, วันที่ */}
           <div className="colum-2">
             <div className="form-group">
               <label
@@ -175,16 +182,18 @@ function AddDoc() {
                 หน่วยงาน
               </label>
               <input
-                list="departments" // ใช้ list เพื่อเชื่อมโยงกับ datalist
+                list="departments"
                 id="department"
                 type="text"
                 value={formData.department}
                 onChange={handleChange}
-                placeholder="พิมพ์หรือเลือกหน่วยงาน"
+                placeholder="เลือกหรือพิมพ์หน่วยงาน"
               />
               <datalist id="departments">
+                {/* ใส่ตัวเลือกหน่วยงานตามต้องการ */}
               </datalist>
             </div>
+
             <div className="form-group">
               <label
                 htmlFor="date"
@@ -198,9 +207,11 @@ function AddDoc() {
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
-                min={currentDate} // Set the minimum date to the current date
+                min={currentDate}
               />
             </div>
+
+            {/* ฟอร์มเลือกไฟล์ PDF */}
             <div className="form-group2">
               <label htmlFor="pdfFile" style={{ color: "orange" }}>
                 แนบไฟล์ PDF
@@ -214,6 +225,7 @@ function AddDoc() {
               />
             </div>
 
+            {/* ฟอร์มเลือกระดับ (Role) */}
             <div className="form-group2">
               <label className="doc-role" style={{ color: "orange" }}>
                 ระดับ
@@ -250,6 +262,7 @@ function AddDoc() {
             </div>
           </div>
 
+          {/* Preview PDF ถ้ามีไฟล์ */}
           {selectedFile && (
             <div className="pdf-preview-container">
               <h3 style={{ color: "orange", marginTop: "20px" }}>
@@ -265,6 +278,7 @@ function AddDoc() {
             </div>
           )}
 
+          {/* ปุ่มกด */}
           <div className="button-group">
             <button onClick={handleCancel} className="cancel-button">
               ยกเลิก

@@ -47,6 +47,7 @@ function EditMemberForm() {
         );
       });
   };
+
   const handleCancelAdd = () => {
     Swal.fire({
       title: "คุณแน่ใจหรือไม่?",
@@ -63,12 +64,12 @@ function EditMemberForm() {
   };
 
   return (
-    <div className="background">
+    <div className="editmemberform-background">
       <Header />
-      <div className="form">
+      <div className="editmemberform-form">
         <form onSubmit={handleSubmit}>
-          <h2 className="form-title">แก้ไขข้อมูลผู้ใช้งาน</h2>
-          <div className="form-grid">
+          <h2 className="editmemberform-form-title">แก้ไขข้อมูลผู้ใช้งาน</h2>
+          <div className="editmemberform-form-grid">
             <div>
               <label>ชื่อ-สกุล</label>
               <input
@@ -120,16 +121,16 @@ function EditMemberForm() {
             </div>
           </div>
 
-          <div>
+          <div className="editmemberform-buttons">
             <button
               type="button"
-              className="btn-secondary"
+              className="editmemberform-btn-secondary"
               onClick={handleCancelAdd}
             >
               ยกเลิก
             </button>
 
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="editmemberform-btn-primary">
               บันทึก
             </button>
           </div>
