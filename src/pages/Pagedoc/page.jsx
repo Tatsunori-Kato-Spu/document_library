@@ -61,18 +61,18 @@ const Pagedoc = ({ user, onLogout }) => {
 
 
   // ฟังก์ชันเมื่อคลิกอ่าน
-  // const handleReadClick = async (docNumber) => {
-  //   try {
-  //     const res = await fetch(`http://localhost:3001/api/documents/${docNumber}/file`);
-  //     if (!res.ok) throw new Error("Network error");
+  const handleReadClick = async (docNumber) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/documents/${docNumber}/file`);
+      if (!res.ok) throw new Error("Network error");
   
-  //     const blob = await res.blob();
-  //     const url = window.URL.createObjectURL(blob);
-  //     window.open(url, "_blank"); // เปิดไฟล์ในแท็บใหม่
-  //   } catch (error) {
-  //     console.error("Error opening document:", error);
-  //   }
-  // };
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank"); // เปิดไฟล์ในแท็บใหม่
+    } catch (error) {
+      console.error("Error opening document:", error);
+    }
+  };
   
 
 
@@ -167,11 +167,10 @@ const Pagedoc = ({ user, onLogout }) => {
                 <tr
                   key={item.id}
                   className={item.isRead ? "row-read" : "row-unread"}
-                  // onClick={() => handleReadClick(item.doc_number)}
                 >
                   <td>{index + 1}</td>
                   <td>{item["doc_number"]}</td>
-                  <td>{item["doc_name"]}</td>
+                  <td onClick={() => handleReadClick(item.doc_number)}>{item["doc_name"]} </td>
                   <td>{item["subject"]}</td>
                   <td>{item["department"]}</td>
                   <td>{item.doc_date ? item.doc_date.split("T")[0] : "-"}</td>
