@@ -414,8 +414,9 @@ const upload = multer({ storage, fileFilter });
 /**
  * @swagger
  * /api/documents/{docNumber}/file:
- *   get:
- *     tags: [Documents]
+get:
+ *     tags: 
+ *       - Documents
  *     summary: Retrieve the file of a specific document
  *     parameters:
  *       - in: path
@@ -423,9 +424,15 @@ const upload = multer({ storage, fileFilter });
  *         required: true
  *         schema:
  *           type: string
+ *         description: The document number to retrieve the file for
  *     responses:
  *       200:
  *         description: Document file found
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
  *       404:
  *         description: Document file not found
  */

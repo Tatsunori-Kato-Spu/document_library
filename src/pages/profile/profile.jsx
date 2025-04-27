@@ -35,7 +35,8 @@ function Profile() {
 
   return (
     <div>
-      <Header user={user} onLogout={() => {}} /> {/* <-- ปรับส่ง user เข้า Header ถ้ามี */}
+      <Header user={user} onLogout={() => {}} />{" "}
+      {/* <-- ปรับส่ง user เข้า Header ถ้ามี */}
       <div className="container">
         <div className="profile-container">
           <div className="profile-content-1">
@@ -46,12 +47,11 @@ function Profile() {
             />
             <button className="button-box-1">ข้อมูลพื้นฐาน</button>
 
-            <button onClick={historyClick} className="button-box-1">
-              ประวัติ
-            </button>
-
             {user.role === "admin" && (
               <>
+                <button onClick={historyClick} className="button-box-1">
+                  ประวัติ
+                </button>
                 <button onClick={permissionClick} className="button-box-1">
                   กำหนดสิทธิ
                 </button>
