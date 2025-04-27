@@ -442,21 +442,45 @@ get:
  * /api/documents/search:
  *   post:
  *     tags: [Documents]
- *     summary: Search for documents
+ *     summary: ค้นหาเอกสารตาม keyword และ username
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - username
  *             properties:
- *               title:
+ *               username:
  *                 type: string
+ *                 description: ชื่อผู้ใช้สำหรับตรวจสอบสิทธิ์
+ *                 example: admin
+ *               keyword:
+ *                 type: string
+ *                 description: คำค้น (ค้นในชื่อหรือเลขเอกสาร)
+ *                 example: "รายงานปี2550"
  *     responses:
- *       200:
- *         description: List of documents matching the search criteria
- *       400:
- *         description: Invalid search criteria
+ *       '200':
+ *         description: รายการเอกสารที่ค้นพบ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Document'
+ *       '404':
+ *         description: ไม่พบผู้ใช้งาน
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 
 /**
@@ -464,7 +488,15 @@ get:
  * /api/documents/search/filter:
  *   post:
  *     tags: [Documents]
- *     summary: Filter documents based on specific criteria
+ *     summary: ค้นหาและกรองเอกสารตาม keyword, department, days
+ *     parameters:
+ *       - in: query
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: admin
+ *         description: ชื่อผู้ใช้สำหรับตรวจสอบสิทธิ์
  *     requestBody:
  *       required: true
  *       content:
@@ -472,21 +504,41 @@ get:
  *           schema:
  *             type: object
  *             properties:
+ *               keyword:
+ *                 type: string
+ *                 description: คำค้น (ไม่บังคับ)
+ *                 example: "รายงานปี2552"
  *               department:
  *                 type: string
- *               dateRange:
- *                 type: object
- *                 properties:
- *                   start:
- *                     type: string
- *                     format: date
- *                   end:
- *                     type: string
- *                     format: date
+ *                 description: แผนก (ไม่บังคับ)
+ *                 example: "การเงิน"
+ *               days:
+ *                 type: integer
+ *                 description: คืนเอกสารที่สร้างภายใน N วันที่ผ่านมา (ไม่บังคับ)
+ *                 example: 30
  *     responses:
- *       200:
- *         description: List of documents after filtering
+ *       '200':
+ *         description: รายการเอกสารหลังกรอง
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Document'
+ *       '404':
+ *         description: ไม่พบผู้ใช้งาน
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       '500':
+ *         description: เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
+
 
 /**
  * @swagger

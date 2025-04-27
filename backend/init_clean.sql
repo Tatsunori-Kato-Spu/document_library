@@ -43,7 +43,7 @@ CREATE TABLE `documents` (
   `department` VARCHAR(100),
   `doc_date` DATE,
   `doc_time` TIME,
-  `pdf_file` LONGBLOB
+  `pdf_file` VARCHAR(255),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- สร้างตาราง document_roles
