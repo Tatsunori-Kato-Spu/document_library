@@ -85,46 +85,41 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, fileFilter });
 
 
-
 /**
  * @swagger
- * /api/documents/upload:
- *   post:
- *     summary: Upload a document
- *     consumes:
- *       - multipart/form-data
- *     parameters:
- *       - in: formData
- *         name: file
- *         type: file
- *         required: true
- *         description: The document file to upload
- *     responses:
- *       200:
- *         description: Document uploaded successfully
- *       400:
- *         description: Invalid file type
+ * tags:
+ *   - name: Documents
+ *     description: Document management
+ *   - name: Users
+ *     description: User management
+ *   - name: Roles
+ *     description: Role management
+ *   - name: Departments
+ *     description: Department management
+ *   - name: Auth
+ *     description: Authentication
  */
 
 /**
  * @swagger
  * /api/login:
  *   post:
+ *     tags: [Auth]
  *     summary: Login a user
- *     parameters:
- *       - in: body
- *         name: loginDetails
- *         description: User login details
- *         schema:
- *           type: object
- *           required:
- *             - username
- *             - password
- *           properties:
- *             username:
- *               type: string
- *             password:
- *               type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully logged in
@@ -134,8 +129,221 @@ const upload = multer({ storage, fileFilter });
 
 /**
  * @swagger
+ * /api/profile:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Retrieve the logged-in user's profile
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         required: true
+ *         description: The token for authenticating the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User profile data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     username:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     contact:
+ *                       type: string
+ *       404:
+ *         description: User profile not found for the provided token
+ *       500:
+ *         description: Internal server error
+ */
+
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Documents
+ *     description: Document management APIs
+ *
+ * /api/documents:
+ *   get:
+ *     tags: [Documents]
+ *     summary: Retrieve documents accessible by a user's role
+ *     description: ดึงเอกสารที่ผู้ใช้งานสามารถเข้าถึงได้ตาม role ของตัวเอง
+ *     parameters:
+ *       - in: query
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Username ของผู้ใช้
+ *     responses:
+ *       200:
+ *         description: A list of accessible documents
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   doc_number:
+ *                     type: string
+ *                     example: DOC-001
+ *                   doc_name:
+ *                     type: string
+ *                     example: Purchase Request
+ *                   subject:
+ *                     type: string
+ *                     example: Purchase of laptops
+ *                   department:
+ *                     type: string
+ *                     example: IT Department
+ *                   doc_date:
+ *                     type: string
+ *                     format: date
+ *                     example: 2025-04-27
+ *                   doc_time:
+ *                     type: string
+ *                     format: time
+ *                     example: 14:30:00
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: ไม่พบผู้ใช้งาน
+ *       500:
+ *         description: Database error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Database error
+ *                 error:
+ *                   type: string
+ *                   example: Some SQL error message
+ */
+
+/**
+ * @swagger
+ * /api/documents/upload:
+ *   post:
+ *     tags: [Documents]
+ *     summary: Upload a document with metadata
+ *     description: Upload a PDF file along with metadata (docNumber, docName, subject, department, date, roles).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *               - docNumber
+ *               - docName
+ *               - subject
+ *               - department
+ *               - date
+ *               - roles
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The PDF file to be uploaded.
+ *               docNumber:
+ *                 type: string
+ *                 description: The unique document number.
+ *               docName:
+ *                 type: string
+ *                 description: The name of the document.
+ *               subject:
+ *                 type: string
+ *                 description: The subject of the document.
+ *               department:
+ *                 type: string
+ *                 description: The department associated with the document.
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 description: The date the document was created.
+ *               roles:
+ *                 type: string
+ *                 description: JSON array of roles (e.g., '["admin", "worker"]') that have access to the document.
+ *     responses:
+ *       200:
+ *         description: Document uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates whether the upload was successful
+ *                 message:
+ *                   type: string
+ *                   description: A message indicating the result of the upload
+ *                 documentId:
+ *                   type: integer
+ *                   description: The ID of the newly created document
+ *       400:
+ *         description: Invalid input data or missing required fields
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indicates failure
+ *                 message:
+ *                   type: string
+ *                   description: The error message explaining the failure
+ *       500:
+ *         description: Internal server error during file upload
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ *                   description: Detailed error message from the server
+ */
+
+/**
+ * @swagger
  * /api/documents/lastDocNumber:
  *   get:
+ *     tags: [Documents]
  *     summary: Get the last document number
  *     responses:
  *       200:
@@ -146,41 +354,59 @@ const upload = multer({ storage, fileFilter });
 
 /**
  * @swagger
- * /api/documents:
- *   get:
- *     summary: Retrieve a list of documents
- *     responses:
- *       200:
- *         description: A list of documents
- *         schema:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               docNumber:
- *                 type: string
- *               title:
- *                 type: string
- *               createdAt:
- *                 type: string
- *               file:
- *                 type: string
- */
-
-/**
- * @swagger
  * /api/documents/{docNumber}:
  *   get:
+ *     tags: [Documents]
  *     summary: Retrieve a document by its number
  *     parameters:
  *       - in: path
  *         name: docNumber
  *         required: true
- *         type: string
- *         description: The document number
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Document found
+ *       404:
+ *         description: Document not found
+ *
+ *   put:
+ *     tags: [Documents]
+ *     summary: Update a document (including file upload)
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Document updated successfully
+ *       400:
+ *         description: Invalid file or document number
+ *
+ *   delete:
+ *     tags: [Documents]
+ *     summary: Delete a document by its number
+ *     parameters:
+ *       - in: path
+ *         name: docNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Document deleted successfully
  *       404:
  *         description: Document not found
  */
@@ -189,13 +415,14 @@ const upload = multer({ storage, fileFilter });
  * @swagger
  * /api/documents/{docNumber}/file:
  *   get:
+ *     tags: [Documents]
  *     summary: Retrieve the file of a specific document
  *     parameters:
  *       - in: path
  *         name: docNumber
  *         required: true
- *         type: string
- *         description: The document number
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Document file found
@@ -207,17 +434,17 @@ const upload = multer({ storage, fileFilter });
  * @swagger
  * /api/documents/search:
  *   post:
+ *     tags: [Documents]
  *     summary: Search for documents
- *     parameters:
- *       - in: body
- *         name: searchCriteria
- *         description: Criteria for searching documents
- *         schema:
- *           type: object
- *           properties:
- *             title:
- *               type: string
- *               description: Document title to search for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
  *     responses:
  *       200:
  *         description: List of documents matching the search criteria
@@ -229,26 +456,26 @@ const upload = multer({ storage, fileFilter });
  * @swagger
  * /api/documents/search/filter:
  *   post:
+ *     tags: [Documents]
  *     summary: Filter documents based on specific criteria
- *     parameters:
- *       - in: body
- *         name: filterCriteria
- *         description: Criteria to filter documents
- *         schema:
- *           type: object
- *           properties:
- *             department:
- *               type: string
- *               description: Filter by department
- *             dateRange:
- *               type: object
- *               properties:
- *                 start:
- *                   type: string
- *                   format: date
- *                 end:
- *                   type: string
- *                   format: date
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               department:
+ *                 type: string
+ *               dateRange:
+ *                 type: object
+ *                 properties:
+ *                   start:
+ *                     type: string
+ *                     format: date
+ *                   end:
+ *                     type: string
+ *                     format: date
  *     responses:
  *       200:
  *         description: List of documents after filtering
@@ -258,64 +485,121 @@ const upload = multer({ storage, fileFilter });
  * @swagger
  * /api/users:
  *   get:
+ *     tags: [Users]
  *     summary: Retrieve a list of all users
  *     responses:
  *       200:
  *         description: A list of users
- *         schema:
- *           type: array
- *           items:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   username:
+ *                     type: string
+ *                   role:
+ *                     type: string
+ *
+ *   post:
+ *     tags: [Users]
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
  *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - name
+ *               - id_card
+ *               - department
+ *               - position
+ *               - email
+ *               - contact
+ *               - role
  *             properties:
- *               id:
- *                 type: integer
  *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               id_card:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               position:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               contact:
  *                 type: string
  *               role:
  *                 type: string
+ *                 enum: [admin, worker, guest]
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid user data
  */
 
 /**
  * @swagger
  * /api/users/{id}:
  *   get:
+ *     tags: [Users]
  *     summary: Get user details by ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         type: integer
- *         description: The user ID
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: User details
  *       404:
  *         description: User not found
- */
-
-/**
- * @swagger
- * /api/users/{id}:
+ *
  *   put:
+ *     tags: [Users]
  *     summary: Update a user's details
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         type: integer
- *         description: The user ID
- *       - in: body
- *         name: userDetails
- *         description: Updated user details
  *         schema:
- *           type: object
- *           properties:
- *             username:
- *               type: string
- *             password:
- *               type: string
- *             role:
- *               type: string
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               id_card:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *               position:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               contact:
+ *                 type: string
  *     responses:
  *       200:
  *         description: User details updated successfully
@@ -325,132 +609,26 @@ const upload = multer({ storage, fileFilter });
 
 /**
  * @swagger
- * /api/profile:
- *   get:
- *     summary: Retrieve the logged-in user's profile
- *     responses:
- *       200:
- *         description: User profile data
- *       404:
- *         description: Profile not found
- */
-
-/**
- * @swagger
- * /api/documents/{docNumber}:
- *   delete:
- *     summary: Delete a document by its number
- *     parameters:
- *       - in: path
- *         name: docNumber
- *         required: true
- *         type: string
- *         description: The document number
- *     responses:
- *       200:
- *         description: Document deleted successfully
- *       404:
- *         description: Document not found
- */
-
-/**
- * @swagger
- * /api/documents/{docNumber}:
- *   put:
- *     summary: Update a document (including file upload)
- *     parameters:
- *       - in: path
- *         name: docNumber
- *         required: true
- *         type: string
- *         description: The document number
- *       - in: formData
- *         name: file
- *         type: file
- *         description: The updated document file
- *     responses:
- *       200:
- *         description: Document updated successfully
- *       400:
- *         description: Invalid file or document number
- */
-
-/**
- * @swagger
- * /api/departments:
- *   get:
- *     summary: Retrieve a list of departments
- *     responses:
- *       200:
- *         description: A list of departments
- *         schema:
- *           type: array
- *           items:
- *             type: string
- */
-
-/**
- * @swagger
- * /api/documents:
- *   post:
- *     summary: Create a new document
- *     parameters:
- *       - in: body
- *         name: documentDetails
- *         description: Document details to be created
- *         schema:
- *           type: object
- *           required:
- *             - title
- *             - department
- *             - content
- *           properties:
- *             title:
- *               type: string
- *             department:
- *               type: string
- *             content:
- *               type: string
- *     responses:
- *       201:
- *         description: Document created successfully
- *       400:
- *         description: Invalid document data
- */
-
-/**
- * @swagger
- * /api/roles:
- *   get:
- *     summary: Retrieve a list of all roles
- *     responses:
- *       200:
- *         description: A list of roles
- *         schema:
- *           type: array
- *           items:
- *             type: string
- */
-
-/**
- * @swagger
  * /api/users/{id}/role:
  *   put:
+ *     tags: [Users]
  *     summary: Update the role of a user
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         type: integer
- *         description: The user ID
- *       - in: body
- *         name: role
- *         description: New role to assign to the user
  *         schema:
- *           type: object
- *           properties:
- *             role:
- *               type: string
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [admin, worker, guest]
  *     responses:
  *       200:
  *         description: User role updated successfully
@@ -460,37 +638,41 @@ const upload = multer({ storage, fileFilter });
 
 /**
  * @swagger
- * /api/users:
- *   post:
- *     summary: Create a new user
- *     parameters:
- *       - in: body
- *         name: userDetails
- *         description: New user details to be created
- *         schema:
- *           type: object
- *           required:
- *             - username
- *             - password
- *             - role
- *           properties:
- *             username:
- *               type: string
- *               description: The username for the new user
- *             password:
- *               type: string
- *               description: The password for the new user
- *             role:
- *               type: string
- *               description: The role assigned to the new user (e.g., 'admin', 'user')
+ * /api/roles:
+ *   get:
+ *     tags: [Roles]
+ *     summary: Retrieve a list of all roles
  *     responses:
- *       201:
- *         description: User created successfully
- *       400:
- *         description: Invalid user data
+ *       200:
+ *         description: A list of roles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
  */
 
+/**
+ * @swagger
+ * /api/departments:
+ *   get:
+ *     tags: [Departments]
+ *     summary: Retrieve a list of departments
+ *     responses:
+ *       200:
+ *         description: A list of departments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
+
+
 // -------------------------- Upload Document (PDF) --------------------------
+
 
 app.post("/api/documents/upload", upload.single("file"), async (req, res) => {
   const { docNumber, docName, subject, department, date, roles } = req.body;
