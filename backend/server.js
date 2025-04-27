@@ -485,6 +485,40 @@ get:
 
 /**
  * @swagger
+ * /api/documents:
+ *   post:
+ *     tags: [Documents]
+ *     summary: Retrieve the latest 5 documents
+ *     responses:
+ *       200:
+ *         description: A list of the latest 5 documents
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   doc_name:
+ *                     type: string
+ *                   subject:
+ *                     type: string
+ *                   doc_date:
+ *                     type: string
+ *                     format: date
+ *                   doc_time:
+ *                     type: string
+ *                     format: time
+ *                   department:
+ *                     type: string
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
  * /api/documents/search/filter:
  *   post:
  *     tags: [Documents]
